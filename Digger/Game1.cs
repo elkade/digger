@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,6 +12,25 @@ namespace Digger
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        private AnimatedSprite animatedSprite;
+
+        private Texture2D arrow;
+        private float angle = 0;
+
+        private Texture2D blue;
+        private Texture2D green;
+        private Texture2D red;
+
+        private float blueAngle = 0;
+        private float greenAngle = 0;
+        private float redAngle = 0;
+
+        private float blueSpeed = 0.025f;
+        private float greenSpeed = 0.017f;
+        private float redSpeed = 0.022f;
+
+        private float distance = 100;
 
         public Game1()
             : base()
@@ -41,7 +61,14 @@ namespace Digger
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            Texture2D texture = Content.Load<Texture2D>("SmileyWalk");
+            animatedSprite = new AnimatedSprite(texture, 4, 4);
+
+            arrow = Content.Load<Texture2D>("arrow");
+
+            blue = Content.Load<Texture2D>("blue");
+            green = Content.Load<Texture2D>("green");
+            red = Content.Load<Texture2D>("red");
         }
 
         /// <summary>
@@ -63,7 +90,13 @@ namespace Digger
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            animatedSprite.Update();
+
+            angle += 0.01f;
+
+            blueAngle += blueSpeed;
+            greenAngle += greenSpeed;
+            redAngle += redSpeed;
 
             base.Update(gameTime);
         }
@@ -75,8 +108,38 @@ namespace Digger
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            
+            animatedSprite.Draw(spriteBatch, new Vector2(400, 200));
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            Vector2 location = new Vector2(400 + animatedSprite.Texture.Width/(animatedSprite.Columns * 2), 200 + animatedSprite.Texture.Height / (animatedSprite.Rows * 2));
+            Rectangle sourceRectangle = new Rectangle(0, 0, arrow.Width, arrow.Height);
+            Vector2 origin = new Vector2(arrow.Width / 2f, -50);
+
+            spriteBatch.Draw(arrow, location, sourceRectangle, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
+
+            spriteBatch.End();
+
+            Vector2 bluePosition = new Vector2(
+                (float)Math.Cos(blueAngle) * distance,
+                (float)Math.Sin(blueAngle) * distance);
+            Vector2 greenPosition = new Vector2(
+                            (float)Math.Cos(greenAngle) * distance,
+                            (float)Math.Sin(greenAngle) * distance);
+            Vector2 redPosition = new Vector2(
+                            (float)Math.Cos(redAngle) * distance,
+                            (float)Math.Sin(redAngle) * distance);
+
+            Vector2 center = new Vector2(300, 140);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+
+            spriteBatch.Draw(blue, center + bluePosition, Color.White);
+            spriteBatch.Draw(green, center + greenPosition, Color.White);
+            spriteBatch.Draw(red, center + redPosition, Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
