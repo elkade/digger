@@ -1,4 +1,5 @@
 ﻿using System;
+using Digger.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,6 +11,11 @@ namespace Digger
     /// </summary>
     public class Game1 : Game
     {
+        private View _currentView;//obecnie wyświetlany ekran. Updatable
+        private GameState _gs;
+
+        private InterfaceManager _im;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -31,6 +37,8 @@ namespace Digger
         private float redSpeed = 0.022f;
 
         private float distance = 100;
+        private View _pausedGame;
+        private GameSettings _gameSettings;
 
         public Game1()
             : base()
@@ -47,8 +55,9 @@ namespace Digger
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            _gameSettings = new GameSettings();
+            _im = new InterfaceManager(_gameSettings);
+            _currentView = _im.GetNewMenu();
             base.Initialize();
         }
 
@@ -90,6 +99,21 @@ namespace Digger
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            _gs = _currentView.Update();
+
+            switch (_gs)
+            {
+                case GameState.StartNewGame:
+                    _currentView = _im.GetNewGame();
+                    break;
+                case GameState.ResumeGame:
+                    _currentView = _im.GetPausedGame();
+                    break;
+                case GameState.ShowMenu:
+                    _currentView = _im.GetNewMenu();
+                    break;
+            }
+
             animatedSprite.Update();
 
             angle += 0.01f;
@@ -109,6 +133,8 @@ namespace Digger
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
+            _currentView.Draw();
+
             animatedSprite.Draw(spriteBatch, new Vector2(400, 200));
 
             spriteBatch.Begin();
@@ -143,5 +169,12 @@ namespace Digger
 
             base.Draw(gameTime);
         }
+    }
+
+    enum GameState
+    {
+        StartNewGame,
+        ResumeGame,
+        ShowMenu
     }
 }
