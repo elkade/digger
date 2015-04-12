@@ -48,7 +48,7 @@ namespace MetroDigger
             base.Initialize();
 
             _gameManager.AddScreen(new GameplayScreen(false));
-            _gameManager.AddScreen(new NewMenuScreen());
+            _gameManager.AddScreen(new LogScreen());
 
         }
 

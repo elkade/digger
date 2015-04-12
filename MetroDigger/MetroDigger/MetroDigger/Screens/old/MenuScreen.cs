@@ -191,6 +191,13 @@ namespace MetroDigger
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
+            while (!MenuObjects[_selectedObjectIndex].IsSelectable)
+            {
+                _selectedObjectIndex++;
+                if (_selectedObjectIndex >= _menuObjects.Count)
+                    _selectedObjectIndex = 0;
+            }
+
             // UpdateMovement each nested MenuEntry object.
             for (int i = 0; i < _menuObjects.Count; i++)
             {

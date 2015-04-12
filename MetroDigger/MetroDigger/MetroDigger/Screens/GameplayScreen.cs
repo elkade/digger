@@ -1,30 +1,11 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// GameplayScreen.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
 using System;
-using System.Collections.Generic;
-using System.Threading;
 using MetroDigger.Gameplay;
-using MetroDigger.Gameplay.GameObjects;
 using MetroDigger.Manager;
 using MetroDigger.Manager.Settings;
-using MetroDigger.Screens;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using XNA_GSM;
 
-#endregion
-
-namespace MetroDigger
+namespace MetroDigger.Screens
 {
     /// <summary>
     /// This screen implements the actual game logic. It is just a
@@ -35,30 +16,13 @@ namespace MetroDigger
     {
         private readonly GameOptions _gameGameOptions;
 
-        #region Fields
-
         private Level _level;
 
-        ContentManager content;
-        SpriteFont gameFont;
-
-        Vector2 playerPosition = new Vector2(100, 100);
-        Vector2 enemyPosition = new Vector2(100, 100);
-
-        Random random = new Random();
-
-        float pauseAlpha;
-
-        private TextRegistrator _textRegistrator = new TextRegistrator(0.3d,0.03d);
-
-        #endregion
+        private float pauseAlpha;
 
         #region Initialization
 
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
         public GameplayScreen(bool isStarted)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -71,7 +35,7 @@ namespace MetroDigger
         {
             if (b)
             {
-                GameManager.AddScreen(new PauseMenuScreen());
+                LoadingScreen.Load(GameManager, false, null, new GameplayScreen(false), new StartScreen());
             }
             _level = new Level(8,8, true);
             _level.LevelAccomplished += OnLevelAccomplished;
@@ -83,19 +47,6 @@ namespace MetroDigger
         /// </summary>
         public override void LoadContent()
         {
-            if (content == null)
-                content = new ContentManager(GameManager.Game.Services, "Content");
-
-            gameFont = content.Load<SpriteFont>("gamefont");
-
-            // A real game would probably have more content than this sample, so
-            // it would take longer to load. We simulate that by delaying for a
-            // while, giving you a chance to admire the beautiful loading screen.
-            Thread.Sleep(1000);
-
-            // once the load has finished, we use ResetElapsedTime to tell the game's
-            // timing mechanism that we have just finished a very long frame, and that
-            // it should not try to catch up.
             GameManager.Game.ResetElapsedTime();
         }
 
@@ -105,7 +56,7 @@ namespace MetroDigger
         /// </summary>
         public override void UnloadContent()
         {
-            content.Unload();
+            
         }
 
 
@@ -119,12 +70,10 @@ namespace MetroDigger
         /// property, so the game will stop updating when the pause menu is active,
         /// or if you tab away to a different application.
         /// </summary>
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
-                                                       bool coveredByOtherScreen)
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
-            // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
             else
@@ -132,98 +81,31 @@ namespace MetroDigger
 
             if (IsActive)
             {
-                // Apply some random jitter to make the enemy move around.
-                const float randomization = 10;
-
-                enemyPosition.X += (float)(random.NextDouble() - 0.5) * randomization;
-                enemyPosition.Y += (float)(random.NextDouble() - 0.5) * randomization;
-
-                // Apply a stabilizing force to stop the enemy moving off the screen.
-                Vector2 targetPosition = new Vector2(
-                    GameManager.GraphicsDevice.Viewport.Width / 2 - gameFont.MeasureString("Insert Gameplay Here").X / 2, 
-                    200);
-
-                enemyPosition = Vector2.Lerp(enemyPosition, targetPosition, 0.05f);
-
-                _textRegistrator.Update(gameTime.TotalGameTime.TotalSeconds);
-
                 _level.Update(gameTime);
             }
         }
 
-
-        /// <summary>
-        /// Lets the game respond to player input. Unlike the Update method,
-        /// this will only be called when the gameplay screen is active.
-        /// </summary>
         public override void HandleInput(InputHandler input)
         {
             if (input == null)
                 throw new ArgumentNullException("input");
 
-            KeyboardState keyboardState = input.CurrentKeyboardState;
-
-            // The game pauses either if the user presses the pause button, or if
-            // they unplug the active gamepad. This requires us to keep track of
-            // whether a gamepad was ever plugged in, because we don't want to pause
-            // on PC if they are playing with a keyboard and have no gamepad at all!
-
             if (input.IsPauseGame())
             {
-                GameManager.AddScreen(new PauseMenuScreen());
-            }
-            else
-            {
-                // Otherwise move the player position.
-                Vector2 movement = Vector2.Zero;
-
-                if (keyboardState.IsKeyDown(Keys.Left))
-                    movement.X--;
-
-                if (keyboardState.IsKeyDown(Keys.Right))
-                    movement.X++;
-
-                if (keyboardState.IsKeyDown(Keys.Up))
-                    movement.Y--;
-
-                if (keyboardState.IsKeyDown(Keys.Down))
-                    movement.Y++;
-
-                if (movement.Length() > 1)
-                    movement.Normalize();
-
-                playerPosition += movement * 2;
-
-                _textRegistrator.Input(keyboardState.GetPressedKeys());
+                GameManager.AddScreen(new PauseMenu2());
             }
         }
 
-
-        /// <summary>
-        /// Draws the gameplay screen.
-        /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            // This game has a blue background. Why? Because!
-            GameManager.GraphicsDevice.Clear(ClearOptions.Target,
-                                               Color.CornflowerBlue, 0, 0);
-
-            // Our player and enemy are both actually just _text strings.
             SpriteBatch spriteBatch = GameManager.SpriteBatch;
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(gameFont, _textRegistrator.Output(), playerPosition, Color.Green);
-
-            spriteBatch.DrawString(gameFont, "Insert Gameplay Here",
-                                   enemyPosition, Color.DarkRed);
-
             _level.Draw(gameTime, spriteBatch);
-
 
             spriteBatch.End();
 
-            // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || pauseAlpha > 0)
             {
                 float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);

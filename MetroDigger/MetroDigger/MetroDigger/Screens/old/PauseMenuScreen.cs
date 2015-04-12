@@ -59,7 +59,7 @@ namespace MetroDigger.Screens
         /// </summary>
         void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e)
         {
-            LoadingScreen.Load(GameManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+            LoadingScreen.Load(GameManager, false, null, new BackgroundScreen(), new StartScreen());
         }
 
 

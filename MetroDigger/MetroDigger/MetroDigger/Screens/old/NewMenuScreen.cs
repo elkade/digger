@@ -1,4 +1,5 @@
 ﻿using System;
+using MetroDigger.Screens.MenuObjects;
 using XNA_GSM.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
@@ -76,7 +77,7 @@ namespace MetroDigger.Screens
         /// </summary>
         void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e)
         {
-            GameManager.AddScreen(new MainMenuScreen());
+            GameManager.AddScreen(new StartScreen());
         }
 
 
