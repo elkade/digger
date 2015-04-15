@@ -10,7 +10,7 @@ namespace MetroDigger.Gameplay.Drivers
 {
     internal class KeyboardDriver : Driver
     {
-        private InputHandler _im;
+        private readonly InputHandler _im;
         public KeyboardDriver(Vector2 unit, Tile[,] board)
             : base(unit, board)
         {
@@ -20,10 +20,14 @@ namespace MetroDigger.Gameplay.Drivers
         public override void UpdateMovement(MovementHandler mh, EntityState state)
         {
             bool wsad = GameOptions.Instance.Controls == Controls.Wsad;//to powinien ogarniac inputmanager
-            var dirVec = new Vector2(_im.Horizontal(wsad) * Unit.X, _im.Vertical(wsad) * Unit.Y);
+            Vector2 direction = new Vector2(_im.Horizontal(wsad), _im.Vertical(wsad));
+            var dirVec = new Vector2(direction.X * Unit.X, direction.Y * Unit.Y);
 
             if (_im.IsNewKeyPress(Keys.Space))
-                RaiseShoot();
+            {
+                if(state!=EntityState.Drilling)
+                    RaiseShoot();
+            }
 
             if (dirVec != Vector2.Zero)
             {
@@ -38,6 +42,7 @@ namespace MetroDigger.Gameplay.Drivers
                             RaiseMove(destTile);
                             break;
                         case Accessibility.Rock:
+                            RaiseTurn(direction);
                             break;
                         case Accessibility.Soil:
                             RaiseDrill(destTile);

@@ -14,7 +14,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
         public int Score = 0;
 
         public Miner(IDriver driver, Tile occupiedTile)
-            : base(driver, 5f)
+            : base(driver, 5f, occupiedTile, new Vector2(0,-1))
         {
             PowerCellCount = 0;
             HasDrill = false;

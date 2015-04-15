@@ -1,6 +1,7 @@
 ﻿using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Tiles;
+using Microsoft.Win32;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -21,14 +22,14 @@ namespace MetroDigger.Gameplay.Entities
 
         public float MoveSpeed { get { return _moveSpeed; } }
 
-        protected MovementHandler MovementHandler;
+        protected readonly MovementHandler MovementHandler;
 
         private EntityState _state;
         protected float _moveSpeed;
 
-        public DynamicEntity(IDriver driver)
+        public DynamicEntity(IDriver driver, Tile firstTile, Vector2 firstDirection)
         {
-            MovementHandler = new MovementHandler();
+            MovementHandler = new MovementHandler(firstTile, firstDirection);
             MovementHandler.Started += (handler, tile1, tile2) => State = EntityState.Moving;
             MovementHandler.Finished += (handler, tile1, tile2) =>
             {
@@ -68,7 +69,12 @@ namespace MetroDigger.Gameplay.Entities
                 return;
             MovementHandler.Update();
             Position = MovementHandler.Position;
-            Direction = MovementHandler.Direction;
+        }
+
+        public override Vector2 Direction
+        {
+            get { return MovementHandler.Direction; }
+            set { MovementHandler.Direction = value; }
         }
 
         protected float Angle = 0.0f;

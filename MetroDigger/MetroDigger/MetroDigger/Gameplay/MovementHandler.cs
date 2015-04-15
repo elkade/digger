@@ -8,11 +8,7 @@ namespace MetroDigger.Gameplay
     {
         private int _distance;
 
-        private Vector2 _endPoint;
-
         private Vector2 _direction;
-
-        private Vector2 _startPoint;
 
         private Vector2 _stepSize;
 
@@ -47,6 +43,7 @@ namespace MetroDigger.Gameplay
         public Vector2 Direction
         {
             get { return _direction; }
+            set { _direction = value; }
         }
 
         public bool IsMoving
@@ -55,17 +52,22 @@ namespace MetroDigger.Gameplay
             set { _isMoving = value; }
         }
 
+        public MovementHandler(Tile firstTile, Vector2 firstDirection)
+        {
+            _startTile = firstTile;
+            _direction = firstDirection;
+            _position = _startTile.Position;
+        }
+
         public void MakeMove(Tile startTile, Tile endTile, float speed)
         {
             _startTile = startTile;
             _endTile = endTile;
-            _startPoint = startTile.Position;
-            _endPoint = endTile.Position;
-            Vector2 route = _endPoint - _startPoint;
+            Vector2 route = _endTile.Position - _startTile.Position;
             _direction = Vector2.Normalize(route);
             _distance = (int)(route.Length() / speed);
             _stepCount = 0;
-            _position = _startPoint;
+            _position = _startTile.Position;
             _halfWay = _distance/2;
             _stepSize = Direction * speed;
             _isMoving = true;
@@ -77,8 +79,11 @@ namespace MetroDigger.Gameplay
         {
             if (_stepCount == _distance)
             {
-                if(Finished!=null)
+                if (Finished != null)
+                {
                     Finished(this, _startTile, _endTile);
+                    _startTile = _endTile;
+                }
                 _isMoving = false;
             }
             else

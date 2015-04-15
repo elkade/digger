@@ -117,6 +117,8 @@ namespace MetroDigger.Utils
             };
             plain.RegisterPlayer(player);
 
+            plain.RegisterEnemies();
+
             #endregion
 
             return plain;

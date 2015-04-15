@@ -1,7 +1,4 @@
-﻿using MetroDigger;
-using XNA_GSM.Utils;
-
-namespace XNA_GSM.Screens.MenuObjects
+﻿namespace XNA_GSM.Screens.MenuObjects
 {
     class MenuCheckField : MenuObject
     {

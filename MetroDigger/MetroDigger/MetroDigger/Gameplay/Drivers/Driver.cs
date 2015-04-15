@@ -31,6 +31,13 @@ namespace MetroDigger.Gameplay.Drivers
         public event Action Shoot;
         public event Action<Tile> Drill;
         public event Action<Tile> Move;
+        public event Action<Vector2> Turn;
+
+        protected void RaiseTurn(Vector2 direction)
+        {
+            if (Turn != null)
+                Turn(direction);
+        }
 
         protected void RaiseShoot()
         {

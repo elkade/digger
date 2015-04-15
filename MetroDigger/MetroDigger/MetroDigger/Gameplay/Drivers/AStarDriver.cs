@@ -21,7 +21,6 @@ namespace MetroDigger.Gameplay.Drivers
 
         public override void UpdateMovement(MovementHandler mh, EntityState state)
         {
-
             if (state == EntityState.Idle)
             {
                 var path = FindPath(Board, mh.StartTile, _chasedEntity.OccupiedTile);

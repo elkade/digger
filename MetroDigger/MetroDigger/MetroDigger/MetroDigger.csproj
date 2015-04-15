@@ -104,8 +104,8 @@
     <Compile Include="Screens\PauseMenu2.cs" />
     <Compile Include="Screens\RankingScreen.cs" />
     <Compile Include="Serialization\LevelDto.cs" />
-    <Compile Include="Utils\Animation.cs" />
-    <Compile Include="Utils\AnimationPlayer.cs" />
+    <Compile Include="Effects\Animation.cs" />
+    <Compile Include="Effects\AnimationPlayer.cs" />
     <Compile Include="Gameplay\Entities\Terrains\Free.cs" />
     <Compile Include="Gameplay\Entities\Terrains\Rock.cs" />
     <Compile Include="Gameplay\Entities\Terrains\Soil.cs" />
@@ -147,10 +147,9 @@
     <Compile Include="Manager\Settings\GameOptions.cs" />
     <Compile Include="Manager\Settings\UserData.cs" />
     <Compile Include="Manager\MediaManager.cs" />
-    <Compile Include="Utils\BindingProperty.cs" />
     <Compile Include="Serialization\IAssembler.cs" />
     <Compile Include="Serialization\LevelAssembler.cs" />
-    <Compile Include="Utils\TextRegistrator.cs" />
+    <Compile Include="Screens\MenuObjects\TextRegistrator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
@@ -186,7 +185,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Logging\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

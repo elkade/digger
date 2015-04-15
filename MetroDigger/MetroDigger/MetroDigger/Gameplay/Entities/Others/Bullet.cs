@@ -11,7 +11,7 @@ namespace MetroDigger.Gameplay.Entities.Others
     public class Bullet : DynamicEntity
     {
         private readonly Character _shooter;
-        public Bullet(IDriver driver, Character shooter) : base(driver)
+        public Bullet(IDriver driver, Character shooter) : base(driver, shooter.OccupiedTile, shooter.Direction)
         {
             _moveSpeed = shooter.MoveSpeed * 2;
             _occupiedTile = shooter.OccupiedTile;
@@ -25,7 +25,6 @@ namespace MetroDigger.Gameplay.Entities.Others
                 new Animation(grc.RedBullet[1], 1, false),
             };
             IsToRemove = false;
-            Direction.Normalize();
             MediaManager.Instance.PlaySound("laser");
             Sprite.PlayAnimation(Animations[1]);
 

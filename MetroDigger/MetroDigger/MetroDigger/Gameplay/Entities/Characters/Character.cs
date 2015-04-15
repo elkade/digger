@@ -3,6 +3,7 @@ using MetroDigger.Effects;
 using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Tiles;
+using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
@@ -10,13 +11,20 @@ namespace MetroDigger.Gameplay.Entities.Characters
     {
         private bool _hasDrill;
 
-        protected Character(IDriver driver, float moveSpeed) : base(driver)
+        protected Character(IDriver driver, float moveSpeed, Tile firstTile, Vector2 firstDirection)
+            : base(driver, firstTile, firstDirection)
         {
+            IsToRemove = false;
             _moveSpeed = moveSpeed;
             MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
             Driver.Drill += StartDrilling;
             Driver.Move += StartMoving;
             Driver.Shoot += StartShooting;
+            Driver.Turn += vector2 =>
+            {
+                MovementHandler.Direction = vector2;
+                Direction = vector2;
+            };
         }
 
         private void RaiseVisited(Tile tile1, Tile tile2)
@@ -53,6 +61,9 @@ namespace MetroDigger.Gameplay.Entities.Characters
                     Sprite.PlayAnimation(Animations[1]);
             }
         }
+
+        public bool IsToRemove { get; set; }
+
         public event Action<Character, Bullet> Shoot;
 
         protected void RaiseShoot()

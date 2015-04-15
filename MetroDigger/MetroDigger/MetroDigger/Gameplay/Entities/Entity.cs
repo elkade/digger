@@ -8,12 +8,17 @@ namespace MetroDigger.Gameplay.Entities
         protected Animation[] Animations;
 
         protected AnimationPlayer Sprite;
+        private Vector2 _direction;
 
-        public Vector2 Direction;
+        public virtual Vector2 Direction
+        {
+            get { return _direction; }
+            set { _direction = value; }
+        }
 
         protected Entity()
         {
-            Direction = new Vector2(1, 0);
+            _direction = new Vector2(1, 0);
             Sprite = new AnimationPlayer();
         }
 
