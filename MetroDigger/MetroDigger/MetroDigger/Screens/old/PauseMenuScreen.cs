@@ -48,7 +48,7 @@ namespace MetroDigger.Screens
 
             confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
 
-            GameManager.AddScreen(confirmQuitMessageBox);
+            ScreenManager.AddScreen(confirmQuitMessageBox);
         }
 
 
@@ -59,7 +59,7 @@ namespace MetroDigger.Screens
         /// </summary>
         void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e)
         {
-            LoadingScreen.Load(GameManager, false, null, new BackgroundScreen(), new StartScreen());
+            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new StartScreen());
         }
 
 

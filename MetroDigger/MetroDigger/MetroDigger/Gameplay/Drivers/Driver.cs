@@ -1,4 +1,5 @@
-﻿using MetroDigger.Gameplay.Entities;
+﻿using System;
+using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Tiles;
 using Microsoft.Xna.Framework;
 
@@ -6,20 +7,13 @@ namespace MetroDigger.Gameplay.Drivers
 {
     public abstract class Driver : IDriver
     {
-        private readonly DynamicEntity _entity;
         private readonly Vector2 _unit;
         private readonly Tile[,] _board;
 
-        public Driver(DynamicEntity entity, Vector2 unit ,Tile[,] board)
+        public Driver(Vector2 unit ,Tile[,] board)
         {
-            _entity = entity;
             _unit = unit;
             _board = board;
-        }
-
-        public DynamicEntity Entity
-        {
-            get { return _entity; }
         }
 
         public Vector2 Unit
@@ -32,7 +26,29 @@ namespace MetroDigger.Gameplay.Drivers
             get { return _board; }
         }
 
-        public abstract void UpdateMovement();
+        public abstract void UpdateMovement(MovementHandler mh, EntityState state);
+
+        public event Action Shoot;
+        public event Action<Tile> Drill;
+        public event Action<Tile> Move;
+
+        protected void RaiseShoot()
+        {
+            if (Shoot != null)
+                Shoot();
+        }
+
+        protected void RaiseDrill(Tile destination)
+        {
+            if (Drill != null)
+                Drill(destination);
+        }
+
+        protected void RaiseMove(Tile destination)
+        {
+            if (Move != null)
+                Move(destination);
+        }
 
         protected Tile PosToTile(Vector2 dirVec)
         {

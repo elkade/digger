@@ -1,5 +1,4 @@
-﻿using MetroDigger.Gameplay.Entities;
-using MetroDigger.Gameplay.Entities.Characters;
+﻿using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Entities.Tiles;
 using MetroDigger.Manager;
@@ -12,41 +11,39 @@ namespace MetroDigger.Gameplay.Drivers
     internal class KeyboardDriver : Driver
     {
         private InputHandler _im;
-        public KeyboardDriver(DynamicEntity entity, Vector2 unit, Tile[,] board)
-            : base(entity, unit, board)
+        public KeyboardDriver(Vector2 unit, Tile[,] board)
+            : base(unit, board)
         {
             _im = InputHandler.Instance;
         }
 
-        public override void UpdateMovement()
+        public override void UpdateMovement(MovementHandler mh, EntityState state)
         {
             bool wsad = GameOptions.Instance.Controls == Controls.Wsad;//to powinien ogarniac inputmanager
             var dirVec = new Vector2(_im.Horizontal(wsad) * Unit.X, _im.Vertical(wsad) * Unit.Y);
 
             if (_im.IsNewKeyPress(Keys.Space))
-                Entity.StartShooting();
+                RaiseShoot();
 
             if (dirVec != Vector2.Zero)
             {
-                Tile destTile = PosToTile(dirVec + Entity.Position);
-                if (destTile != null && Entity.State == EntityState.Idle)
+                Tile destTile = PosToTile(dirVec + mh.Position);
+                if (destTile != null && state == EntityState.Idle)
                     switch (destTile.Accessibility)
                     {
                         case Accessibility.Free:
-                            Entity.StartMoving(destTile);
+                            RaiseMove(destTile);
                             break;
                         case Accessibility.Water:
-                            Entity.StartMoving(destTile);
+                            RaiseMove(destTile);
                             break;
                         case Accessibility.Rock:
                             break;
                         case Accessibility.Soil:
-                            Entity.StartDrilling(destTile);
+                            RaiseDrill(destTile);
                             break;
                     }
             }
-
-            Entity.Update();
         }
     }
 }

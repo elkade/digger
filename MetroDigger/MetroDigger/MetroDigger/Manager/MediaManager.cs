@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using MetroDigger.Manager.Settings;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Manager
 {
-    public class SoundManager
+    public class MediaManager
     {
         #region Singleton
-        public static SoundManager Instance{get { return _instance; }}
+        public static MediaManager Instance { get { return _instance; } }
 
-        private static readonly SoundManager _instance = new SoundManager();
+        private static readonly MediaManager _instance = new MediaManager();
         #endregion
 
-        private SoundManager()
+        private MediaManager()
         {
             _soundInfos = new List<SoundInfo>();
             _gameOptions = GameOptions.Instance;
+            DrillingPracticles = new List<Texture2D>();
+            RedBullet = new Texture2D[2];
         }
 
         private readonly GameOptions _gameOptions ;
@@ -53,7 +56,7 @@ namespace MetroDigger.Manager
             player.Play();
         }
 
-        public void Switch(bool b, SoundType soundType)
+        public void Switch(SoundType soundType)
         {
             var set = _soundInfos.Where(si => si.SoundType == soundType);
             foreach (var soundInfo in set)
@@ -77,6 +80,27 @@ namespace MetroDigger.Manager
             public string Name { get; set; }
             public SoundType SoundType { get; set; }
         }
+        #region Graphics
+        public Texture2D Free { get; set; }
+        public Texture2D Rock { get; set; }
+        public Texture2D Soil { get; set; }
+        public Texture2D PlayerIdle { get; set; }
+        public List<Texture2D> DrillingPracticles { get; set; }
+        public Texture2D MetroStation { get; set; }
+        public Texture2D MetroTunnel { get; set; }
+
+        public Texture2D PowerCell { get; set; }
+        public Texture2D Drill { get; set; }
+
+        public Texture2D[] RedBullet;
+
+        public SpriteFont Font { get; set; }
+        public Texture2D PlayerWithDrill { get; set; }
+        public Texture2D Miner { get; set; }
+        public Texture2D Ranger { get; set; }
+
+        #endregion
+
     }
 
     public enum SoundType

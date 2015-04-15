@@ -36,12 +36,12 @@ namespace MetroDigger.Screens
             musicMenuCheckField.Selected += (sender, args) =>
             {
                 GameOptions.Instance.IsMusicEnabled = ((MenuCheckField)sender).IsOn;
-                SoundManager.Instance.Switch(((MenuCheckField)sender).IsOn, SoundType.Music);
+                MediaManager.Instance.Switch(SoundType.Music);
             };
             soundEffectsMenuCheckField.Selected += (sender, args) =>
             {
                 GameOptions.Instance.IsSoundEnabled = ((MenuCheckField)sender).IsOn;
-                SoundManager.Instance.Switch(((MenuCheckField)sender).IsOn, SoundType.SoundEffect);
+                MediaManager.Instance.Switch(SoundType.SoundEffect);
             };
             back.Selected += OnCancel;
             

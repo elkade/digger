@@ -74,7 +74,6 @@
   <ItemGroup>
     <Compile Include="Effects\Particle.cs" />
     <Compile Include="Effects\ParticleEngine.cs" />
-    <Compile Include="Files\FileManager.cs" />
     <Compile Include="Gameplay\CollisionDetection\CircleDetector.cs" />
     <Compile Include="Gameplay\CollisionDetection\CollisionDetector.cs" />
     <Compile Include="Gameplay\CollisionDetection\ICollisionDetector.cs" />
@@ -98,12 +97,13 @@
     <Compile Include="Gameplay\IMovable.cs" />
     <Compile Include="Gameplay\IShooter.cs" />
     <Compile Include="Gameplay\MovementHandler.cs" />
-    <Compile Include="Manager\UserManager.cs" />
+    <Compile Include="Manager\GameManager.cs" />
     <Compile Include="Screens\LoadMenuScreen.cs" />
     <Compile Include="Screens\LogScreen.cs" />
     <Compile Include="Screens\NewGameScreen.cs" />
     <Compile Include="Screens\PauseMenu2.cs" />
     <Compile Include="Screens\RankingScreen.cs" />
+    <Compile Include="Serialization\LevelDto.cs" />
     <Compile Include="Utils\Animation.cs" />
     <Compile Include="Utils\AnimationPlayer.cs" />
     <Compile Include="Gameplay\Entities\Terrains\Free.cs" />
@@ -122,7 +122,6 @@
     <Compile Include="Gameplay\TopBar.cs" />
     <Compile Include="Gameplay\Level.cs" />
     <Compile Include="Gameplay\Entities\Tiles\Tile.cs" />
-    <Compile Include="Manager\TextureManager.cs" />
     <Compile Include="MetroDiggerGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
@@ -144,11 +143,13 @@
     <Compile Include="Screens\OptionsMenuScreen.cs" />
     <Compile Include="Screens\old\PauseMenuScreen.cs" />
     <Compile Include="Screens\SaveMenuScreen.cs" />
-    <Compile Include="Manager\GameManager.cs" />
+    <Compile Include="Manager\ScreenManager.cs" />
     <Compile Include="Manager\Settings\GameOptions.cs" />
     <Compile Include="Manager\Settings\UserData.cs" />
-    <Compile Include="Manager\SoundManager.cs" />
+    <Compile Include="Manager\MediaManager.cs" />
     <Compile Include="Utils\BindingProperty.cs" />
+    <Compile Include="Serialization\IAssembler.cs" />
+    <Compile Include="Serialization\LevelAssembler.cs" />
     <Compile Include="Utils\TextRegistrator.cs" />
   </ItemGroup>
   <ItemGroup>

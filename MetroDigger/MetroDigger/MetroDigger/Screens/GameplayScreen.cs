@@ -1,7 +1,6 @@
 using System;
 using MetroDigger.Gameplay;
 using MetroDigger.Manager;
-using MetroDigger.Manager.Settings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,31 +13,52 @@ namespace MetroDigger.Screens
     /// </summary>
     class GameplayScreen : GameScreen
     {
-        private readonly GameOptions _gameGameOptions;
-
         private Level _level;
 
-        private float pauseAlpha;
+        private float _pauseAlpha;
 
         #region Initialization
 
-
-        public GameplayScreen(bool isStarted)
+        public GameplayScreen(Level level)//do wczytania levelu z save'a
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
-            _level = new Level(8, 8, isStarted);
+            _level = level;
+            _level.IsStarted = true;
             _level.LevelAccomplished += OnLevelAccomplished;
         }
 
-        private void OnLevelAccomplished(bool b)
+        public GameplayScreen()//do t³a
         {
-            if (b)
+            TransitionOnTime = TimeSpan.FromSeconds(1.5);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            int lvlNo = (new Random()).Next(0);
+            if (!GameManager.Instance.GetLevel(lvlNo, out _level))
             {
-                LoadingScreen.Load(GameManager, false, null, new GameplayScreen(false), new StartScreen());
+                _level.LevelAccomplished += OnLevelAccomplished;
+
             }
-            _level = new Level(8,8, true);
-            _level.LevelAccomplished += OnLevelAccomplished;
+        }
+
+        public GameplayScreen(int lvlNo)//do wczytania levelu o konkretnym numerze
+        {
+            TransitionOnTime = TimeSpan.FromSeconds(1.5);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            if (!GameManager.Instance.GetLevel(lvlNo, out _level))
+            {
+                _level.IsStarted = true;
+                _level.LevelAccomplished += OnLevelAccomplished;
+
+            }
+            else ;//osi¹gniêto max level
+        }
+
+        private void OnLevelAccomplished(Level level, bool b)
+        {
+            if (!GameManager.Instance.GetLevel(level.Number + 1, out _level))
+            {
+                _level.LevelAccomplished += OnLevelAccomplished;
+            }
         }
 
 
@@ -47,7 +67,7 @@ namespace MetroDigger.Screens
         /// </summary>
         public override void LoadContent()
         {
-            GameManager.Game.ResetElapsedTime();
+            ScreenManager.Game.ResetElapsedTime();
         }
 
 
@@ -75,9 +95,9 @@ namespace MetroDigger.Screens
             base.Update(gameTime, otherScreenHasFocus, false);
 
             if (coveredByOtherScreen)
-                pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
+                _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
             else
-                pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
+                _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
 
             if (IsActive)
             {
@@ -92,13 +112,14 @@ namespace MetroDigger.Screens
 
             if (input.IsPauseGame())
             {
-                GameManager.AddScreen(new PauseMenu2());
+                GameManager.Instance.SaveToMemory(_level);
+                ScreenManager.AddScreen(new PauseMenu2());
             }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            SpriteBatch spriteBatch = GameManager.SpriteBatch;
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
 
@@ -106,11 +127,11 @@ namespace MetroDigger.Screens
 
             spriteBatch.End();
 
-            if (TransitionPosition > 0 || pauseAlpha > 0)
+            if (TransitionPosition > 0 || _pauseAlpha > 0)
             {
-                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
+                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, _pauseAlpha / 2);
 
-                GameManager.FadeBackBufferToBlack(alpha);
+                ScreenManager.FadeBackBufferToBlack(alpha);
             }
 
         }

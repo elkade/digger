@@ -1,4 +1,5 @@
 ﻿using MetroDigger.Effects;
+using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Tiles;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
@@ -6,18 +7,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
-    public class Player : Character, ICollector, IShooter
+    public class Player : Character, ICollector
     {
-        private GraphicResourceContainer _grc;
+        private MediaManager _grc;
 
         public int Score = 0;
 
-        public Player(Tile occupiedTile)
-            : base(5f)
+        public Player(IDriver driver, Tile occupiedTile)
+            : base(driver, 5f)
         {
             PowerCellCount = 0;
             HasDrill = false;
-            _grc = GraphicResourceContainer.Instance;
+            _grc = MediaManager.Instance;
             Direction = new Vector2(0, 1);
             _occupiedTile = occupiedTile;
             Position = OccupiedTile.Position;
@@ -59,6 +60,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
 
         }
         public int PowerCellCount { get; set; }
+        public int LivesCount { get; set; }
     }
 
 }

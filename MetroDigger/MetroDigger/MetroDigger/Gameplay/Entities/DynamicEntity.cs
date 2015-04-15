@@ -1,4 +1,5 @@
-﻿using MetroDigger.Gameplay.Entities.Characters;
+﻿using MetroDigger.Gameplay.Drivers;
+using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,16 +11,22 @@ namespace MetroDigger.Gameplay.Entities
         public float Width { get { return Sprite.Animation.FrameWidth * Sprite.Animation.Scale; } }
         public float Height { get { return Sprite.Animation.FrameHeight * Sprite.Animation.Scale; } }
 
+        public IDriver Driver
+        {
+            get { return _driver; }
+            set { _driver = value; }
+        }
+
         public Vector2 Position;
 
-        protected float MoveSpeed { get { return _moveSpeed; } }
+        public float MoveSpeed { get { return _moveSpeed; } }
 
         protected MovementHandler MovementHandler;
 
         private EntityState _state;
         protected float _moveSpeed;
 
-        public DynamicEntity()
+        public DynamicEntity(IDriver driver)
         {
             MovementHandler = new MovementHandler();
             MovementHandler.Started += (handler, tile1, tile2) => State = EntityState.Moving;
@@ -28,6 +35,9 @@ namespace MetroDigger.Gameplay.Entities
                 _occupiedTile = tile2;
                 State = EntityState.Idle;
             };
+
+            _driver = driver;
+            _driver.Move += StartMoving;
         }
 
         public EntityState State
@@ -62,6 +72,7 @@ namespace MetroDigger.Gameplay.Entities
         }
 
         protected float Angle = 0.0f;
+        private IDriver _driver;
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -70,6 +81,7 @@ namespace MetroDigger.Gameplay.Entities
 
         public virtual void Update()
         {
+            Driver.UpdateMovement(MovementHandler,_state);
             Angle = GetAngle(Direction);
             UpdateMoving();
         }

@@ -1,4 +1,5 @@
 ﻿using MetroDigger.Effects;
+using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Tiles;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
@@ -8,16 +9,16 @@ namespace MetroDigger.Gameplay.Entities.Characters
 {
     public class Miner : Character, ICollector, IShooter
     {
-        private GraphicResourceContainer _grc;
+        private MediaManager _grc;
 
         public int Score = 0;
 
-        public Miner(Tile occupiedTile)
-            : base(5f)
+        public Miner(IDriver driver, Tile occupiedTile)
+            : base(driver, 5f)
         {
             PowerCellCount = 0;
             HasDrill = false;
-            _grc = GraphicResourceContainer.Instance;
+            _grc = MediaManager.Instance;
             Direction = new Vector2(0, 1);
             _occupiedTile = occupiedTile;
             Position = OccupiedTile.Position;

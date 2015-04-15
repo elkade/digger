@@ -17,20 +17,21 @@ namespace MetroDigger.Gameplay
     {
         private readonly int _width;
         private readonly int _height;
-        private readonly bool _isStarted;
-        private readonly Tile[,] _tiles;
+        private bool _isStarted;
+        public Tile[,] Tiles;
         private List<Character> _enemies;
-        private List<Driver> _bulletDrivers;
+        private List<Bullet> _bullets;
         private readonly TopBar _topBar;
-        private readonly Player _player;
+        private Player _player;
 
-        private readonly Driver _playerDriver;
+        private Driver _playerDriver;
 
         private readonly Driver _minerDriver;
 
         private readonly Miner _miner;
 
         private readonly CollisionDetector _collisionDetector;
+
 
         public int Width
         {
@@ -42,25 +43,80 @@ namespace MetroDigger.Gameplay
             get { return _height; }
         }
 
+        public Player Player
+        {
+            get { return _player; }
+        }
+
+
+        public bool IsStarted { get { return _isStarted; } set { _isStarted = value; }}
+        public int Number { get; set; }
+
+        #region LoadFromSave
+        public Level(int width, int height)
+        {
+            _stationsCount = 0;
+            _width = width;
+            _height = height;
+            _isStarted = false;
+            Tiles = new Tile[Width, Height];
+            _bullets = new List<Bullet>();
+            _topBar = new TopBar();
+            _collisionDetector = new RectangleDetector();
+        }
+
+        public void RegisterPlayer(Player p)
+        {
+            _player = p;
+            _playerDriver = new KeyboardDriver(Tile.Size, Tiles);
+            Player.Shoot += (sender, bullet) =>
+            {
+                bullet = new Bullet(new StraightDriver(Tile.Size, Tiles), sender);
+                bullet.Update();
+                bullet.Hit += (bullet1, tile) =>
+                {
+                    if (tile.Accessibility == Accessibility.Free)
+                        return;
+                    bullet1.IsToRemove = true;
+                    tile.Clear();//tu powinno zwrócić punkty
+                    //tu dodać punkty bonusowe
+                };
+                _bullets.Add(bullet);
+            };
+
+            Player.Visited += (character, tile1, tile2) =>
+            {
+                if (tile2.Item != null)
+                    if (character is ICollector)
+                        tile2.Item.GetCollected(character as ICollector);
+                tile2.Clear();
+            };
+
+            Player.Drilled += (character, tile) =>
+            {
+                tile.Clear();
+            };
+        }
+        #endregion
+
         public Level(int width, int height, bool isStarted)
         {
             _stationsCount = 0;
             _width = width;
             _height = height;
             _isStarted = isStarted;
-            _tiles = new Tile[Width, Height];
-            _bulletDrivers = new List<Driver>();
+            Tiles = new Tile[Width, Height];
+            _bullets = new List<Bullet>();
             InitMap();
             _topBar = new TopBar();
-            _player = new Player(_tiles[0, 0]);
+            _player = new Player(new KeyboardDriver(Tile.Size, Tiles), Tiles[0, 0]);
 
-            _miner = new Miner(_tiles[7, 2]);
-            _minerDriver = new AStarDriver(_miner, Tile.Size, _tiles, _player);
+            //_miner = new Miner(Tiles[7, 2]);
+            //_minerDriver = new AStarDriver(_miner, Tile.Size, Tiles, Player);
 
             _collisionDetector = new RectangleDetector();
 
             InitEvents();
-            _playerDriver = new KeyboardDriver(_player,Tile.Size,_tiles);
             InitEnemies();
         }
 
@@ -70,28 +126,28 @@ namespace MetroDigger.Gameplay
             if (!_isStarted)
                 return;
 
-            _playerDriver.UpdateMovement();
+            _player.Update();
 
-            foreach (var driver in _bulletDrivers)
+            foreach (var bullet in _bullets)
             {
-                driver.UpdateMovement();
+                bullet.Update();
             }
+            //if(_minerDriver!=null)
+            //_minerDriver.UpdateMovement();
 
-            _minerDriver.UpdateMovement();
+            _bullets.RemoveAll(bullet => bullet.IsToRemove);
 
-            _bulletDrivers.RemoveAll(driver => (driver.Entity as Bullet).ToRemove);//TODO TODO
+            _topBar.Update(Player.Score);
 
-            _topBar.Update(_player.Score);
-
-            foreach (var bd in _bulletDrivers)
+            foreach (var bullet in _bullets)
             {
-                if(_collisionDetector.CheckCollision(bd.Entity, _miner))
+                if (_collisionDetector.CheckCollision(bullet, _miner))
                 {
                     Debug.WriteLine("Miner Detected");
-                    (bd.Entity as Bullet).ToRemove = true;
+                    bullet.IsToRemove = true;
                 }
             }
-            if(_collisionDetector.CheckCollision(_player,_miner))
+            if(_collisionDetector.CheckCollision(Player,_miner))
                 Debug.WriteLine("Detected");
 
             CheckProgress();
@@ -99,8 +155,8 @@ namespace MetroDigger.Gameplay
 
         private void CheckProgress()
         {
-            if (_stationsCount == 0)
-                RaiseLevelAccomplished(true);
+            //if (_stationsCount == 0)//TODO
+            //    RaiseLevelAccomplished(true);
         }
 
         private void DrawTiles(GameTime gameTime, SpriteBatch spriteBatch)
@@ -109,18 +165,17 @@ namespace MetroDigger.Gameplay
             {
                 for (int x = 0; x < Width; ++x)
                 {
-                    _tiles[x, y].Draw(gameTime, spriteBatch);
+                    Tiles[x, y].Draw(gameTime, spriteBatch);
                 }
             }
         }
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawTiles(gameTime, spriteBatch);
-            _player.Draw(gameTime, spriteBatch);
-            foreach (var driver in _bulletDrivers)
-            {
-                driver.Entity.Draw(gameTime, spriteBatch);
-            }
+            Player.Draw(gameTime, spriteBatch);
+            foreach (var bullet in _bullets)
+                bullet.Draw(gameTime, spriteBatch);
+            if(_miner!=null)
             _miner.Draw(gameTime, spriteBatch);
             _topBar.Draw(spriteBatch);
         }
@@ -135,43 +190,43 @@ namespace MetroDigger.Gameplay
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    _tiles[i, j] = new Tile(i, j, new Soil());
+                    Tiles[i, j] = new Tile(i, j, new Soil());
                 }
             }
             for (int i = 1; i < Width - 1; i++)
             {
                 int j = 1;
-                _tiles[j, i] = new Tile(j, i, new Rock());
+                Tiles[j, i] = new Tile(j, i, new Rock());
             }
             for (int i = 1; i < Width; i++)
             {
                 int j = 2;
-                _tiles[j, i].Metro = new Tunnel();
+                Tiles[j, i].Metro = new Tunnel();
             }
-            _tiles[4, 4].Item = new Drill();
-            _tiles[5, 5].Item = new PowerCell();
-            _tiles[0, 6].Metro = new Station();
+            Tiles[4, 4].Item = new Drill();
+            Tiles[5, 5].Item = new PowerCell();
+            Tiles[0, 6].Metro = new Station();
             _stationsCount++;
-            _tiles[4, 6].Metro = new Station();
+            Tiles[4, 6].Metro = new Station();
             _stationsCount++;//TODO WTF
         }
 
         private void InitEvents()
         {
-            _player.Shoot += (sender, bullet) =>
+            Player.Shoot += (sender, bullet) =>
             {
                 bullet.Hit += (bullet1, tile) =>
                 {
                     if (tile.Accessibility == Accessibility.Free)
                         return;
-                    bullet1.ToRemove = true;
+                    bullet1.IsToRemove = true;
                     tile.Clear();//tu powinno zwrócić punkty
                     //tu dodać punkty bonusowe
                 };
-                _bulletDrivers.Add(new StraightDriver(bullet,Tile.Size,_tiles));
+                _bullets.Add(bullet);
             };
 
-            _player.Visited += (character, tile1, tile2) =>
+            Player.Visited += (character, tile1, tile2) =>
             {
                 if (tile2.Item != null)
                     if (character is ICollector)
@@ -179,7 +234,7 @@ namespace MetroDigger.Gameplay
                 tile2.Clear();
             };
 
-            _player.Drilled += (character, tile) =>
+            Player.Drilled += (character, tile) =>
             {
                 tile.Clear();
             };
@@ -203,10 +258,10 @@ namespace MetroDigger.Gameplay
         private void RaiseLevelAccomplished(bool b)
         {
             if (LevelAccomplished != null)
-                LevelAccomplished(b);
+                LevelAccomplished(this, b);
         }
 
-        public event Action<bool> LevelAccomplished;
+        public event Action<Level, bool> LevelAccomplished;
 
         private int _stationsCount;
     }

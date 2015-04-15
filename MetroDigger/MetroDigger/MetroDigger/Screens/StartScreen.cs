@@ -11,13 +11,12 @@ namespace MetroDigger.Screens
             : base("MetroDigger")
         {
             MenuEntry newGameEntry = new MenuEntry("Play Game");
-            MenuEntry saveGameEntry = new MenuEntry("Save Game");
+            MenuLabel saveGameEntry = new MenuLabel("Save Game");
             MenuEntry loadGameEntry = new MenuEntry("Load Game");
             MenuEntry optionsEntry = new MenuEntry("Options");
             MenuEntry exitEntry = new MenuEntry("Exit");
 
             newGameEntry.Selected += NewGameSelected;
-            saveGameEntry.Selected += SaveGameSelected;
             loadGameEntry.Selected += LoadGameSelected;
             optionsEntry.Selected += OptionsSelected;
             exitEntry.Selected += OnCancel;
@@ -35,27 +34,22 @@ namespace MetroDigger.Screens
 
         void NewGameSelected(object sender, EventArgs e)
         {
-            LoadingScreen.Load(GameManager, true, new GameplayScreen(true));
-        }
-
-        void SaveGameSelected(object sender, EventArgs e)
-        {
-            GameManager.AddScreen(new SaveMenuScreen());
+            LoadingScreen.Load(ScreenManager, true, new GameplayScreen(0));
         }
 
         void LoadGameSelected(object sender, EventArgs e)
         {
-            GameManager.AddScreen(new LoadMenuScreen());
+            ScreenManager.AddScreen(new LoadMenuScreen());
         }
 
         void OptionsSelected(object sender, EventArgs e)
         {
-            GameManager.AddScreen(new OptionsMenuScreen());
+            ScreenManager.AddScreen(new OptionsMenuScreen());
         }
 
         protected override void OnCancel()
         {
-            GameManager.Game.Exit();
+            ScreenManager.Game.Exit();
         }
 
         #endregion

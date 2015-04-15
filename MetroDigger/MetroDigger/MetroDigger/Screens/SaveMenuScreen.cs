@@ -35,7 +35,7 @@ namespace MetroDigger.Screens
 
         void OkSelected(object sender, EventArgs e)
         {
-            UserManager.Instance.SaveGame(_textInput.Text);
+            GameManager.Instance.SaveGameToFile(_textInput.Text);
             OnCancel();
         }
         #endregion

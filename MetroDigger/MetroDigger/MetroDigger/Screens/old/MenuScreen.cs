@@ -167,7 +167,7 @@ namespace MetroDigger
                 MenuObject menuObject = _menuObjects[i];
                 
                 // each entry is to be centered horizontally
-                position.X = GameManager.GraphicsDevice.Viewport.Width / 2 - menuObject.GetWidth(this) / 2;
+                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuObject.GetWidth(this) / 2;
 
                 if (ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
@@ -217,9 +217,9 @@ namespace MetroDigger
         public override void Draw(GameTime gameTime)
         {
 
-            GraphicsDevice graphics = GameManager.GraphicsDevice;
-            SpriteBatch spriteBatch = GameManager.SpriteBatch;
-            SpriteFont font = GraphicResourceContainer.Instance.Font;
+            GraphicsDevice graphics = ScreenManager.GraphicsDevice;
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            SpriteFont font = MediaManager.Instance.Font;
 
             spriteBatch.Begin();
 

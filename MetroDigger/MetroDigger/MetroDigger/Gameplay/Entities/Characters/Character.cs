@@ -1,5 +1,6 @@
 ﻿using System;
 using MetroDigger.Effects;
+using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Tiles;
 
@@ -9,10 +10,13 @@ namespace MetroDigger.Gameplay.Entities.Characters
     {
         private bool _hasDrill;
 
-        protected Character(float moveSpeed) : base()
+        protected Character(IDriver driver, float moveSpeed) : base(driver)
         {
             _moveSpeed = moveSpeed;
             MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
+            Driver.Drill += StartDrilling;
+            Driver.Move += StartMoving;
+            Driver.Shoot += StartShooting;
         }
 
         private void RaiseVisited(Tile tile1, Tile tile2)
@@ -54,9 +58,8 @@ namespace MetroDigger.Gameplay.Entities.Characters
         protected void RaiseShoot()
         {
             //if (PowerCellCount <= 0) return;//TODO
-            Bullet bullet = new Bullet(this, Direction, Position, _moveSpeed * 2);
-            bullet.Update();
-            Shoot(this, bullet);
+
+            Shoot(this, null);//TODO
         }
         public override void StartShooting()
         {

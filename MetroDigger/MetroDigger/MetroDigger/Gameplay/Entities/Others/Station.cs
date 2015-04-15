@@ -10,7 +10,7 @@ namespace MetroDigger.Gameplay.Entities.Others
 
         public Station()
         {
-            var grc = GraphicResourceContainer.Instance;
+            var grc = MediaManager.Instance;
             Animations = new[] { new Animation(grc.MetroStation, 1, false) };
             Sprite.PlayAnimation(Animations[0]);
             //if (Created != null)

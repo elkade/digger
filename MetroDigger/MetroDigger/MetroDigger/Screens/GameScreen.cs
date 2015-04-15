@@ -155,13 +155,13 @@ namespace MetroDigger
         /// <summary>
         /// Gets the manager that this screen belongs to.
         /// </summary>
-        public GameManager GameManager
+        public ScreenManager ScreenManager
         {
-            get { return _gameManager; }
-            internal set { _gameManager = value; }
+            get { return screenManager; }
+            internal set { screenManager = value; }
         }
 
-        GameManager _gameManager;
+        ScreenManager screenManager;
 
         #endregion
 
@@ -203,7 +203,7 @@ namespace MetroDigger
                 if (!UpdateTransition(gameTime, transitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
-                    GameManager.RemoveScreen(this);
+                    ScreenManager.RemoveScreen(this);
                 }
             }
             else if (coveredByOtherScreen)
@@ -287,7 +287,7 @@ namespace MetroDigger
 
 
         /// <summary>
-        /// Tells the screen to go away. Unlike GameManager.RemoveScreen, which
+        /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which
         /// instantly kills the screen, this method respects the transition timings
         /// and will give the screen a chance to gradually transition off.
         /// </summary>
@@ -296,7 +296,7 @@ namespace MetroDigger
             if (TransitionOffTime == TimeSpan.Zero)
             {
                 // If the screen has a zero transition time, remove it immediately.
-                GameManager.RemoveScreen(this);
+                ScreenManager.RemoveScreen(this);
             }
             else
             {

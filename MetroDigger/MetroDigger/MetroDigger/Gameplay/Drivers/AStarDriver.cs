@@ -13,36 +13,35 @@ namespace MetroDigger.Gameplay.Drivers
     {
         private readonly DynamicEntity _chasedEntity;
 
-        public AStarDriver(DynamicEntity entity, Vector2 unit, Tile[,] board, DynamicEntity chasedEntity)
-            : base(entity, unit, board)
+        public AStarDriver(Vector2 unit, Tile[,] board, DynamicEntity chasedEntity)
+            : base(unit, board)
         {
             _chasedEntity = chasedEntity;
         }
 
-        public override void UpdateMovement()
+        public override void UpdateMovement(MovementHandler mh, EntityState state)
         {
 
-            if (Entity.State == EntityState.Idle)
+            if (state == EntityState.Idle)
             {
-                var path = FindPath(Board, Entity.OccupiedTile, _chasedEntity.OccupiedTile);
+                var path = FindPath(Board, mh.StartTile, _chasedEntity.OccupiedTile);
                 var destTile = path[0];
-                if(destTile!=null && destTile != Entity.OccupiedTile)
+                if(destTile!=null && destTile != mh.StartTile)
                     switch (destTile.Accessibility)
                     {
                         case Accessibility.Free:
-                            Entity.StartMoving(destTile);
+                            RaiseMove(destTile);
                             break;
                         case Accessibility.Water:
-                            Entity.StartMoving(destTile);
+                            RaiseMove(destTile);
                             break;
                         case Accessibility.Rock:
                             break;
                         case Accessibility.Soil:
-                            Entity.StartDrilling(destTile);
+                            RaiseDrill(destTile);
                             break;
                     }
             }
-            Entity.Update();
         }
 
         Tile[] FindPath(Tile[,] map, Tile s, Tile t)
@@ -109,5 +108,6 @@ namespace MetroDigger.Gameplay.Drivers
         {
             return Math.Abs(t1.X - t2.X) + Math.Abs(t1.Y - t2.Y);
         }
+
     }
 }

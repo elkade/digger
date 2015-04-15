@@ -35,27 +35,27 @@ namespace MetroDigger.Screens
 
         void NewGameSelected(object sender, EventArgs e)
         {
-            LoadingScreen.Load(GameManager, true, new GameplayScreen(true));
+            LoadingScreen.Load(ScreenManager, true, new GameplayScreen(0));
         }
 
         void SaveGameSelected(object sender, EventArgs e)
         {
-            GameManager.AddScreen(new OptionsMenuScreen());
+            ScreenManager.AddScreen(new SaveMenuScreen());
         }
 
         void LoadGameSelected(object sender, EventArgs e)
         {
-            GameManager.AddScreen(new OptionsMenuScreen());
+            ScreenManager.AddScreen(new LoadMenuScreen());
         }
 
         void OptionsSelected(object sender, EventArgs e)
         {
-            GameManager.AddScreen(new OptionsMenuScreen());
+            ScreenManager.AddScreen(new OptionsMenuScreen());
         }
 
         private void Exit(object sender, EventArgs e)
         {
-            GameManager.Game.Exit();
+            ScreenManager.Game.Exit();
         }
 
         #endregion

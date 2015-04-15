@@ -10,7 +10,7 @@ namespace MetroDigger.Gameplay.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            SpriteFont font = GraphicResourceContainer.Instance.Font;
+            SpriteFont font = MediaManager.Instance.Font;
 
             Vector2 origin = new Vector2(0, font.LineSpacing / 2f);
 

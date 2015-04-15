@@ -9,7 +9,7 @@ namespace MetroDigger.Gameplay.Entities.Others
     {
         public Drill()
         {
-            var grc = GraphicResourceContainer.Instance;
+            var grc = MediaManager.Instance;
             Animations = new[] { new Animation(grc.Drill, 1, false, 300) };
             Sprite.PlayAnimation(Animations[0]);
         }

@@ -34,13 +34,13 @@ namespace MetroDigger.Screens
 
         void StartEntrySelected(object sender, EventArgs e)
         {
-            UserManager.Instance.SignIn(_nameInput.Text);
-            GameManager.AddScreen(new StartScreen());
+            GameManager.Instance.SignIn(_nameInput.Text);
+            ScreenManager.AddScreen(new StartScreen());
         }
 
         protected override void OnCancel()
         {
-            GameManager.Game.Exit();
+            ScreenManager.Game.Exit();
         }
 
         #endregion

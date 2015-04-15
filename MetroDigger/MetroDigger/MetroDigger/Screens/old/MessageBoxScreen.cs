@@ -78,7 +78,7 @@ namespace MetroDigger
         /// </summary>
         public override void LoadContent()
         {
-            ContentManager content = GameManager.Game.Content;
+            ContentManager content = ScreenManager.Game.Content;
 
             gradientTexture = content.Load<Texture2D>("gradient");
         }
@@ -130,14 +130,14 @@ namespace MetroDigger
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            SpriteBatch spriteBatch = GameManager.SpriteBatch;
-            SpriteFont font = GraphicResourceContainer.Instance.Font;
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            SpriteFont font = MediaManager.Instance.Font;
 
             // Darken down any other screens that were drawn beneath the popup.
-            GameManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
+            ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 
             // Position the message _text in the viewport.
-            Viewport viewport = GameManager.GraphicsDevice.Viewport;
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
             Vector2 textSize = font.MeasureString(message);
             Vector2 textPosition = (viewportSize - textSize) / 2;

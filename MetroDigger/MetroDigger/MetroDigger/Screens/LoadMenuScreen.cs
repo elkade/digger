@@ -35,8 +35,8 @@ namespace MetroDigger.Screens
 
         void OkSelected(object sender, EventArgs e)
         {
-            UserManager.Instance.SaveGame(_textInput.Text);
-            OnCancel();
+            GameManager.Instance.LoadLevelFromFile(_textInput.Text);
+            LoadingScreen.Load(ScreenManager,false,new GameplayScreen(GameManager.Instance.LoadSavedLevelFromMemory()));
         }
         #endregion
     }

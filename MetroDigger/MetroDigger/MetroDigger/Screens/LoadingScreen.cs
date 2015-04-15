@@ -49,7 +49,7 @@ namespace MetroDigger
         /// The constructor is private: loading screens should
         /// be activated via the static Load method instead.
         /// </summary>
-        private LoadingScreen(GameManager _gameManager, bool loadingIsSlow,
+        private LoadingScreen(ScreenManager screenManager, bool loadingIsSlow,
                               GameScreen[] screensToLoad)
         {
             this.loadingIsSlow = loadingIsSlow;
@@ -62,18 +62,18 @@ namespace MetroDigger
         /// <summary>
         /// Activates the loading screen.
         /// </summary>
-        public static void Load(GameManager _gameManager, bool loadingIsSlow, params GameScreen[] screensToLoad)
+        public static void Load(ScreenManager screenManager, bool loadingIsSlow, params GameScreen[] screensToLoad)
         {
             // Tell all the current screens to transition off.
-            foreach (GameScreen screen in _gameManager.GetScreens())
+            foreach (GameScreen screen in screenManager.GetScreens())
                 screen.ExitScreen();
 
             // Create and activate the loading screen.
-            LoadingScreen loadingScreen = new LoadingScreen(_gameManager,
+            LoadingScreen loadingScreen = new LoadingScreen(screenManager,
                                                             loadingIsSlow,
                                                             screensToLoad);
 
-            _gameManager.AddScreen(loadingScreen);
+            screenManager.AddScreen(loadingScreen);
         }
 
 
@@ -94,20 +94,20 @@ namespace MetroDigger
             // off, it is time to actually perform the load.
             if (otherScreensAreGone)
             {
-                GameManager.RemoveScreen(this);
+                ScreenManager.RemoveScreen(this);
 
                 foreach (GameScreen screen in screensToLoad)
                 {
                     if (screen != null)
                     {
-                        GameManager.AddScreen(screen);
+                        ScreenManager.AddScreen(screen);
                     }
                 }
 
                 // Once the load has finished, we use ResetElapsedTime to tell
                 // the  game timing mechanism that we have just finished a very
                 // long frame, and that it should not try to catch up.
-                GameManager.Game.ResetElapsedTime();
+                ScreenManager.Game.ResetElapsedTime();
             }
         }
 
@@ -123,7 +123,7 @@ namespace MetroDigger
             // screens to be gone: in order for the transition to look good we must
             // have actually drawn a frame without them before we perform the load.
             if ((ScreenState == ScreenState.Active) &&
-                (GameManager.GetScreens().Length == 1))
+                (ScreenManager.GetScreens().Length == 1))
             {
                 otherScreensAreGone = true;
             }
@@ -136,13 +136,13 @@ namespace MetroDigger
             // to bother drawing the message.
             if (loadingIsSlow)
             {
-                SpriteBatch spriteBatch = GameManager.SpriteBatch;
-                SpriteFont font = GraphicResourceContainer.Instance.Font;
+                SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+                SpriteFont font = MediaManager.Instance.Font;
 
                 const string message = "Loading...";
 
                 // Position the _text in the viewport.
-                Viewport viewport = GameManager.GraphicsDevice.Viewport;
+                Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
                 Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
                 Vector2 textSize = font.MeasureString(message);
                 Vector2 textPosition = (viewportSize - textSize) / 2;

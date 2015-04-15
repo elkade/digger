@@ -66,7 +66,7 @@ namespace MetroDigger.Screens
 
             confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
 
-            GameManager.AddScreen(confirmQuitMessageBox);
+            ScreenManager.AddScreen(confirmQuitMessageBox);
         }
 
 
@@ -77,7 +77,7 @@ namespace MetroDigger.Screens
         /// </summary>
         void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e)
         {
-            GameManager.AddScreen(new StartScreen());
+            ScreenManager.AddScreen(new StartScreen());
         }
 
 
@@ -92,7 +92,7 @@ namespace MetroDigger.Screens
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, EventArgs e)
         {
-            LoadingScreen.Load(GameManager, true, new GameplayScreen(true));
+            LoadingScreen.Load(ScreenManager, true, new GameplayScreen(0));
         }
 
 
@@ -101,7 +101,7 @@ namespace MetroDigger.Screens
         /// </summary>
         void OptionsMenuEntrySelected(object sender, EventArgs e)
         {
-            GameManager.AddScreen(new OptionsMenuScreen());
+            ScreenManager.AddScreen(new OptionsMenuScreen());
         }
 
 
@@ -116,7 +116,7 @@ namespace MetroDigger.Screens
 
             confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
 
-            GameManager.AddScreen(confirmExitMessageBox);
+            ScreenManager.AddScreen(confirmExitMessageBox);
         }
 
 
@@ -126,7 +126,7 @@ namespace MetroDigger.Screens
         /// </summary>
         void ConfirmExitMessageBoxAccepted(object sender, EventArgs e)
         {
-            GameManager.Game.Exit();
+            ScreenManager.Game.Exit();
         }
 
 

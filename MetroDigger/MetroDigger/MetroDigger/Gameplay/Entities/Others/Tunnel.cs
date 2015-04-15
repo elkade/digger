@@ -8,7 +8,7 @@ namespace MetroDigger.Gameplay.Entities.Others
     {
         public Tunnel()
         {
-            var grc = GraphicResourceContainer.Instance;
+            var grc = MediaManager.Instance;
             Animations = new[] {new Animation(grc.MetroTunnel, 1, false)};
             Sprite.PlayAnimation(Animations[0]);
         }

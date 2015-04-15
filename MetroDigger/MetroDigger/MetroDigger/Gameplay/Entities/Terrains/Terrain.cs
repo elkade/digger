@@ -19,6 +19,7 @@
         Free = 0,
         Soil = 1,
         Water = 2,
-        Rock = 4
+        Rock = 4,
+        Buffer
     }
 }

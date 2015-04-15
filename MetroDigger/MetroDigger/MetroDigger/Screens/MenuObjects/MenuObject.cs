@@ -149,9 +149,9 @@ namespace XNA_GSM.Screens.MenuObjects
             color *= screen.TransitionAlpha;
 
             // Draw _text, centered on the middle of each line.
-            GameManager _gameManager = screen.GameManager;
-            SpriteBatch spriteBatch = _gameManager.SpriteBatch;
-            SpriteFont font = GraphicResourceContainer.Instance.Font;
+            ScreenManager screenManager = screen.ScreenManager;
+            SpriteBatch spriteBatch = screenManager.SpriteBatch;
+            SpriteFont font = MediaManager.Instance.Font;
 
             Vector2 origin = new Vector2(0, font.LineSpacing / 2);
 
@@ -165,7 +165,7 @@ namespace XNA_GSM.Screens.MenuObjects
         /// </summary>
         public virtual int GetHeight(MenuScreen screen)
         {
-            return GraphicResourceContainer.Instance.Font.LineSpacing;
+            return MediaManager.Instance.Font.LineSpacing;
         }
 
 
@@ -174,7 +174,7 @@ namespace XNA_GSM.Screens.MenuObjects
         /// </summary>
         public virtual int GetWidth(MenuScreen screen)
         {
-            return (int)GraphicResourceContainer.Instance.Font.MeasureString(Text).X;
+            return (int)MediaManager.Instance.Font.MeasureString(Text).X;
         }
 
 
