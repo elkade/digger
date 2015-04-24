@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using MetroDigger.Gameplay;
 using MetroDigger.Gameplay.Drivers;
@@ -107,6 +108,22 @@ namespace MetroDigger.Utils
                 }
                 plain.Tiles[item.Position.X, item.Position.Y].Terrain = terrain;
             }
+            #region items & metro
+            foreach (var item in dto.MetroStations)
+            {
+                plain.Tiles[item.Position.X, item.Position.Y].Metro = new Station();
+                plain.StationsCount++;
+            }
+            foreach (var item in dto.MetroTunnels)
+                plain.Tiles[item.Position.X, item.Position.Y].Metro = new Tunnel();
+            foreach (var item in dto.PowerCells)
+                plain.Tiles[item.Position.X, item.Position.Y].Item = new PowerCell();
+            foreach (var item in dto.Drills)
+                plain.Tiles[item.Position.X, item.Position.Y].Item = new Drill();
+            #endregion
+            #region Enemy
+
+            #endregion
             #region Player
 
             Player player = new Player(new KeyboardDriver(Tile.Size,plain.Tiles), plain.Tiles[dto.Player.Position.X, dto.Player.Position.Y])
@@ -119,15 +136,12 @@ namespace MetroDigger.Utils
 
             plain.RegisterEnemies();
 
+            plain.InitEvents();
+
             #endregion
 
             return plain;
         }
-        //private Position Discretize(float x, float y)
-        //{
-        //    int xx = (int)(x / Tile.Width);
-        //    int yy = (int)(y / Tile.Height);
-        //    return new Position {X = xx, Y = yy};
-        //}
+
     }
 }

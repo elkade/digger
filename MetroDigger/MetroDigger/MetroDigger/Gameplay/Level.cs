@@ -45,10 +45,12 @@ namespace MetroDigger.Gameplay
         public bool IsStarted { get { return _isStarted; } set { _isStarted = value; }}
         public int Number { get; set; }
 
+        public int StationsCount { get; set; }
+
         #region LoadFromSave
         public Level(int width, int height)
         {
-            _stationsCount = 0;
+            StationsCount = 0;
             _width = width;
             _height = height;
             _isStarted = false;
@@ -107,7 +109,7 @@ namespace MetroDigger.Gameplay
 
         public Level(int width, int height, bool isStarted)
         {
-            _stationsCount = 0;
+            StationsCount = 0;
             _width = width;
             _height = height;
             _isStarted = isStarted;
@@ -121,7 +123,6 @@ namespace MetroDigger.Gameplay
             //_minerDriver = new AStarDriver(_miner, Tile.Size, Tiles, Player);
 
             _collisionDetector = new RectangleDetector();
-
             InitEvents();
             InitEnemies();
         }
@@ -168,8 +169,8 @@ namespace MetroDigger.Gameplay
 
         private void CheckProgress()
         {
-            //if (_stationsCount == 0)//TODO
-            //    RaiseLevelAccomplished(true);
+            if (StationsCount == 0)//TODO
+                RaiseLevelAccomplished(true);
         }
 
         private void DrawTiles(GameTime gameTime, SpriteBatch spriteBatch)
@@ -219,56 +220,50 @@ namespace MetroDigger.Gameplay
             Tiles[4, 4].Item = new Drill();
             Tiles[5, 5].Item = new PowerCell();
             Tiles[0, 6].Metro = new Station();
-            _stationsCount++;
+            StationsCount++;
             Tiles[4, 6].Metro = new Station();
-            _stationsCount++;//TODO WTF
+            StationsCount++;//TODO WTF
         }
 
-        private void InitEvents()
+        public void InitEvents()
         {
-            Player.Shoot += (sender, bullet) =>
-            {
-                bullet.Hit += (bullet1, tile) =>
-                {
-                    if (tile.Accessibility == Accessibility.Free)
-                        return;
-                    bullet1.IsToRemove = true;
-                    tile.Clear();//tu powinno zwrócić punkty
-                    //tu dodać punkty bonusowe
-                };
-                _bullets.Add(bullet);
-            };
+            //Player.Shoot += (sender, bullet) =>
+            //{
+            //    bullet.Hit += (bullet1, tile) =>
+            //    {
+            //        if (tile.Accessibility == Accessibility.Free)
+            //            return;
+            //        bullet1.IsToRemove = true;
+            //        tile.Clear();//tu powinno zwrócić punkty
+            //        //tu dodać punkty bonusowe
+            //    };
+            //    _bullets.Add(bullet);
+            //};
 
-            Player.Visited += (character, tile1, tile2) =>
-            {
-                if (tile2.Item != null)
-                    if (character is ICollector)
-                        tile2.Item.GetCollected(character as ICollector);
-                tile2.Clear();
-            };
+            //Player.Visited += (character, tile1, tile2) =>
+            //{
+            //    if (tile2.Item != null)
+            //        if (character is ICollector)
+            //            tile2.Item.GetCollected(character as ICollector);
+            //    tile2.Clear();
+            //};
 
-            Player.Drilled += (character, tile) =>
-            {
-                tile.Clear();
-            };
+            //Player.Drilled += (character, tile) =>
+            //{
+            //    tile.Clear();
+            //};
 
-            foreach (var enemy in _enemies)//TODO to jeswt nie tak
-            {
-                enemy.Drilled += (character, tile) => tile.Clear();
-            }
+            //foreach (var enemy in _enemies)//TODO to jeswt nie tak
+            //{
+            //    enemy.Drilled += (character, tile) => tile.Clear();
+            //}
 
-            //Station.Created += AddStation;
             Station.Cleared += RemoveStation;
-        }
-
-        void AddStation()
-        {
-            _stationsCount++;
         }
 
         void RemoveStation()
         {
-            _stationsCount--;
+            StationsCount--;
         }
 
         private void RaiseLevelAccomplished(bool b)
@@ -278,8 +273,6 @@ namespace MetroDigger.Gameplay
         }
 
         public event Action<Level, bool> LevelAccomplished;
-
-        private int _stationsCount;
     }
 
 }

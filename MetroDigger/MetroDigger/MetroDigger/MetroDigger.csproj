@@ -137,7 +137,7 @@
     <Compile Include="Screens\MenuObjects\MenuObject.cs" />
     <Compile Include="Screens\MenuObjects\MenuRadioField.cs" />
     <Compile Include="Screens\MenuObjects\MenuTextInput.cs" />
-    <Compile Include="Screens\old\MenuScreen.cs" />
+    <Compile Include="Screens\MenuScreen.cs" />
     <Compile Include="Screens\old\MessageBoxScreen.cs" />
     <Compile Include="Screens\old\NewMenuScreen.cs" />
     <Compile Include="Screens\OptionsMenuScreen.cs" />

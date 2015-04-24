@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities
 {
-    public abstract class DynamicEntity : Entity, IShooter, IDriller, IMovable
+    public abstract class DynamicEntity : Entity
     {
         public float Width { get { return Sprite.Animation.FrameWidth * Sprite.Animation.Scale; } }
         public float Height { get { return Sprite.Animation.FrameHeight * Sprite.Animation.Scale; } }

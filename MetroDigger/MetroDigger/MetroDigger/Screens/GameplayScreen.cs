@@ -55,9 +55,17 @@ namespace MetroDigger.Screens
 
         private void OnLevelAccomplished(Level level, bool b)
         {
-            if (!GameManager.Instance.GetLevel(level.Number + 1, out _level))
+            Level lvl;
+            if (!GameManager.Instance.GetLevel(level.Number + 1, out lvl))
             {
+                _level = lvl;
                 _level.LevelAccomplished += OnLevelAccomplished;
+            }
+            else
+            {
+                _level.IsStarted = false;
+                GameManager.Instance.AddToBestScores(_level.Player.Score);
+                LoadingScreen.Load(ScreenManager, false, new GameplayScreen(), new StartScreen(), new RankingScreen(_level.Player.Score));
             }
         }
 
@@ -76,7 +84,6 @@ namespace MetroDigger.Screens
         /// </summary>
         public override void UnloadContent()
         {
-            
         }
 
 
@@ -123,7 +130,8 @@ namespace MetroDigger.Screens
 
             spriteBatch.Begin();
 
-            _level.Draw(gameTime, spriteBatch);
+            if(_level!=null)
+                _level.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
 

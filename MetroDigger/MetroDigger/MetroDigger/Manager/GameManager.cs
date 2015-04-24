@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using MetroDigger.Gameplay;
@@ -82,5 +84,49 @@ namespace MetroDigger.Manager
             level.Player.LivesCount = bufLevel.Player.LivesCount;
             return b;
         }
+
+        public List<ScoreInfo> LoadBestScores()
+        {
+            List<ScoreInfo> bestScores;
+
+            XmlSerializer serializer = new XmlSerializer(typeof(List<ScoreInfo>));
+
+            if (!File.Exists(BestScoresFileName))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ScoreInfo>));
+                using (TextWriter writer = new StreamWriter(BestScoresFileName))
+                    xmlSerializer.Serialize(writer, new List<ScoreInfo>());
+            }
+
+            using (FileStream fs = new FileStream(BestScoresFileName, FileMode.Open))
+            {
+                XmlReader reader = XmlReader.Create(fs);
+                bestScores = (List<ScoreInfo>)serializer.Deserialize(reader);
+            }
+            return bestScores;
+        }
+
+        public void AddToBestScores(int scoreValue)
+        {
+            ScoreInfo score = new ScoreInfo {Score = scoreValue, Name = UserName};
+            var scores = LoadBestScores();
+            scores.Add(score);
+            Array.Sort(scores.ToArray(),(info, scoreInfo) => info.Score<scoreInfo.Score?-1:1);
+            while(scores.Count>10)
+                scores.RemoveAt(scores.Count-1);
+            XmlSerializer xmlSerializer = new XmlSerializer(scores.GetType());
+            using (TextWriter writer = new StreamWriter(BestScoresFileName))
+                xmlSerializer.Serialize(writer, scores);
+        }
+
+        public const string BestScoresFileName = "bestScores";
+
+        public const int SavedScoresCount = 10;
+    }
+
+    public class ScoreInfo
+    {
+        public int Score { get; set; }
+        public string Name { get; set; }
     }
 }
