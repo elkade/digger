@@ -98,6 +98,7 @@
     <Compile Include="Gameplay\IShooter.cs" />
     <Compile Include="Gameplay\MovementHandler.cs" />
     <Compile Include="Manager\GameManager.cs" />
+    <Compile Include="Screens\ChooseLevelScreen.cs" />
     <Compile Include="Screens\LoadMenuScreen.cs" />
     <Compile Include="Screens\LogScreen.cs" />
     <Compile Include="Screens\NewGameScreen.cs" />

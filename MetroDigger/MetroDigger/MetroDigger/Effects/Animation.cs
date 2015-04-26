@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay
 {
@@ -40,7 +41,7 @@ public class Animation
             set { IsLooping = value; }
         }
         bool isLooping;
-    private readonly float _scale;
+        private readonly Vector2 _scale;
 
     /// <summary>
         /// Gets the number of frames in the animation.
@@ -67,7 +68,7 @@ public class Animation
             get { return Texture.Height; }
         }
 
-    public float Scale
+        public Vector2 Scale
     {
         get { return _scale; }
     }
@@ -76,7 +77,7 @@ public class Animation
     /// <summary>
         /// Constructs a new animation with a predefined with.
         /// </summary>        
-        public Animation(Texture2D texture, float frameTime, bool isLooping, int frameWidth, float scale = 0.3f)
+        public Animation(Texture2D texture, float frameTime, bool isLooping, int frameWidth, Vector2 scale)
         {
             this.texture = texture;
             this.frameTime = frameTime;
@@ -87,16 +88,16 @@ public class Animation
             else if (frameWidth > 0)
                 this.FrameWidth = frameWidth;
         }
-        /// <summary>
-        /// Constructs a new animation with the width being the same as the height.
-        /// </summary>        
-        public Animation(Texture2D texture, float frameTime, bool isLooping, float scale = 0.3f)
-        {
-            this.texture = texture;
-            this.frameTime = frameTime;
-            this.isLooping = isLooping;
-            _scale = scale;
-            this.FrameWidth = texture.Height;
-        }
+        ///// <summary>
+        ///// Constructs a new animation with the width being the same as the height.
+        ///// </summary>        
+        //public Animation(Texture2D texture, float frameTime, bool isLooping, float scale)
+        //{
+        //    this.texture = texture;
+        //    this.frameTime = frameTime;
+        //    this.isLooping = isLooping;
+        //    _scale = scale;
+        //    this.
+        //}
     }
 }

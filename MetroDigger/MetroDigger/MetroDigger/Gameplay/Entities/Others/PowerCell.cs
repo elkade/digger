@@ -10,7 +10,7 @@ namespace MetroDigger.Gameplay.Entities.Others
         public PowerCell()
         {
             var grc = MediaManager.Instance;
-            Animations = new[] { new Animation(grc.PowerCell, 1, false, 300) };
+            Animations = new[] { new Animation(grc.PowerCell, 1, false, 300, MediaManager.Instance.Scale) };
             Sprite.PlayAnimation(Animations[0]);
         }
 

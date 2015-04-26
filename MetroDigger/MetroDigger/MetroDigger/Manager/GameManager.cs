@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using MetroDigger.Gameplay;
+using MetroDigger.Manager.Settings;
 using MetroDigger.Serialization;
 using MetroDigger.Utils;
 
@@ -20,16 +22,16 @@ namespace MetroDigger.Manager
         private GameManager()
         {
             _levelAssembler = new LevelAssembler();
-            _maxLevel = 1;
+            MaxLevel = 3;
         }
 
         private LevelDto _levelDto;
 
         private readonly IAssembler<Level,LevelDto> _levelAssembler;
 
-        private int _maxLevel;
-
         public string UserName { get; set; }
+
+        public int MaxLevel { get; set; }
 
         public void SignIn(string text)
         {
@@ -38,7 +40,7 @@ namespace MetroDigger.Manager
 
         public void SaveGameToFile(string text)
         {
-            text = Directory.GetCurrentDirectory() + "\\" + text + ".xml";
+            text = Directory.GetCurrentDirectory() + "\\" + text;
             if (File.Exists(text)) return;
             XmlSerializer xmlSerializer = new XmlSerializer(_levelDto.GetType());
             using (TextWriter writer = new StreamWriter(text))
@@ -47,9 +49,10 @@ namespace MetroDigger.Manager
 
         public void LoadLevelFromFile(string filename)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(LevelDto));
+            if (!File.Exists(filename)) return;
 
-            using (FileStream fs = new FileStream(filename+".xml", FileMode.Open))
+            XmlSerializer serializer = new XmlSerializer(typeof(LevelDto));
+            using (FileStream fs = new FileStream(filename, FileMode.Open))
             {
                 XmlReader reader = XmlReader.Create(fs);
                 _levelDto = (LevelDto) serializer.Deserialize(reader);
@@ -69,7 +72,7 @@ namespace MetroDigger.Manager
         public bool GetLevel(int lvlNo, out Level level)
         {
             level = null;
-            if (lvlNo == _maxLevel)
+            if (lvlNo == MaxLevel)
                 return true;
             LoadLevelFromFile("level_" + lvlNo);
             level = _levelAssembler.GetPlain(_levelDto);
@@ -78,10 +81,14 @@ namespace MetroDigger.Manager
 
         public bool NextLevel(ref Level level)
         {
-            Level bufLevel = level;
-            bool b = GetLevel(level.Number + 1, out level);
-            level.Player.Score = bufLevel.Player.Score;
-            level.Player.LivesCount = bufLevel.Player.LivesCount;
+            Level bufLevel;
+            bool b = GetLevel(level.Number + 1, out bufLevel);
+            if(!b)
+            {
+                bufLevel.Player.Score = level.Player.Score;
+                bufLevel.Player.LivesCount = level.Player.LivesCount;
+                level = bufLevel;
+            }
             return b;
         }
 
@@ -111,17 +118,65 @@ namespace MetroDigger.Manager
             ScoreInfo score = new ScoreInfo {Score = scoreValue, Name = UserName};
             var scores = LoadBestScores();
             scores.Add(score);
-            Array.Sort(scores.ToArray(),(info, scoreInfo) => info.Score<scoreInfo.Score?-1:1);
-            while(scores.Count>10)
-                scores.RemoveAt(scores.Count-1);
+            scores = scores.OrderByDescending((info => info.Score)).Take(SavedScoresCount).ToList();
             XmlSerializer xmlSerializer = new XmlSerializer(scores.GetType());
             using (TextWriter writer = new StreamWriter(BestScoresFileName))
                 xmlSerializer.Serialize(writer, scores);
         }
 
+        public UserData LoadUserData()
+        {
+            UserData userData;
+            string path = UserName+"_data";
+            if (!File.Exists(path))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(UserData));
+                using (TextWriter writer = new StreamWriter(path))
+                    xmlSerializer.Serialize(writer, new UserData(UserName,new List<UserLevel>{new UserLevel()}));
+            }
+
+            XmlSerializer serializer = new XmlSerializer(typeof(UserData));
+
+            using (FileStream fs = new FileStream(path, FileMode.Open))
+            {
+                XmlReader reader = XmlReader.Create(fs);
+                userData = (UserData)serializer.Deserialize(reader);
+            }
+            return userData;
+        }
+
         public const string BestScoresFileName = "bestScores";
 
         public const int SavedScoresCount = 10;
+
+        public int[] UnlockedLevels()
+        {
+            UserData userData = LoadUserData();
+            return userData.Levels.Where(ll=>ll.IsUnlocked).Select(l=>l.Number).ToArray();
+        }
+
+        public void SaveUserData(UserData userData)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(userData.GetType());
+            using (TextWriter writer = new StreamWriter(UserName + "_data"))
+                xmlSerializer.Serialize(writer, userData);
+        }
+
+        public void SaveAccomplishedLevel(int lvlNo, int score, int lives)
+        {
+            UserData userData = LoadUserData();
+            var lvl = userData.Levels.SingleOrDefault(l => l.Number == lvlNo);
+            if (lvl == null)
+            {
+                lvl = new UserLevel {Number = lvlNo};
+                userData.Levels.Add(lvl);
+            }
+            if (lvl.BestScore >= score && lvl.IsUnlocked) return;
+            lvl.BestScore = score;
+            lvl.IsUnlocked = true;
+            lvl.MaxLives = lives;
+            SaveUserData(userData);
+        }
     }
 
     public class ScoreInfo

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using MetroDigger.Gameplay.CollisionDetection;
@@ -8,23 +9,40 @@ using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Entities.Tiles;
 using MetroDigger.Gameplay.GameObjects;
+using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Buffer = MetroDigger.Gameplay.Entities.Terrains.Buffer;
 
 namespace MetroDigger.Gameplay
 {
-    class Level
+    internal class Level
     {
-        private readonly int _width;
+        private readonly List<Bullet> _bullets;
+        private readonly CollisionDetector _collisionDetector;
         private readonly int _height;
-        private bool _isStarted;
-        public Tile[,] Tiles;
-        private List<Character> _enemies = new List<Character>();
-        private List<Bullet> _bullets;
         private readonly TopBar _topBar;
+        private readonly int _width;
+        public List<Character> Enemies = new List<Character>();
+        public Board Board;
+        private bool _isStarted;
         private Player _player;
 
-        private readonly CollisionDetector _collisionDetector;
+        //public Level(int width, int height, bool isStarted)
+        //{
+        //    StationsCount = 0;
+        //    _width = width;
+        //    _height = height;
+        //    _isStarted = isStarted;
+        //    Board = new Tile[Width, Height];
+        //    _bullets = new List<Bullet>();
+        //    InitMap();
+        //    _topBar = new TopBar();
+        //    _player = new Player(new KeyboardDriver(Tile.Size, Board), Board[0, 0]);
+
+        //    _collisionDetector = new RectangleDetector();
+        //    InitEvents();
+        //}
 
         public int Width
         {
@@ -42,25 +60,33 @@ namespace MetroDigger.Gameplay
         }
 
 
-        public bool IsStarted { get { return _isStarted; } set { _isStarted = value; }}
+        public bool IsStarted
+        {
+            get { return _isStarted; }
+            set { _isStarted = value; }
+        }
+
         public int Number { get; set; }
 
-        public int StationsCount { get; set; }
+        public int StationsCount;
 
         #region LoadFromSave
+
         public Level(int width, int height)
         {
             StationsCount = 0;
             _width = width;
             _height = height;
+            float h = (float)MediaManager.Instance.Height / height;
+            float w = (float)MediaManager.Instance.Width / width;
+            float min = Math.Min(h, w);
+            Tile.Size = new Vector2(min, min);
+            MediaManager.Instance.Scale = new Vector2(min / 300, min / 300);
             _isStarted = false;
-            Tiles = new Tile[Width, Height];
+            Board = new Board(Width, Height);
             _bullets = new List<Bullet>();
             _topBar = new TopBar();
             _collisionDetector = new RectangleDetector();
-
-            //----------
-
         }
 
         public void RegisterPlayer(Player p)
@@ -68,15 +94,13 @@ namespace MetroDigger.Gameplay
             _player = p;
             Player.Shoot += (sender, bullet) =>
             {
-                bullet = new Bullet(new StraightDriver(Tile.Size, Tiles), sender);
+                bullet = new Bullet(new StraightDriver(Tile.Size, Board), sender);
                 bullet.Update();
                 bullet.Hit += (bullet1, tile) =>
                 {
-                    if (tile.Accessibility == Accessibility.Free)
-                        return;
-                    bullet1.IsToRemove = true;
-                    tile.Clear();//tu powinno zwrócić punkty
-                    //tu dodać punkty bonusowe
+                    bool b;
+                    Player.Score += tile.Clear(ref StationsCount, out b);
+                    bullet1.IsToRemove = b;
                 };
                 _bullets.Add(bullet);
             };
@@ -86,47 +110,25 @@ namespace MetroDigger.Gameplay
                 if (tile2.Item != null)
                     if (character is ICollector)
                         tile2.Item.GetCollected(character as ICollector);
-                tile2.Clear();
+                int score = tile2.Clear(ref StationsCount);
+                if (tile1.Metro is Tunnel && score>0)
+                    score += 50;
+                Player.Score += score;
             };
 
-            Player.Drilled += (character, tile) =>
-            {
-                tile.Clear();
-            };
+            Player.Drilled += (character, tile) => { /*tile.Clear();*/ };
+            Board.StartTile = Player.OccupiedTile;
         }
 
         public void RegisterEnemies()
         {
-            _enemies.Add(new Miner(new AStarDriver(Tile.Size, Tiles, Player), Tiles[7, 6]));
-
-            foreach (var enemy in _enemies)//TODO to jeswt nie tak
+            foreach (Character enemy in Enemies) //TODO to jeswt nie tak
             {
-                enemy.Drilled += (character, tile) => tile.Clear();
+                enemy.Drilled += (character, tile) => Player.Score += tile.Clear(ref StationsCount);
             }
-
         }
+
         #endregion
-
-        public Level(int width, int height, bool isStarted)
-        {
-            StationsCount = 0;
-            _width = width;
-            _height = height;
-            _isStarted = isStarted;
-            Tiles = new Tile[Width, Height];
-            _bullets = new List<Bullet>();
-            InitMap();
-            _topBar = new TopBar();
-            _player = new Player(new KeyboardDriver(Tile.Size, Tiles), Tiles[0, 0]);
-
-            //_miner = new Miner(Tiles[7, 2]);
-            //_minerDriver = new AStarDriver(_miner, Tile.Size, Tiles, Player);
-
-            _collisionDetector = new RectangleDetector();
-            InitEvents();
-            InitEnemies();
-        }
-
 
         public void Update(GameTime gameTime)
         {
@@ -135,42 +137,48 @@ namespace MetroDigger.Gameplay
 
             _player.Update();
 
-            foreach (var bullet in _bullets)
+            foreach (Bullet bullet in _bullets)
             {
                 bullet.Update();
             }
 
-            foreach (var enemy in _enemies)
+            foreach (Character enemy in Enemies)
             {
                 enemy.Update();
             }
 
             _bullets.RemoveAll(bullet => bullet.IsToRemove);
-            _enemies.RemoveAll(enemy => enemy.IsToRemove);
+            Enemies.RemoveAll(enemy => enemy.IsToRemove);
 
-            _topBar.Update(Player.Score);
-            foreach (var enemy in _enemies)
+            _topBar.Update(Player.LivesCount,Player.Score,Player.PowerCellCount);
+            foreach (Character enemy in Enemies)
             {
-                foreach (var bullet in _bullets)
+                foreach (Bullet bullet in _bullets)
                 {
                     if (_collisionDetector.CheckCollision(bullet, enemy))
                     {
                         Debug.WriteLine("Miner Detected");
                         bullet.IsToRemove = true;
                         enemy.IsToRemove = true;
+                        Player.Score += enemy.Value;
                     }
-
                 }
                 if (_collisionDetector.CheckCollision(Player, enemy))
+                {
                     Debug.WriteLine("Detected");
+                    Player.Reset(Board.StartTile);
+                    enemy.IsToRemove = true;
+                }
             }
             CheckProgress();
         }
 
         private void CheckProgress()
         {
-            if (StationsCount == 0)//TODO
+            if (StationsCount == 0)
                 RaiseLevelAccomplished(true);
+            if(Player.LivesCount==0)
+                RaiseLevelAccomplished(false);
         }
 
         private void DrawTiles(GameTime gameTime, SpriteBatch spriteBatch)
@@ -179,91 +187,48 @@ namespace MetroDigger.Gameplay
             {
                 for (int x = 0; x < Width; ++x)
                 {
-                    Tiles[x, y].Draw(gameTime, spriteBatch);
+                    Board[x, y].Draw(gameTime, spriteBatch);
                 }
             }
         }
+
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawTiles(gameTime, spriteBatch);
             Player.Draw(gameTime, spriteBatch);
-            foreach (var bullet in _bullets)
+            foreach (Bullet bullet in _bullets)
                 bullet.Draw(gameTime, spriteBatch);
-            foreach (var enemy in _enemies)
+            foreach (Character enemy in Enemies)
                 enemy.Draw(gameTime, spriteBatch);
             _topBar.Draw(spriteBatch);
         }
 
-        private void InitEnemies()
-        {
-            
-        }
+
         private void InitMap()
         {
             for (int i = 0; i < Width; i++)
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    Tiles[i, j] = new Tile(i, j, new Soil());
+                    Board[i, j] = new Tile(i, j, new Soil());
                 }
             }
             for (int i = 1; i < Width - 1; i++)
             {
                 int j = 1;
-                Tiles[j, i] = new Tile(j, i, new Rock());
+                Board[j, i] = new Tile(j, i, new Rock());
             }
             for (int i = 1; i < Width; i++)
             {
                 int j = 2;
-                Tiles[j, i].Metro = new Tunnel();
+                Board[j, i].Metro = new Tunnel();
             }
-            Tiles[4, 4].Item = new Drill();
-            Tiles[5, 5].Item = new PowerCell();
-            Tiles[0, 6].Metro = new Station();
+            Board[4, 4].Item = new Drill();
+            Board[5, 5].Item = new PowerCell();
+            Board[0, 6].Metro = new Station();
             StationsCount++;
-            Tiles[4, 6].Metro = new Station();
-            StationsCount++;//TODO WTF
-        }
-
-        public void InitEvents()
-        {
-            //Player.Shoot += (sender, bullet) =>
-            //{
-            //    bullet.Hit += (bullet1, tile) =>
-            //    {
-            //        if (tile.Accessibility == Accessibility.Free)
-            //            return;
-            //        bullet1.IsToRemove = true;
-            //        tile.Clear();//tu powinno zwrócić punkty
-            //        //tu dodać punkty bonusowe
-            //    };
-            //    _bullets.Add(bullet);
-            //};
-
-            //Player.Visited += (character, tile1, tile2) =>
-            //{
-            //    if (tile2.Item != null)
-            //        if (character is ICollector)
-            //            tile2.Item.GetCollected(character as ICollector);
-            //    tile2.Clear();
-            //};
-
-            //Player.Drilled += (character, tile) =>
-            //{
-            //    tile.Clear();
-            //};
-
-            //foreach (var enemy in _enemies)//TODO to jeswt nie tak
-            //{
-            //    enemy.Drilled += (character, tile) => tile.Clear();
-            //}
-
-            Station.Cleared += RemoveStation;
-        }
-
-        void RemoveStation()
-        {
-            StationsCount--;
+            Board[4, 6].Metro = new Station();
+            StationsCount++; //TODO WTF
         }
 
         private void RaiseLevelAccomplished(bool b)
@@ -275,4 +240,62 @@ namespace MetroDigger.Gameplay
         public event Action<Level, bool> LevelAccomplished;
     }
 
+    public class Board : IEnumerable<Tile>
+    {
+        private readonly int _width;
+        private readonly int _height;
+        private Tile[,] _tiles; 
+        public Board(int width, int height)
+        {
+            _width = width;
+            _height = height;
+            _tiles = new Tile[width+2,height+2];
+            for (int i = 0; i < width+2; i++)
+            {
+                for (int j = 0; j < height+2; j++)
+                {
+                    _tiles[i,j] = new Tile(i-1,j-1,new Buffer());
+                }
+            }
+        }
+        public Tile this[int x, int y]
+        {
+            get
+            {
+                if (x + 1 < 0 || x > _width || y + 1 < 0 || y > _height)
+                    return null;
+                return _tiles[x+1,y+1];
+            }
+            set
+            {
+               _tiles[x+1,y+1] = value;
+            }
+        }
+
+        public Tile StartTile
+        { get; set; }
+
+        public int GetLength(int p0)
+        {
+            if (p0 == 0)
+                return _width;
+            return _height;
+        }
+
+        public IEnumerator<Tile> GetEnumerator()
+        {
+            for (int i = 0; i < _width; i++)
+            {
+                for (int j = 0; j < _height; j++)
+                {
+                    yield return this[i, j];
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 }

@@ -11,7 +11,7 @@ namespace MetroDigger.Gameplay.Drivers
     internal class KeyboardDriver : Driver
     {
         private readonly InputHandler _im;
-        public KeyboardDriver(Vector2 unit, Tile[,] board)
+        public KeyboardDriver(Vector2 unit, Board board)
             : base(unit, board)
         {
             _im = InputHandler.Instance;
@@ -20,7 +20,13 @@ namespace MetroDigger.Gameplay.Drivers
         public override void UpdateMovement(MovementHandler mh, EntityState state)
         {
             bool wsad = GameOptions.Instance.Controls == Controls.Wsad;//to powinien ogarniac inputmanager
-            Vector2 direction = new Vector2(_im.Horizontal(wsad), _im.Vertical(wsad));
+            int x = _im.Horizontal(wsad);
+            int y = _im.Vertical(wsad);
+            Vector2 direction;
+            if((x!=0 && y==0)||(y!=0 && x==0))
+                direction = new Vector2(x, y);
+            else
+                direction = new Vector2(x, 0);
             var dirVec = new Vector2(direction.X * Unit.X, direction.Y * Unit.Y);
 
             if (_im.IsNewKeyPress(Keys.Space))

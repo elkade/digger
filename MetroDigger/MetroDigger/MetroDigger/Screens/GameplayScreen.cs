@@ -6,11 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Screens
 {
-    /// <summary>
-    /// This screen implements the actual game logic. It is just a
-    /// placeholder to get the idea across: you'll probably want to
-    /// put some more interesting gameplay in here!
-    /// </summary>
     class GameplayScreen : GameScreen
     {
         private Level _level;
@@ -32,7 +27,7 @@ namespace MetroDigger.Screens
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
-            int lvlNo = (new Random()).Next(0);
+            int lvlNo = (new Random()).Next(GameManager.Instance.MaxLevel);
             if (!GameManager.Instance.GetLevel(lvlNo, out _level))
             {
                 _level.LevelAccomplished += OnLevelAccomplished;
@@ -55,16 +50,16 @@ namespace MetroDigger.Screens
 
         private void OnLevelAccomplished(Level level, bool b)
         {
-            Level lvl;
-            if (!GameManager.Instance.GetLevel(level.Number + 1, out lvl))
+            if (!GameManager.Instance.NextLevel(ref _level))
             {
-                _level = lvl;
+                _level.IsStarted = true;
                 _level.LevelAccomplished += OnLevelAccomplished;
             }
             else
             {
                 _level.IsStarted = false;
                 GameManager.Instance.AddToBestScores(_level.Player.Score);
+                GameManager.Instance.SaveAccomplishedLevel(_level.Number,_level.Player.Score,_level.Player.LivesCount);
                 LoadingScreen.Load(ScreenManager, false, new GameplayScreen(), new StartScreen(), new RankingScreen(_level.Player.Score));
             }
         }

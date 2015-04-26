@@ -22,12 +22,14 @@ namespace MetroDigger
 
         public MetroDiggerGame()
         {
+            MediaManager.Instance.Width = 800;
+            MediaManager.Instance.Height = 700;
             Content.RootDirectory = "Content";
 
             _graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 700,
-                PreferredBackBufferHeight = 700
+                PreferredBackBufferWidth = MediaManager.Instance.Width,
+                PreferredBackBufferHeight = MediaManager.Instance.Height
             };
 
             screenManager = new ScreenManager(this);
@@ -77,6 +79,7 @@ namespace MetroDigger
             mm.MetroStation = Content.Load<Texture2D>("stacja");
 
             mm.Font = Content.Load<SpriteFont>("menufont");
+            mm.TopBarFont = Content.Load<SpriteFont>("gamefont");
 
             mm.PowerCell = Content.Load<Texture2D>("bateria");
             mm.Drill = Content.Load<Texture2D>("swider");

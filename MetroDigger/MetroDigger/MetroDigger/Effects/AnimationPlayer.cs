@@ -97,13 +97,9 @@ namespace MetroDigger.Gameplay
 
                 // Advance the frame index; looping or clamping as appropriate.
                 if (Animation.IsLooping)
-                {
-                    _frameIndex = (_frameIndex + 1) % Animation.FrameCount;
-                }
+                    _frameIndex = (_frameIndex + 1)%Animation.FrameCount;
                 else
-                {
-                    _frameIndex = Math.Min(_frameIndex + 1, Animation.FrameCount - 1);
-                }
+                    _frameIndex = 0;
             }
 
             // Calculate the source rectangle of the current frame.

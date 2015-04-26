@@ -2,8 +2,12 @@
 
 namespace MetroDigger.Manager.Settings
 {
-    class UserData
+    public class UserData
     {
+        public UserData()
+        {
+            
+        }
         private string _name;
         private List<UserLevel> _levels;
 
@@ -26,11 +30,23 @@ namespace MetroDigger.Manager.Settings
         }
     }
 
-    class UserLevel
+    public class UserLevel
     {
-        private int _number;
-        private int _bestScore;
-        private bool _isUnblocked;
-        private int _maxLives;
+
+        public UserLevel()
+        {
+            BestScore = 0;
+            IsUnlocked = true;
+            MaxLives = 2;
+            Number = 0;
+        }
+
+        public int Number { get; set; }
+
+        public int BestScore { get; set; }
+
+        public bool IsUnlocked { get; set; }
+
+        public int MaxLives { get; set; }
     }
 }

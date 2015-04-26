@@ -21,8 +21,8 @@ namespace MetroDigger.Gameplay.Entities.Others
             Direction = shooter.Direction;
             Animations = new[]
             {
-                new Animation(grc.RedBullet[0], 1, false),
-                new Animation(grc.RedBullet[1], 1, false),
+                new Animation(grc.RedBullet[0], 1f, false, 0, MediaManager.Instance.Scale),
+                new Animation(grc.RedBullet[1], 1f, false, 0, MediaManager.Instance.Scale),
             };
             IsToRemove = false;
             MediaManager.Instance.PlaySound("laser");
@@ -47,7 +47,7 @@ namespace MetroDigger.Gameplay.Entities.Others
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+            spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive);
             Sprite.Draw(gameTime, spriteBatch, Position, SpriteEffects.None, Color.White, Angle);
             spriteBatch.End();
             spriteBatch.Begin();

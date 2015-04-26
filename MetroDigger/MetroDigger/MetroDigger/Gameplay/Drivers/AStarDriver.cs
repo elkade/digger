@@ -13,37 +13,61 @@ namespace MetroDigger.Gameplay.Drivers
     {
         private readonly DynamicEntity _chasedEntity;
 
-        public AStarDriver(Vector2 unit, Tile[,] board, DynamicEntity chasedEntity)
+        public AStarDriver(Vector2 unit, Board board, DynamicEntity chasedEntity)
             : base(unit, board)
         {
             _chasedEntity = chasedEntity;
+            _nextUpdate = DateTime.Now;
         }
 
+        private DateTime _nextUpdate;
+
+        private Tile[] _path;
+        private int _i;
         public override void UpdateMovement(MovementHandler mh, EntityState state)
         {
             if (state == EntityState.Idle)
             {
-                var path = FindPath(Board, mh.StartTile, _chasedEntity.OccupiedTile);
-                var destTile = path[0];
-                if(destTile!=null && destTile != mh.StartTile)
-                    switch (destTile.Accessibility)
-                    {
-                        case Accessibility.Free:
-                            RaiseMove(destTile);
-                            break;
-                        case Accessibility.Water:
-                            RaiseMove(destTile);
-                            break;
-                        case Accessibility.Rock:
-                            break;
-                        case Accessibility.Soil:
-                            RaiseDrill(destTile);
-                            break;
-                    }
+                Tile destTile;
+                if (_nextUpdate<DateTime.Now)
+                {
+                    _nextUpdate = DateTime.Now + TimeSpan.FromSeconds( (new Random()).Next(2, 7));
+                    _path = FindPath(Board, mh.StartTile, _chasedEntity.OccupiedTile);
+                    _i = 0;
+                }
+                if (_i < _path.Length)
+                    destTile = _path[_i++];
+                else
+                    return;
+                if (destTile != null && destTile != mh.StartTile)
+                {
+                    if (AreNeighbours(destTile, mh.StartTile))
+                        //destTile = Board[mh.StartTile.X + (new Random()).Next(2) - 1, mh.StartTile.Y + (new Random()).Next(2) - 1];
+                        switch (destTile.Accessibility)
+                        {
+                            case Accessibility.Free:
+                                RaiseMove(destTile);
+                                break;
+                            case Accessibility.Water:
+                                RaiseMove(destTile);
+                                break;
+                            case Accessibility.Rock:
+                                break;
+                            case Accessibility.Soil:
+                                RaiseDrill(destTile);
+                                break;
+                        }
+                }
             }
         }
 
-        Tile[] FindPath(Tile[,] map, Tile s, Tile t)
+        private bool AreNeighbours(Tile destTile, Tile startTile)
+        {
+            return Math.Abs(destTile.X - startTile.X) <= 1 && Math.Abs(destTile.Y - startTile.Y) == 0 ||
+                   Math.Abs(destTile.X - startTile.X) <= 0 && Math.Abs(destTile.Y - startTile.Y) == 1;
+        }
+
+        Tile[] FindPath(Board map, Tile s, Tile t)
         {
             int m = map.GetLength(0);
             int n = map.GetLength(1);
@@ -97,6 +121,10 @@ namespace MetroDigger.Gameplay.Drivers
         private int Weight(Tile tile1, Tile tile2)
         {
             if (tile2.Accessibility == Accessibility.Rock)
+                return Int16.MaxValue;
+            if (tile2.Accessibility == Accessibility.Buffer)
+                return Int16.MaxValue;
+            if (tile2 == Board.StartTile)
                 return Int16.MaxValue;
             if (tile2.Accessibility == Accessibility.Soil)
                 return 2;

@@ -17,13 +17,16 @@ namespace MetroDigger.Gameplay.Entities.Characters
             IsToRemove = false;
             _moveSpeed = moveSpeed;
             MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
-            Driver.Drill += StartDrilling;
+            Driver.Drill += tile =>
+            {
+                if (HasDrill) StartDrilling(tile);
+                else MovementHandler.Direction = Vector2.Normalize(tile.Position - OccupiedTile.Position);
+            };
             Driver.Move += StartMoving;
             Driver.Shoot += StartShooting;
             Driver.Turn += vector2 =>
             {
                 MovementHandler.Direction = vector2;
-                Direction = vector2;
             };
         }
 
@@ -57,7 +60,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
             set
             {
                 _hasDrill = value;
-                if (_hasDrill)
+                if (_hasDrill && Animations != null)
                     Sprite.PlayAnimation(Animations[1]);
             }
         }

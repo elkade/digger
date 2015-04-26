@@ -11,6 +11,14 @@ namespace MetroDigger.Effects
         public Vector2 EmitterLocation { get; set; }
         private readonly List<Particle> _particles;
         private readonly List<Texture2D> _textures;
+        private readonly Color[] _colors =
+        {
+            new Color(0x66, 0x33, 0x00),
+            new Color(0x2B, 0x0E, 0x00),
+            new Color(0x29, 0x14, 0x00),
+            new Color(0x60, 0x20, 0x00),
+            new Color(0x14, 0x0A, 0x00)
+        };
 
         public ParticleEngine(List<Texture2D> textures, Vector2 location)
         {
@@ -49,10 +57,7 @@ namespace MetroDigger.Effects
                                     1f * (float)(_random.NextDouble() * 2 - 1));
             float angle = 0;
             float angularVelocity = 0.1f * (float)(_random.NextDouble() * 2 - 1);
-            Color color = new Color(
-                        (float)_random.NextDouble(),
-                        (float)_random.NextDouble(),
-                        (float)_random.NextDouble());
+            Color color = _colors[(new Random()).Next(_colors.Length-1)];
             float size = (float)_random.NextDouble();
             int ttl = 20 + _random.Next(40);
 

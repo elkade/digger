@@ -27,6 +27,7 @@ namespace MetroDigger.Gameplay
         public Tile StartTile
         {
             get { return _startTile; }
+            set { _startTile = value; }
         }
 
         public Tile EndTile
@@ -54,9 +55,20 @@ namespace MetroDigger.Gameplay
 
         public MovementHandler(Tile firstTile, Vector2 firstDirection)
         {
+            Reset(firstTile, firstDirection);
+        }
+
+        public void Reset(Tile firstTile, Vector2 firstDirection)
+        {
             _startTile = firstTile;
             _direction = firstDirection;
             _position = _startTile.Position;
+            _distance = 0;
+            _stepCount = 0;
+            _position = _startTile.Position;
+            _halfWay = 0;
+            _stepSize = Vector2.Zero;
+            _isMoving = false;
         }
 
         public void MakeMove(Tile startTile, Tile endTile, float speed)

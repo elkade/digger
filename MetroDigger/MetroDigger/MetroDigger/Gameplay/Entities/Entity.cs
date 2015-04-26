@@ -27,5 +27,6 @@ namespace MetroDigger.Gameplay.Entities
             return (float)(Math.Atan2(vector.Y, vector.X) - Math.PI/2);
         }
 
+        public int Value { get; set; }
     }
 }

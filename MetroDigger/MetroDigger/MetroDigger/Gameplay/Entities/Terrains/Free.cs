@@ -10,7 +10,7 @@ namespace MetroDigger.Gameplay.Entities.Terrains
         public Free()
         {
             var grc = MediaManager.Instance;
-            Animations = new[]{new Animation(grc.Free,1,false,300)};
+            Animations = new[]{new Animation(grc.Free,1,false,300, MediaManager.Instance.Scale)};
             Sprite.PlayAnimation(Animations[0]);
             _accessibility = Accessibility.Free;
         }

@@ -2,12 +2,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MetroDigger.Manager
 {
-    /// <summary>
-    /// Helper for reading input from keyboard, gamepad, and touch input. This class 
-    /// tracks both the current and previous state of the input devices, and implements 
-    /// query methods for high level input actions such as "move up through the menu"
-    /// or "pause the game".
-    /// </summary>
+
     public class InputHandler
     {
         #region Singleton
@@ -145,18 +140,18 @@ namespace MetroDigger.Manager
         public int Vertical(bool wsad = false)
         {
             int dir = 0;
-            if ((wsad && IsKeyPress(Keys.S)) || IsKeyPress(Keys.Down))
+            if ((wsad && IsKeyPress(Keys.S)) || (!wsad && IsKeyPress(Keys.Down)))
                 dir++;
-            if ((wsad && IsNewKeyPress(Keys.W)) || IsKeyPress(Keys.Up))
+            if ((wsad && IsKeyPress(Keys.W)) || (!wsad && IsKeyPress(Keys.Up)))
                 dir--;
             return dir;
         }
         public int Horizontal(bool wsad = false)
         {
             int dir = 0;
-            if ((wsad && IsKeyPress(Keys.A)) || IsKeyPress(Keys.Left))
+            if ((wsad && IsKeyPress(Keys.A)) || (!wsad && IsKeyPress(Keys.Left)))
                 dir--;
-            if ((wsad && IsKeyPress(Keys.D)) || IsKeyPress(Keys.Right))
+            if ((wsad && IsKeyPress(Keys.D)) || (!wsad && IsKeyPress(Keys.Right)))
                 dir++;
             return dir;
         }

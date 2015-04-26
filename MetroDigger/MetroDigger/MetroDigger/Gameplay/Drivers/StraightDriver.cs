@@ -6,7 +6,8 @@ namespace MetroDigger.Gameplay.Drivers
 {
     class StraightDriver : Driver
     {
-        public StraightDriver(Vector2 unit, Tile[,] board) : base(unit, board)
+        public StraightDriver(Vector2 unit, Board board)
+            : base(unit, board)
         {
         }
 

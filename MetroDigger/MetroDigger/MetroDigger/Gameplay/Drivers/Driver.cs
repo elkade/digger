@@ -8,9 +8,9 @@ namespace MetroDigger.Gameplay.Drivers
     public abstract class Driver : IDriver
     {
         private readonly Vector2 _unit;
-        private readonly Tile[,] _board;
+        private readonly Board _board;
 
-        public Driver(Vector2 unit ,Tile[,] board)
+        public Driver(Vector2 unit ,Board board)
         {
             _unit = unit;
             _board = board;
@@ -21,7 +21,7 @@ namespace MetroDigger.Gameplay.Drivers
             get { return _unit; }
         }
 
-        public Tile[,] Board
+        public Board Board
         {
             get { return _board; }
         }
@@ -59,12 +59,12 @@ namespace MetroDigger.Gameplay.Drivers
 
         protected Tile PosToTile(Vector2 dirVec)
         {
-            int x = (int)(dirVec.X / Tile.Width);
-            int y = (int)(dirVec.Y / Tile.Height);
+            int x = (int)Math.Floor(dirVec.X / Tile.Width);
+            int y = (int)Math.Floor(dirVec.Y / Tile.Height);
 
-            if (x < 0 || x >= _board.GetLength(0) || y < 0 || y >= _board.GetLength(1))
-                return null;
-            return _board[x, y];
+            //if (x < 0 || x >= _board.GetLength(0) || y < 0 || y >= _board.GetLength(1))
+            //    return null;
+            return _board[x,y];
         }
 
     }

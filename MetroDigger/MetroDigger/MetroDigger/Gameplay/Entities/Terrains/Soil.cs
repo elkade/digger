@@ -7,7 +7,7 @@ namespace MetroDigger.Gameplay.Entities.Terrains
         public Soil()
         {
             var grc = MediaManager.Instance;
-            Animations = new[] { new Animation(grc.Soil, 1, false, 300) };
+            Animations = new[] { new Animation(grc.Soil, 1, false, 300, MediaManager.Instance.Scale) };
             Sprite.PlayAnimation(Animations[0]);
             _accessibility = Accessibility.Soil;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MetroDigger.Manager.Settings;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -22,6 +23,9 @@ namespace MetroDigger.Manager
             DrillingPracticles = new List<Texture2D>();
             RedBullet = new Texture2D[2];
         }
+
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         private readonly GameOptions _gameOptions ;
 
@@ -95,9 +99,11 @@ namespace MetroDigger.Manager
         public Texture2D[] RedBullet;
 
         public SpriteFont Font { get; set; }
+        public SpriteFont TopBarFont { get; set; }
         public Texture2D PlayerWithDrill { get; set; }
         public Texture2D Miner { get; set; }
         public Texture2D Ranger { get; set; }
+        public Vector2 Scale { get; set; }
 
         #endregion
 

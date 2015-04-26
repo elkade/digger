@@ -9,9 +9,10 @@
             IsCleared = false;
         }
 
-        public virtual void Clear()
+        public virtual int Clear(ref int stationsCount)
         {
             IsCleared = true;
+            return 0;
         }
     }
 }

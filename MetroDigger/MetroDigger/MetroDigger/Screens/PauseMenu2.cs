@@ -14,19 +14,27 @@ namespace MetroDigger.Screens
             MenuEntry saveGameEntry = new MenuEntry("Save Game");
             MenuEntry loadGameEntry = new MenuEntry("Load Game");
             MenuEntry optionsEntry = new MenuEntry("Options");
+            MenuEntry rankingEntry = new MenuEntry("Options");
             MenuEntry exitEntry = new MenuEntry("Exit");
 
             newGameEntry.Selected += NewGameSelected;
             saveGameEntry.Selected += SaveGameSelected;
             loadGameEntry.Selected += LoadGameSelected;
             optionsEntry.Selected += OptionsSelected;
+            rankingEntry.Selected += RankingSelected;
             exitEntry.Selected += Exit;
 
             MenuObjects.Add(newGameEntry);
             MenuObjects.Add(saveGameEntry);
             MenuObjects.Add(loadGameEntry);
             MenuObjects.Add(optionsEntry);
+            MenuObjects.Add(rankingEntry);
             MenuObjects.Add(exitEntry);
+        }
+
+        private void RankingSelected(object sender, EventArgs e)
+        {
+            ScreenManager.AddScreen(new RankingScreen());
         }
 
         #endregion
@@ -35,7 +43,7 @@ namespace MetroDigger.Screens
 
         void NewGameSelected(object sender, EventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, new GameplayScreen(0));
+            ScreenManager.AddScreen( new ChooseLevelScreen());//GameplayScreen(0)
         }
 
         void SaveGameSelected(object sender, EventArgs e)

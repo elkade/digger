@@ -12,11 +12,12 @@ namespace MetroDigger.Screens
         private readonly MenuTextInput _nameInput;
         private readonly MenuEntry _startEntry;
         private readonly MenuEntry _exitEntry;
+        private const string firstText = "Type your name...";
 
         public LogScreen()
             : base("Type your name")
         {
-            _nameInput = new MenuTextInput("Type your name...");
+            _nameInput = new MenuTextInput(firstText);
             _startEntry = new MenuEntry("Submit");
             _exitEntry = new MenuEntry("Exit");
 
@@ -34,6 +35,8 @@ namespace MetroDigger.Screens
 
         void StartEntrySelected(object sender, EventArgs e)
         {
+            if (_nameInput.Text == firstText)
+                return;
             GameManager.Instance.SignIn(_nameInput.Text);
             ScreenManager.AddScreen(new StartScreen());
         }

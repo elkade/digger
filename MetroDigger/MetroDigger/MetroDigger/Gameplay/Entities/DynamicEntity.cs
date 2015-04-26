@@ -1,16 +1,15 @@
 ﻿using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Tiles;
-using Microsoft.Win32;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities
 {
     public abstract class DynamicEntity : Entity
-    {
-        public float Width { get { return Sprite.Animation.FrameWidth * Sprite.Animation.Scale; } }
-        public float Height { get { return Sprite.Animation.FrameHeight * Sprite.Animation.Scale; } }
+    {//todo to jest fatalnie
+        public float Width { get { return Sprite.Animation.FrameWidth * Sprite.Animation.Scale.X; } }
+        public float Height { get { return Sprite.Animation.FrameHeight * Sprite.Animation.Scale.Y; } }
 
         public IDriver Driver
         {
@@ -22,7 +21,7 @@ namespace MetroDigger.Gameplay.Entities
 
         public float MoveSpeed { get { return _moveSpeed; } }
 
-        protected readonly MovementHandler MovementHandler;
+        protected MovementHandler MovementHandler;
 
         private EntityState _state;
         protected float _moveSpeed;

@@ -14,14 +14,27 @@ namespace MetroDigger.Gameplay.Entities.Tiles
 
         public Metro Metro;
 
-        public void Clear()
+        public int Clear(ref int stationsCount, out bool isCollision)
         {
-            Terrain = new Free();
-            Item = null;
-            if(Metro!=null)
-                Metro.Clear();
+            isCollision = true;
+            if (Item == null && Accessibility == Accessibility.Free)
+                isCollision = false;
+            return Clear(ref stationsCount);
         }
+        public int Clear(ref int stationsCount)
+        {
+            int points = 0;
+            Item = null;
+            if (Metro != null)
+                points = Metro.Clear(ref stationsCount);
+            if (Accessibility == Accessibility.Free)
+                points *= 2;
+            else if (Accessibility == Accessibility.Water)
+                points *= 3;
 
+            Terrain = new Free();
+            return points;
+        }
         public virtual int Value
         {
             get { return _value; }

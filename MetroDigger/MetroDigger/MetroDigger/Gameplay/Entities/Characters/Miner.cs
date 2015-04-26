@@ -17,7 +17,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
             : base(driver, 5f, occupiedTile, new Vector2(0,-1))
         {
             PowerCellCount = 0;
-            HasDrill = false;
+            HasDrill = true;
             _grc = MediaManager.Instance;
             Direction = new Vector2(0, 1);
             _occupiedTile = occupiedTile;
@@ -25,12 +25,13 @@ namespace MetroDigger.Gameplay.Entities.Characters
             LoadContent();
             Sprite.PlayAnimation(Animations[0]);
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
+            Value = 500;
         }
         private void LoadContent()
         {
             Animations = new[]
             {
-                new Animation(_grc.Miner, 1f, true, 300),
+                new Animation(_grc.Miner, 1f, true, 300, MediaManager.Instance.Scale),
             };
             MovementHandler.Halved += (handler, tile1, tile2) =>
             {
