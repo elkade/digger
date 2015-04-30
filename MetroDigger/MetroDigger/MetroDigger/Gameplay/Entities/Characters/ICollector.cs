@@ -1,4 +1,5 @@
-﻿using MetroDigger.Gameplay.Entities.Others;
+﻿using System;
+using MetroDigger.Gameplay.Entities.Tiles;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
@@ -6,5 +7,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
     {
         bool HasDrill { get; set; }
         int PowerCellCount { get; set; }
+        event Action<ICollector, Tile, Tile> Visited;
+
     }
 }

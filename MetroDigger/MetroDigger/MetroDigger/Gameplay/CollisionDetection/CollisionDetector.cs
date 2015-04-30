@@ -4,6 +4,6 @@ namespace MetroDigger.Gameplay.CollisionDetection
 {
     public abstract class CollisionDetector : ICollisionDetector
     {
-        public abstract bool CheckCollision(DynamicEntity entity1, DynamicEntity entity2);
+        public abstract bool CheckCollision(IDynamicEntity entity1, IDynamicEntity entity2);
     }
 }

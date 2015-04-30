@@ -11,7 +11,7 @@ namespace MetroDigger.Gameplay.Drivers
         {
         }
 
-        public override void UpdateMovement(MovementHandler mh, EntityState state)
+        public override void UpdateMovement(IMover mh, EntityState state)
         {
             if (state == EntityState.Moving) return;
             var dirVec = new Vector2(mh.Direction.X * Unit.X, mh.Direction.Y * Unit.Y);

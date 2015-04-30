@@ -15,7 +15,7 @@ namespace MetroDigger.Gameplay.Drivers
             _gravityDirection = gravityDirection;
         }
 
-        public override void UpdateMovement(MovementHandler mh, EntityState state)
+        public override void UpdateMovement(IMover mh, EntityState state)
         {
             if (state == EntityState.Moving) return;
             if (state != EntityState.StartingMoving)

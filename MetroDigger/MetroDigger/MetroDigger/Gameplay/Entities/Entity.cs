@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities
 {
-    public abstract class Entity
+    public abstract class Entity : IDrawable
     {
         protected Animation[] Animations;
 
@@ -28,5 +29,9 @@ namespace MetroDigger.Gameplay.Entities
         }
 
         public int Value { get; set; }
+
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+        }
     }
 }

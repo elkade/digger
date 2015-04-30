@@ -4,7 +4,29 @@ using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay
 {
-    public class MovementHandler
+    public interface IMover
+    {
+        Tile StartTile { get; }
+
+        Tile EndTile { get; }
+
+        Vector2 Position { get; }
+
+        Vector2 Direction { get; set; }
+
+        bool IsMoving { get; }
+        
+        void Reset(Tile firstTile, Vector2 firstDirection);
+
+        void MakeMove(Tile startTile, Tile endTile, float speed);
+
+        void Update();
+
+        event Action<IMover,Tile,Tile> Started;
+        event Action<IMover, Tile, Tile> Halved;
+        event Action<IMover, Tile, Tile> Finished;
+    }
+    public class MovementHandler : IMover
     {
         private int _distance;
 
@@ -27,7 +49,6 @@ namespace MetroDigger.Gameplay
         public Tile StartTile
         {
             get { return _startTile; }
-            set { _startTile = value; }
         }
 
         public Tile EndTile
@@ -38,7 +59,6 @@ namespace MetroDigger.Gameplay
         public Vector2 Position
         {
             get { return _position; }
-            set { _position = value; }
         }
 
         public Vector2 Direction
@@ -50,7 +70,6 @@ namespace MetroDigger.Gameplay
         public bool IsMoving
         {
             get { return _isMoving; }
-            set { _isMoving = value; }
         }
 
         public MovementHandler(Tile firstTile, Vector2 firstDirection)
@@ -110,8 +129,8 @@ namespace MetroDigger.Gameplay
             }
         }
 
-        public event Action<MovementHandler,Tile,Tile> Started;
-        public event Action<MovementHandler, Tile, Tile> Halved;
-        public event Action<MovementHandler, Tile, Tile> Finished;
+        public event Action<IMover,Tile,Tile> Started;
+        public event Action<IMover, Tile, Tile> Halved;
+        public event Action<IMover, Tile, Tile> Finished;
     }
 }

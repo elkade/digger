@@ -1,5 +1,7 @@
-﻿using MetroDigger.Effects;
+﻿using System;
+using MetroDigger.Effects;
 using MetroDigger.Gameplay.Drivers;
+using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Tiles;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
@@ -7,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
-    public class Miner : Character, ICollector, IShooter
+    public class Miner : Character, ICollector, IDriller
     {
         private MediaManager _grc;
 
@@ -27,6 +29,8 @@ namespace MetroDigger.Gameplay.Entities.Characters
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
             Value = 500;
             Aggressiveness = Aggressiveness.Enemy;
+            MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
+
         }
         private void LoadContent()
         {
@@ -39,6 +43,14 @@ namespace MetroDigger.Gameplay.Entities.Characters
                 if (State == EntityState.Drilling)
                     RaiseDrilled(tile2);
             };
+        }
+
+        public event Action<IDriller, Tile> Drilled;
+
+        protected void RaiseDrilled(Tile tile)
+        {
+            if (Drilled != null)
+                Drilled(this, tile);
         }
 
         public override void Update()
@@ -54,12 +66,13 @@ namespace MetroDigger.Gameplay.Entities.Characters
                 ParticleEngine.Draw(spriteBatch);
             base.Draw(gameTime, spriteBatch);
         }
-        public override void StartShooting()
+        private void RaiseVisited(Tile tile1, Tile tile2)
         {
-            RaiseShoot();
-            PowerCellCount--;
-
+            if (Visited != null)
+                Visited(this, tile1, tile2);
         }
+        public event Action<ICollector, Tile, Tile> Visited;
+
 
         public int PowerCellCount { get; set; }
     }

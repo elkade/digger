@@ -6,25 +6,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities
 {
-    public abstract class DynamicEntity : Entity
-    {//todo to jest fatalnie
-        public float Width { get { return Sprite.Animation.FrameWidth * Sprite.Animation.Scale.X; } }
-        public float Height { get { return Sprite.Animation.FrameHeight * Sprite.Animation.Scale.Y; } }
 
-        public IDriver Driver
-        {
-            get { return _driver; }
-            set { _driver = value; }
-        }
+    public interface IDynamicEntity : IUpdateable, ICollideable, IDrawable
+    {
+    }
+    public abstract class DynamicEntity : Entity, IDynamicEntity
+    {
+//todo to jest fatalnie
 
-        public Vector2 Position;
+        protected float Angle = 0.0f;
+        protected IMover MovementHandler;
+        private IDriver _driver;
 
-        public float MoveSpeed { get { return _moveSpeed; } }
-
-        protected MovementHandler MovementHandler;
-
+        protected Tile _occupiedTile;
         private EntityState _state;
-        protected float _moveSpeed;
 
         public DynamicEntity(IDriver driver, Tile firstTile, Vector2 firstDirection)
         {
@@ -40,26 +35,88 @@ namespace MetroDigger.Gameplay.Entities
             _driver.Move += StartMoving;
         }
 
+        public IDriver Driver
+        {
+            get { return _driver; }
+        }
+
+
         public EntityState State
         {
             get { return _state; }
             set { _state = value; }
         }
 
+        public float Width
+        {
+            get { return Sprite.Animation.FrameWidth*Sprite.Animation.Scale.X; }
+        }
+
+        public float Height
+        {
+            get { return Sprite.Animation.FrameHeight*Sprite.Animation.Scale.Y; }
+        }
+
+        public Vector2 Position { get; set; }
+        public float MovementSpeed { get; set; }
+
+        public bool IsToRemove { get; set; }
+
+
         public Tile OccupiedTile
         {
             get { return _occupiedTile; }
         }
 
-        protected Tile _occupiedTile;
+        public override Vector2 Direction
+        {
+            get { return MovementHandler.Direction; }
+            set { MovementHandler.Direction = value; }
+        }
 
-        public abstract void StartShooting();
-        public abstract void StartDrilling(Tile destination);
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Sprite.Draw(gameTime, spriteBatch, Position, SpriteEffects.None, Color.White, Angle);
+        }
+
+        public virtual void Update()
+        {
+            Driver.UpdateMovement(MovementHandler, _state);
+            Angle = GetAngle(Direction);
+            UpdateMoving();
+        }
+
+
+        public virtual void CollideWith(ICollideable character)
+        {
+            switch (Aggressiveness)
+            {
+                case Aggressiveness.All:
+                    character.Harm();
+                    break;
+                case Aggressiveness.None:
+                    return;
+                case Aggressiveness.Player:
+                    return;
+                case Aggressiveness.Enemy:
+                    if (character.Aggressiveness == Aggressiveness.Player)
+                        character.Harm();
+                    return;
+            }
+        }
+
+        public Aggressiveness Aggressiveness { get; set; }
+
+        public virtual void Harm()
+        {
+            IsToRemove = true;
+        }
+
         public virtual void StartMoving(Tile destinationTile)
         {
             if (MovementHandler.IsMoving || destinationTile == null)
                 return;
-            MovementHandler.MakeMove(_occupiedTile, destinationTile, _moveSpeed);
+            MovementHandler.MakeMove(_occupiedTile, destinationTile, MovementSpeed);
         }
 
         protected void UpdateMoving()
@@ -69,28 +126,6 @@ namespace MetroDigger.Gameplay.Entities
             MovementHandler.Update();
             Position = MovementHandler.Position;
         }
-
-        public override Vector2 Direction
-        {
-            get { return MovementHandler.Direction; }
-            set { MovementHandler.Direction = value; }
-        }
-
-        protected float Angle = 0.0f;
-        private IDriver _driver;
-
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            Sprite.Draw(gameTime, spriteBatch, Position, SpriteEffects.None, Color.White, Angle);
-        }
-
-        public virtual void Update()
-        {
-            Driver.UpdateMovement(MovementHandler,_state);
-            Angle = GetAngle(Direction);
-            UpdateMoving();
-        }
-
-
     }
+
 }

@@ -10,9 +10,9 @@ namespace MetroDigger.Gameplay.Entities.Others
 {
     public class Bullet : Character
     {
-        private readonly Character _shooter;
-        public Bullet(IDriver driver, Character shooter)
-            : base(driver, shooter.MoveSpeed * 2, shooter.OccupiedTile, shooter.Direction)
+        private readonly IShooter _shooter;
+        public Bullet(IDriver driver, IShooter shooter)
+            : base(driver, shooter.MovementSpeed * 2, shooter.OccupiedTile, shooter.Direction)
         {
             _occupiedTile = shooter.OccupiedTile;
             _shooter = shooter;
@@ -38,7 +38,7 @@ namespace MetroDigger.Gameplay.Entities.Others
 
         public event Action<Bullet, Tile> Hit;
 
-        public Character Shooter
+        public IShooter Shooter
         {
             get { return _shooter; }
         }
@@ -52,15 +52,7 @@ namespace MetroDigger.Gameplay.Entities.Others
             spriteBatch.Begin();
         }
 
-        public override void StartShooting()
-        {
-        }
-
-        public override void StartDrilling(Tile destination)
-        {
-        }
-
-        public override void CollideWith(Character character)
+        public override void CollideWith(ICollideable character)
         {
             if (character == Shooter) return;
             character.Harm();

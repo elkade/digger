@@ -2,7 +2,7 @@
 
 namespace MetroDigger.Gameplay
 {
-    internal interface IMovable
+    public interface IMovable
     {
         void StartMoving(Tile destinationTile);
     }

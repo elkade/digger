@@ -17,7 +17,7 @@ namespace MetroDigger.Gameplay.Drivers
             _im = InputHandler.Instance;
         }
 
-        public override void UpdateMovement(MovementHandler mh, EntityState state)
+        public override void UpdateMovement(IMover mh, EntityState state)
         {
             bool wsad = GameOptions.Instance.Controls == Controls.Wsad;//to powinien ogarniac inputmanager
             int x = _im.Horizontal(wsad);

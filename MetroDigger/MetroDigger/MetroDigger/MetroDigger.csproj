@@ -85,6 +85,10 @@
     <Compile Include="Gameplay\Drivers\KeyboardDriver.cs" />
     <Compile Include="Gameplay\Drivers\StraightDriver.cs" />
     <Compile Include="Gameplay\Entities\DynamicEntity.cs" />
+    <Compile Include="Gameplay\Entities\IBoardObject.cs" />
+    <Compile Include="Gameplay\Entities\ICollideable.cs" />
+    <Compile Include="Gameplay\Entities\IDrawable.cs" />
+    <Compile Include="Gameplay\Entities\IUpdateable.cs" />
     <Compile Include="Gameplay\Entities\Others\Drill.cs" />
     <Compile Include="Gameplay\Entities\Others\Metro.cs" />
     <Compile Include="Gameplay\Entities\Others\PowerCell.cs" />
@@ -115,7 +119,6 @@
     <Compile Include="Gameplay\Entities\Terrains\Water.cs" />
     <Compile Include="Gameplay\Entities\Others\Bullet.cs" />
     <Compile Include="Gameplay\Entities\Characters\Character.cs" />
-    <Compile Include="Gameplay\Entities\Characters\Enemy.cs" />
     <Compile Include="Gameplay\Entities\Characters\Miner.cs" />
     <Compile Include="Gameplay\Entities\Characters\Ranger.cs" />
     <Compile Include="Gameplay\Entities\Entity.cs" />

@@ -1,13 +1,11 @@
-﻿using System.Security.Cryptography;
-using MetroDigger.Effects;
+﻿using MetroDigger.Effects;
 using MetroDigger.Gameplay.Drivers;
-using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Tiles;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MetroDigger.Gameplay.Entities.Others
+namespace MetroDigger.Gameplay.Entities.Characters
 {
     public class Stone : Character
     {
@@ -34,11 +32,6 @@ namespace MetroDigger.Gameplay.Entities.Others
             {
                 new Animation(_grc.Stone, 1f, true, 300, MediaManager.Instance.Scale),
             };
-            MovementHandler.Halved += (handler, tile1, tile2) =>
-            {
-                if (State == EntityState.Drilling)
-                    RaiseDrilled(tile2);
-            };
             MovementHandler.Finished += (handler, tile1, tile2) =>
             {
                 Aggressiveness = Aggressiveness.None;
@@ -58,10 +51,6 @@ namespace MetroDigger.Gameplay.Entities.Others
             Sprite.Draw(gameTime, spriteBatch, Position, SpriteEffects.None, Color.White);
 
         }
-        public override void StartShooting()
-        {
-
-        }
 
         public int PowerCellCount { get; set; }
         public override void StartMoving(Tile destinationTile)
@@ -71,10 +60,10 @@ namespace MetroDigger.Gameplay.Entities.Others
             base.StartMoving(destinationTile);
         }
 
-        public override void CollideWith(Character character)
+        public override void CollideWith(ICollideable character)
         {
             base.CollideWith(character);
-            if(!character.IsToRemove && character.OccupiedTile != OccupiedTile)//character przeżył kolizję więc podchodził od boku
+            if(character.OccupiedTile != OccupiedTile)//character przeżył kolizję więc podchodził od boku
                 Shift(character.Direction);
         }
 

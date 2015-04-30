@@ -24,7 +24,7 @@ namespace MetroDigger.Gameplay.Drivers
 
         private Tile[] _path;
         private int _i;
-        public override void UpdateMovement(MovementHandler mh, EntityState state)
+        public override void UpdateMovement(IMover mh, EntityState state)
         {
             if (state == EntityState.Idle)
             {

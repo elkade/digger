@@ -26,7 +26,7 @@ namespace MetroDigger.Gameplay.Drivers
             get { return _board; }
         }
 
-        public abstract void UpdateMovement(MovementHandler mh, EntityState state);
+        public abstract void UpdateMovement(IMover mh, EntityState state);
 
         public event Action Shoot;
         public event Action<Tile> Drill;

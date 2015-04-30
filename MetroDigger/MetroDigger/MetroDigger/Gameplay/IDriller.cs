@@ -1,9 +1,12 @@
-﻿using MetroDigger.Gameplay.Entities.Tiles;
+﻿using System;
+using MetroDigger.Gameplay.Entities.Tiles;
 
 namespace MetroDigger.Gameplay
 {
-    internal interface IDriller
+    public interface IDriller
     {
         void StartDrilling(Tile destination);
+
+        event Action<IDriller, Tile> Drilled;
     }
 }

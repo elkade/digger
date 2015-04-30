@@ -5,7 +5,7 @@ namespace MetroDigger.Gameplay.CollisionDetection
 {
     public class RectangleDetector : CollisionDetector
     {
-        public override bool CheckCollision(DynamicEntity entity1, DynamicEntity entity2)
+        public override bool CheckCollision(IDynamicEntity entity1, IDynamicEntity entity2)
         {
             if (entity1 == null || entity2 == null)
                 return false;

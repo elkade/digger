@@ -1,5 +1,7 @@
-﻿using MetroDigger.Effects;
+﻿using System;
+using MetroDigger.Effects;
 using MetroDigger.Gameplay.Drivers;
+using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Tiles;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
@@ -7,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
-    public class Player : Character, ICollector
+    public class Player : Character, ICollector, IDriller, IShooter
     {
         private MediaManager _grc;
 
@@ -29,6 +31,8 @@ namespace MetroDigger.Gameplay.Entities.Characters
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
             StartTile = _occupiedTile;
             Aggressiveness = Aggressiveness.Player;
+            MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
+            Driver.Shoot += RaiseShoot;
         }
         private void LoadContent()
         {
@@ -44,6 +48,23 @@ namespace MetroDigger.Gameplay.Entities.Characters
             };
         }
 
+
+        public event Action<IShooter, Bullet> Shoot;
+
+        private void RaiseShoot()
+        {
+            if (PowerCellCount <= 0) return;
+
+            Shoot(this, null); //TODO
+        }
+
+        public event Action<IDriller, Tile> Drilled;
+
+        protected void RaiseDrilled(Tile tile)
+        {
+            if (Drilled != null)
+                Drilled(this, tile);
+        }
         public override void Update()
         {
             ParticleEngine.EmitterLocation = Position;
@@ -57,7 +78,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
                 ParticleEngine.Draw(spriteBatch);
             base.Draw(gameTime, spriteBatch);
         }
-        public override void StartShooting()
+        public void StartShooting()
         {
             if (PowerCellCount <= 0) return;
             RaiseShoot();
@@ -90,6 +111,14 @@ namespace MetroDigger.Gameplay.Entities.Characters
         {
             Reset();
         }
+        private void RaiseVisited(Tile tile1, Tile tile2)
+        {
+            if (Visited != null)
+                Visited(this, tile1, tile2);
+        }
+        public event Action<ICollector, Tile, Tile> Visited;
+
+
     }
 
 }
