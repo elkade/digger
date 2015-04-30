@@ -54,7 +54,7 @@ namespace MetroDigger.Screens
             {
                 _level.IsStarted = false;
                 GameManager.Instance.AddToBestScores(_level.Player.Score);
-                GameManager.Instance.SaveAccomplishedLevel(_level.Number, _level.Player.Score, _level.Player.LivesCount);
+                GameManager.Instance.SaveAccomplishedLevel(_level.Number-1, _level.Player.Score, _level.Player.LivesCount);
                 LoadingScreen.Load(ScreenManager, false, new GameplayScreen(), new StartScreen(),
                     new RankingScreen(_level.Player.Score));
             }
@@ -62,14 +62,14 @@ namespace MetroDigger.Screens
             {
                 if (b)
                 {
-                    ScreenManager.AddScreen(new LevelAccomplishedScreen(true, _level.Number, _level.Player.Score));
+                    ScreenManager.AddScreen(new LevelAccomplishedScreen(true, _level.Number-1, _level.Player.Score));
                     _level.IsStarted = true;
                     _level.LevelAccomplished += OnLevelAccomplished;
                 }
                 else
                 {
                     LoadingScreen.Load(ScreenManager, false, this, new StartScreen(),
-                        new LevelAccomplishedScreen(false, _level.Number, _level.Player.Score));
+                        new LevelAccomplishedScreen(false, _level.Number-1, _level.Player.Score));
                 }
             }
         }

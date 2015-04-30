@@ -13,6 +13,8 @@ namespace MetroDigger.Gameplay.Entities.Characters
 
         private int _score;
 
+        private Tile StartTile;
+
         public Player(IDriver driver, Tile occupiedTile)
             : base(driver, 5f, occupiedTile, new Vector2(0,1))
         {
@@ -25,6 +27,8 @@ namespace MetroDigger.Gameplay.Entities.Characters
             LoadContent();
             Sprite.PlayAnimation(Animations[0]);
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
+            StartTile = _occupiedTile;
+            Aggressiveness = Aggressiveness.Player;
         }
         private void LoadContent()
         {
@@ -73,13 +77,18 @@ namespace MetroDigger.Gameplay.Entities.Characters
             }
         }
 
-        public void Reset(Tile startTile)
+        public void Reset()
         {
             LivesCount--;
             State = EntityState.Idle;
-            MovementHandler.Reset(startTile, new Vector2(0,1));
-            _occupiedTile = startTile;
-            Position = startTile.Position;
+            MovementHandler.Reset(StartTile, new Vector2(0,1));
+            _occupiedTile = StartTile;
+            Position = StartTile.Position;
+        }
+
+        public override void Harm()
+        {
+            Reset();
         }
     }
 

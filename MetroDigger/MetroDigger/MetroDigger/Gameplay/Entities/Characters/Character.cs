@@ -28,6 +28,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
             {
                 MovementHandler.Direction = vector2;
             };
+            Aggressiveness = Aggressiveness.None;
         }
 
         private void RaiseVisited(Tile tile1, Tile tile2)
@@ -81,12 +82,47 @@ namespace MetroDigger.Gameplay.Entities.Characters
         }
 
         public event Action<Character, Tile, Tile> Visited;
+
+
+        public virtual void CollideWith(Character character)
+        {
+            switch (Aggressiveness)
+            {
+                case Aggressiveness.All:
+                    character.Harm();
+                    break;
+                case Aggressiveness.None:
+                    return;
+                case Aggressiveness.Player:
+                    return;
+                case Aggressiveness.Enemy:
+                    if (character.Aggressiveness == Aggressiveness.Player)
+                        character.Harm();
+                    return;
+            }
+        }
+
+        public virtual void Harm()
+        {
+            IsToRemove = true;
+        }
+
+        public Aggressiveness Aggressiveness { get; set; }
+
     }
     public enum EntityState
     {
         Idle,
         Drilling,
-        Moving
+        Moving,
+        StartingMoving
     }
 
+    public enum Aggressiveness
+    {
+        None,
+        Player,
+        Enemy,
+        All
+    }
 }

@@ -103,6 +103,7 @@ namespace MetroDigger.Manager
         public Texture2D PlayerWithDrill { get; set; }
         public Texture2D Miner { get; set; }
         public Texture2D Ranger { get; set; }
+        public Texture2D Stone { get; set; }
         public Vector2 Scale { get; set; }
 
         #endregion

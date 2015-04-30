@@ -14,12 +14,18 @@ namespace MetroDigger.Serialization
         public List<EntityDto> MetroStations { get; set; }
         public List<EntityDto> MetroTunnels { get; set; }
         public List<MinerDto> Miners { get; set; }
+        public List<StoneDto> Stones { get; set; }
         public int Number { get; set; }
 
         //stone
         //bullet
         //miner
         //ranger
+    }
+
+    public class StoneDto : EntityDto
+    {
+        
     }
 
     public class MinerDto : EntityDto

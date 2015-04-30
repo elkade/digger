@@ -80,6 +80,7 @@
     <Compile Include="Gameplay\CollisionDetection\RectangleDetector.cs" />
     <Compile Include="Gameplay\Drivers\AStarDriver.cs" />
     <Compile Include="Gameplay\Drivers\Driver.cs" />
+    <Compile Include="Gameplay\Drivers\GravityDriver.cs" />
     <Compile Include="Gameplay\Drivers\IDriver.cs" />
     <Compile Include="Gameplay\Drivers\KeyboardDriver.cs" />
     <Compile Include="Gameplay\Drivers\StraightDriver.cs" />
@@ -120,7 +121,7 @@
     <Compile Include="Gameplay\Entities\Entity.cs" />
     <Compile Include="Gameplay\Entities\Characters\Player.cs" />
     <Compile Include="Gameplay\Entities\Others\Item.cs" />
-    <Compile Include="Gameplay\Entities\Others\Stone.cs" />
+    <Compile Include="Gameplay\Entities\Characters\Stone.cs" />
     <Compile Include="Gameplay\TopBar.cs" />
     <Compile Include="Gameplay\Level.cs" />
     <Compile Include="Gameplay\Entities\Tiles\Tile.cs" />

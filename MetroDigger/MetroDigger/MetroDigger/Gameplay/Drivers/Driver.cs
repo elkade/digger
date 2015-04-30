@@ -57,7 +57,7 @@ namespace MetroDigger.Gameplay.Drivers
                 Move(destination);
         }
 
-        protected Tile PosToTile(Vector2 dirVec)
+        public Tile PosToTile(Vector2 dirVec)
         {
             int x = (int)Math.Floor(dirVec.X / Tile.Width);
             int y = (int)Math.Floor(dirVec.Y / Tile.Height);

@@ -8,12 +8,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Others
 {
-    public class Bullet : DynamicEntity
+    public class Bullet : Character
     {
         private readonly Character _shooter;
-        public Bullet(IDriver driver, Character shooter) : base(driver, shooter.OccupiedTile, shooter.Direction)
+        public Bullet(IDriver driver, Character shooter)
+            : base(driver, shooter.MoveSpeed * 2, shooter.OccupiedTile, shooter.Direction)
         {
-            _moveSpeed = shooter.MoveSpeed * 2;
             _occupiedTile = shooter.OccupiedTile;
             _shooter = shooter;
             var grc = MediaManager.Instance;
@@ -33,6 +33,7 @@ namespace MetroDigger.Gameplay.Entities.Others
                 if (Hit != null)
                     Hit(this, tile2);
             };
+            Aggressiveness = Aggressiveness.All;
         }
 
         public event Action<Bullet, Tile> Hit;
@@ -41,8 +42,6 @@ namespace MetroDigger.Gameplay.Entities.Others
         {
             get { return _shooter; }
         }
-
-        public bool IsToRemove { get; set; }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -60,5 +59,20 @@ namespace MetroDigger.Gameplay.Entities.Others
         public override void StartDrilling(Tile destination)
         {
         }
+
+        public override void CollideWith(Character character)
+        {
+            if (character == Shooter) return;
+            character.Harm();
+            Harm();
+        }
+
+        public override void Update()
+        {
+            Driver.UpdateMovement(MovementHandler, State);
+            Angle = GetAngle(Direction);
+            UpdateMoving();
+        }
+
     }
 }

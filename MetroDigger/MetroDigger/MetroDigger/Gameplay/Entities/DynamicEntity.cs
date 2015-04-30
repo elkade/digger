@@ -55,14 +55,14 @@ namespace MetroDigger.Gameplay.Entities
 
         public abstract void StartShooting();
         public abstract void StartDrilling(Tile destination);
-        public void StartMoving(Tile destinationTile)
+        public virtual void StartMoving(Tile destinationTile)
         {
             if (MovementHandler.IsMoving || destinationTile == null)
                 return;
             MovementHandler.MakeMove(_occupiedTile, destinationTile, _moveSpeed);
         }
 
-        private void UpdateMoving()
+        protected void UpdateMoving()
         {
             if (!MovementHandler.IsMoving)
                 return;

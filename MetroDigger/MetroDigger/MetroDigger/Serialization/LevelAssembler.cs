@@ -6,6 +6,7 @@ using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Entities.Tiles;
 using MetroDigger.Utils;
+using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Serialization
 {
@@ -21,6 +22,7 @@ namespace MetroDigger.Serialization
                 MetroStations = new List<EntityDto>(),
                 Terrains = new List<TerrainDto>(),
                 Miners = new List<MinerDto>(),
+                Stones = new List<StoneDto>(),
                 Width = plain.Width,
                 Height = plain.Height,
                 Number = plain.Number,
@@ -98,6 +100,11 @@ namespace MetroDigger.Serialization
                     {
                         Position = new Position {X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y}
                     });
+                else if (enemy is Stone)
+                    dto.Stones.Add(new StoneDto
+                    {
+                        Position = new Position { X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y }
+                    });
             }
 
             #endregion
@@ -162,14 +169,17 @@ namespace MetroDigger.Serialization
             };
             plain.RegisterPlayer(player);
 
-            plain.RegisterEnemies();
-
             #endregion
 
             #region Enemy
 
             foreach (MinerDto item in dto.Miners)
                 plain.Enemies.Add(new Miner(new AStarDriver(Tile.Size, plain.Board, plain.Player),plain.Board[item.Position.X,item.Position.Y] ));
+
+            foreach (StoneDto item in dto.Stones)
+                plain.Enemies.Add(new Stone(new GravityDriver(Tile.Size, plain.Board, Level.GravityVector), plain.Board[item.Position.X, item.Position.Y]));
+
+
             plain.RegisterEnemies();
             #endregion
 

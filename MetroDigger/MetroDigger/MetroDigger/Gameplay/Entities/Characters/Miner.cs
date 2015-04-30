@@ -26,6 +26,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
             Sprite.PlayAnimation(Animations[0]);
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
             Value = 500;
+            Aggressiveness = Aggressiveness.Enemy;
         }
         private void LoadContent()
         {
@@ -59,6 +60,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
             PowerCellCount--;
 
         }
+
         public int PowerCellCount { get; set; }
     }
 
