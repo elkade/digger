@@ -32,35 +32,6 @@ namespace MetroDigger.Screens
 
         }
 
-        private void RankingSelected(object sender, EventArgs e)
-        {
-            ScreenManager.AddScreen(new RankingScreen());
-        }
-
-        #endregion
-
-        #region Handle Input
-
-        void NewGameSelected(object sender, EventArgs e)
-        {
-            LoadingScreen.Load(ScreenManager, true, new GameplayScreen(0));
-        }
-
-        void LoadGameSelected(object sender, EventArgs e)
-        {
-            ScreenManager.AddScreen(new LoadMenuScreen());
-        }
-
-        void OptionsSelected(object sender, EventArgs e)
-        {
-            ScreenManager.AddScreen(new OptionsMenuScreen());
-        }
-
-        protected override void OnCancel()
-        {
-            ScreenManager.Game.Exit();
-        }
-
         #endregion
     }
 }

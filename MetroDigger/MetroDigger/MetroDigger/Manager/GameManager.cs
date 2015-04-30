@@ -22,7 +22,7 @@ namespace MetroDigger.Manager
         private GameManager()
         {
             _levelAssembler = new LevelAssembler();
-            MaxLevel = 3;
+            MaxLevel = 2;
         }
 
         private LevelDto _levelDto;

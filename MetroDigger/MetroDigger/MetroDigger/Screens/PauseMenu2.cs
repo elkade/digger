@@ -14,7 +14,7 @@ namespace MetroDigger.Screens
             MenuEntry saveGameEntry = new MenuEntry("Save Game");
             MenuEntry loadGameEntry = new MenuEntry("Load Game");
             MenuEntry optionsEntry = new MenuEntry("Options");
-            MenuEntry rankingEntry = new MenuEntry("Options");
+            MenuEntry rankingEntry = new MenuEntry("Ranking");
             MenuEntry exitEntry = new MenuEntry("Exit");
 
             newGameEntry.Selected += NewGameSelected;

@@ -2,18 +2,19 @@
 {
     class MenuCheckField : MenuObject
     {
-        public bool IsOn { get; private set; }
+        public int Number { get; private set; }
 
-        public override string Text { get { return string.Format("{0} {1}", _text, _valueTexts[IsOn ? 0 : 1]); } }
+        public override string Text { get { return string.Format("{0} {1}", _text, _valueTexts[Number]); } }
 
         private string[] _valueTexts;
 
-        public MenuCheckField(string text, string textOn, string textOff, bool isOn) : base(text)
+        public MenuCheckField(string text,string[] texts, int currentNumber)
+            : base(text)
         {
-            _valueTexts = new []{textOn, textOff};
+            _valueTexts = texts;
             IsSelectable = true;
-            IsOn = isOn;
-            Selected += (sender, args) => IsOn = !IsOn;
+            Number = currentNumber;
+            Selected += (sender, args) => Number = (Number + 1) % _valueTexts.Length;
         }
 
     }

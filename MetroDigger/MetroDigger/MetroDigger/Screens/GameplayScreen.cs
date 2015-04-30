@@ -50,17 +50,27 @@ namespace MetroDigger.Screens
 
         private void OnLevelAccomplished(Level level, bool b)
         {
-            if (!GameManager.Instance.NextLevel(ref _level))
-            {
-                _level.IsStarted = true;
-                _level.LevelAccomplished += OnLevelAccomplished;
-            }
-            else
+            if (GameManager.Instance.NextLevel(ref _level))
             {
                 _level.IsStarted = false;
                 GameManager.Instance.AddToBestScores(_level.Player.Score);
-                GameManager.Instance.SaveAccomplishedLevel(_level.Number,_level.Player.Score,_level.Player.LivesCount);
-                LoadingScreen.Load(ScreenManager, false, new GameplayScreen(), new StartScreen(), new RankingScreen(_level.Player.Score));
+                GameManager.Instance.SaveAccomplishedLevel(_level.Number, _level.Player.Score, _level.Player.LivesCount);
+                LoadingScreen.Load(ScreenManager, false, new GameplayScreen(), new StartScreen(),
+                    new RankingScreen(_level.Player.Score));
+            }
+            else
+            {
+                if (b)
+                {
+                    ScreenManager.AddScreen(new LevelAccomplishedScreen(true, _level.Number, _level.Player.Score));
+                    _level.IsStarted = true;
+                    _level.LevelAccomplished += OnLevelAccomplished;
+                }
+                else
+                {
+                    LoadingScreen.Load(ScreenManager, false, this, new StartScreen(),
+                        new LevelAccomplishedScreen(false, _level.Number, _level.Player.Score));
+                }
             }
         }
 

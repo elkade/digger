@@ -147,8 +147,6 @@ namespace MetroDigger.Gameplay
                 enemy.Update();
             }
 
-            _bullets.RemoveAll(bullet => bullet.IsToRemove);
-            Enemies.RemoveAll(enemy => enemy.IsToRemove);
 
             _topBar.Update(Player.LivesCount,Player.Score,Player.PowerCellCount);
             foreach (Character enemy in Enemies)
@@ -167,9 +165,12 @@ namespace MetroDigger.Gameplay
                 {
                     Debug.WriteLine("Detected");
                     Player.Reset(Board.StartTile);
-                    enemy.IsToRemove = true;
+                    //enemy.IsToRemove = true;
                 }
             }
+            _bullets.RemoveAll(bullet => bullet.IsToRemove);
+            Enemies.RemoveAll(enemy => enemy.IsToRemove);
+
             CheckProgress();
         }
 
