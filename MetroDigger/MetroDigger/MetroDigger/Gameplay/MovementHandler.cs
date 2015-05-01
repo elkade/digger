@@ -1,5 +1,5 @@
 ﻿using System;
-using MetroDigger.Gameplay.Entities.Tiles;
+using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay

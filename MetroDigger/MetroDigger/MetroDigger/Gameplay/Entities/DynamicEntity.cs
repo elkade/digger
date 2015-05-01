@@ -1,13 +1,13 @@
 ﻿using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Characters;
-using MetroDigger.Gameplay.Entities.Tiles;
+using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities
 {
 
-    public interface IDynamicEntity : IUpdateable, ICollideable, IDrawable
+    public interface IDynamicEntity : ICollideable, IDrawable
     {
     }
     public abstract class DynamicEntity : Entity, IDynamicEntity
@@ -33,6 +33,7 @@ namespace MetroDigger.Gameplay.Entities
 
             _driver = driver;
             _driver.Move += StartMoving;
+            IsWaterProof = true;
         }
 
         public IDriver Driver
@@ -89,6 +90,8 @@ namespace MetroDigger.Gameplay.Entities
 
         public virtual void CollideWith(ICollideable character)
         {
+            if (IsToRemove || character.IsToRemove)
+                return;
             switch (Aggressiveness)
             {
                 case Aggressiveness.All:
@@ -111,6 +114,8 @@ namespace MetroDigger.Gameplay.Entities
         {
             IsToRemove = true;
         }
+
+        public bool IsWaterProof { get; set; }
 
         public virtual void StartMoving(Tile destinationTile)
         {

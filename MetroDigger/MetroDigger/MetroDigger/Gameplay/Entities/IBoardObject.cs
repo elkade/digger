@@ -1,4 +1,4 @@
-using MetroDigger.Gameplay.Entities.Tiles;
+using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay.Entities
@@ -11,7 +11,7 @@ namespace MetroDigger.Gameplay.Entities
         float Height { get; }
     }
 
-    public interface IMoveable
+    public interface IMoveable : IUpdateable
     {
         Vector2 Position { get; }
         float MovementSpeed { get; set; }

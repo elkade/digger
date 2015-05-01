@@ -4,7 +4,7 @@ using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
-using MetroDigger.Gameplay.Entities.Tiles;
+using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Utils;
 using Microsoft.Xna.Framework;
 
@@ -118,72 +118,87 @@ namespace MetroDigger.Serialization
             {
                 Number = dto.Number
             };
-            for (int i = 0; i < dto.Width; i++)
-                for (int j = 0; j < dto.Height; j++)
-                    plain.Board[i, j] = new Tile(i, j);
-            foreach (TerrainDto item in dto.Terrains)
+            try
             {
-                Terrain terrain = null;
-                switch (item.Type)
+
+                for (int i = 0; i < dto.Width; i++)
+                    for (int j = 0; j < dto.Height; j++)
+                        plain.Board[i, j] = new Tile(i, j);
+                foreach (TerrainDto item in dto.Terrains)
                 {
-                    case TerrainType.Free:
-                        terrain = new Free();
-                        break;
-                    case TerrainType.Rock:
-                        terrain = new Rock();
-                        break;
-                    case TerrainType.Soil:
-                        terrain = new Soil();
-                        break;
+                    Terrain terrain = null;
+                    switch (item.Type)
+                    {
+                        case TerrainType.Free:
+                            terrain = new Free();
+                            break;
+                        case TerrainType.Rock:
+                            terrain = new Rock();
+                            break;
+                        case TerrainType.Soil:
+                            terrain = new Soil();
+                            break;
+                        case TerrainType.Buffer:
+                            terrain = new Buffer();
+                            break;
+                        case TerrainType.Water:
+                            terrain = new Water();
+                            break;
+                    }
+                    plain.Board[item.Position.X, item.Position.Y].Terrain = terrain;
                 }
-                plain.Board[item.Position.X, item.Position.Y].Terrain = terrain;
+
+                #region items & metro
+
+                foreach (EntityDto item in dto.MetroStations)
+                {
+                    plain.Board[item.Position.X, item.Position.Y].Metro = new Station();
+                    if (plain.Board[item.Position.X, item.Position.Y].Terrain.Accessibility != Accessibility.Free)
+                        plain.StationsCount++;
+                    else
+                        plain.Board[item.Position.X, item.Position.Y].Metro.IsCleared = true;
+                }
+                foreach (EntityDto item in dto.MetroTunnels)
+                    plain.Board[item.Position.X, item.Position.Y].Metro = new Tunnel();
+                foreach (EntityDto item in dto.PowerCells)
+                    plain.Board[item.Position.X, item.Position.Y].Item = new PowerCell();
+                foreach (EntityDto item in dto.Drills)
+                    plain.Board[item.Position.X, item.Position.Y].Item = new Drill();
+
+                #endregion
+
+                #region Player
+
+                var player = new Player(new KeyboardDriver(Tile.Size, plain.Board),
+                    plain.Board[dto.Player.Position.X, dto.Player.Position.Y])
+                {
+                    PowerCellCount = dto.Player.PowerCells,
+                    LivesCount = dto.Player.Lives,
+                    Score = dto.Player.Score
+                };
+                plain.RegisterPlayer(player);
+
+                #endregion
+
+                #region Enemy
+
+                foreach (MinerDto item in dto.Miners)
+                    plain.Enemies.Add(new Miner(new AStarDriver(Tile.Size, plain.Board, plain.Player),
+                        plain.Board[item.Position.X, item.Position.Y]));
+
+                foreach (StoneDto item in dto.Stones)
+                    plain.Enemies.Add(new Stone(new GravityDriver(Tile.Size, plain.Board, Level.GravityVector),
+                        plain.Board[item.Position.X, item.Position.Y]));
+
+
+                plain.RegisterEnemies();
+
+                #endregion
             }
-
-            #region items & metro
-
-            foreach (EntityDto item in dto.MetroStations)
+            catch
             {
-                plain.Board[item.Position.X, item.Position.Y].Metro = new Station();
-                if (plain.Board[item.Position.X, item.Position.Y].Terrain.Accessibility != Accessibility.Free)
-                    plain.StationsCount++;
-                else
-                    plain.Board[item.Position.X, item.Position.Y].Metro.IsCleared = true;
+                plain = null;
             }
-            foreach (EntityDto item in dto.MetroTunnels)
-                plain.Board[item.Position.X, item.Position.Y].Metro = new Tunnel();
-            foreach (EntityDto item in dto.PowerCells)
-                plain.Board[item.Position.X, item.Position.Y].Item = new PowerCell();
-            foreach (EntityDto item in dto.Drills)
-                plain.Board[item.Position.X, item.Position.Y].Item = new Drill();
-
-            #endregion
-
-            #region Player
-
-            var player = new Player(new KeyboardDriver(Tile.Size, plain.Board),
-                plain.Board[dto.Player.Position.X, dto.Player.Position.Y])
-            {
-                PowerCellCount = dto.Player.PowerCells,
-                LivesCount = dto.Player.Lives,
-                Score = dto.Player.Score
-            };
-            plain.RegisterPlayer(player);
-
-            #endregion
-
-            #region Enemy
-
-            foreach (MinerDto item in dto.Miners)
-                plain.Enemies.Add(new Miner(new AStarDriver(Tile.Size, plain.Board, plain.Player),plain.Board[item.Position.X,item.Position.Y] ));
-
-            foreach (StoneDto item in dto.Stones)
-                plain.Enemies.Add(new Stone(new GravityDriver(Tile.Size, plain.Board, Level.GravityVector), plain.Board[item.Position.X, item.Position.Y]));
-
-
-            plain.RegisterEnemies();
-            #endregion
-
-            
 
             return plain;
         }

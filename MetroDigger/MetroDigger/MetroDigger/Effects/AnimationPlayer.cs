@@ -46,11 +46,13 @@ namespace MetroDigger.Gameplay
 
         #endregion
 
+        private bool _orientation;
         /// <summary>
         /// Begins or continues playback of an animation.
         /// </summary>
-        public void PlayAnimation(Animation animation)
+        public void PlayAnimation(Animation animation, bool orientation=true)
         {
+            _orientation = orientation;
             // If this animation is already running, do not restart it.
             if (Animation == animation)
                 return;
@@ -69,19 +71,20 @@ namespace MetroDigger.Gameplay
         {
             this._frameIndex = 0;
             this.time = 0.0f;
+            CustomIndex = 0;
         }
 
-        /// <summary>
-        /// Draws an specific _sprite frame(instead of animating)
-        /// </summary>
-        public void DrawSprite(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
-        {
-            // Calculate the source rectangle of the current frame.
-            Rectangle source = new Rectangle(_frameIndex * Animation.FrameWidth, 0, Animation.FrameWidth, Animation.FrameHeight);
+        ///// <summary>
+        ///// Draws an specific _sprite frame(instead of animating)
+        ///// </summary>
+        //public void DrawSprite(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
+        //{
+        //    // Calculate the source rectangle of the current frame.
+        //    Rectangle source = new Rectangle(_frameIndex * Animation.FrameWidth, _shift, Animation.FrameWidth, Animation.FrameHeight + _shift);
 
-            // Draw the current frame.
-            spriteBatch.Draw(Animation.Texture, position, source, Color.White, 0.0f, Origin, Animation.Scale, spriteEffects, 0.0f);
-        }
+        //    // Draw the current frame.
+        //    spriteBatch.Draw(Animation.Texture, position, source, Color.White, 0.0f, Origin, Animation.Scale, spriteEffects, 0.0f);
+        //}
 
         #region Draw
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, Color color, float angle = 0.0f)
@@ -98,21 +101,26 @@ namespace MetroDigger.Gameplay
                 // Advance the frame index; looping or clamping as appropriate.
                 if (Animation.IsLooping)
                     _frameIndex = (_frameIndex + 1)%Animation.FrameCount;
-                else
-                    _frameIndex = 0;
             }
-
+            if (!Animation.IsLooping)
+                _frameIndex = CustomIndex;
             // Calculate the source rectangle of the current frame.
-            Rectangle source = new Rectangle(FrameIndex * Animation.Texture.Height, 0, Animation.FrameWidth, Animation.FrameHeight);
+            Rectangle source;
+            if(_orientation)
+                source = new Rectangle(FrameIndex * Animation.FrameWidth, 0, Animation.FrameWidth, Animation.FrameHeight);
+            else
+                source = new Rectangle(0, FrameIndex * Animation.FrameHeight, Animation.FrameWidth, Animation.FrameHeight);
 
             // Draw the current frame.
             spriteBatch.Draw(Animation.Texture, position, source, color, angle, Origin, Animation.Scale, spriteEffects, 0.0f);
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
-        {
-            Draw(gameTime, spriteBatch, position, spriteEffects, Color.White);
-        }
+        public int CustomIndex { get; set; }
+
+        //public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
+        //{
+        //    Draw(gameTime, spriteBatch, position, spriteEffects, Color.White);
+        //}
         #endregion
 
     }

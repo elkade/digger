@@ -88,6 +88,7 @@ namespace MetroDigger
             mm.Ranger = Content.Load<Texture2D>("zwiadowca1");
 
             mm.Stone = Content.Load<Texture2D>("kamien");
+            mm.Water = Content.Load<Texture2D>("wodaEx");
         }
     }
 

@@ -2,7 +2,7 @@
 using MetroDigger.Effects;
 using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Others;
-using MetroDigger.Gameplay.Entities.Tiles;
+using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,7 +30,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
             Value = 500;
             Aggressiveness = Aggressiveness.Enemy;
             MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
-
+            IsWaterProof = false;
         }
         private void LoadContent()
         {

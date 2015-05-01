@@ -7,5 +7,6 @@ namespace MetroDigger.Gameplay.Entities
         Aggressiveness Aggressiveness { get; }
         void CollideWith(ICollideable collideable);
         void Harm();
+        bool IsWaterProof { get; set; }
     }
 }

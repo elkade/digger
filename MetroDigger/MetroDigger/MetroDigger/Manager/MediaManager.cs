@@ -105,6 +105,7 @@ namespace MetroDigger.Manager
         public Texture2D Ranger { get; set; }
         public Texture2D Stone { get; set; }
         public Vector2 Scale { get; set; }
+        public Texture2D Water { get; set; }
 
         #endregion
 

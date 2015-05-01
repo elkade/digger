@@ -1,7 +1,7 @@
 ﻿using System;
 using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Characters;
-using MetroDigger.Gameplay.Entities.Tiles;
+using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

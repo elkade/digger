@@ -8,8 +8,9 @@ using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Others;
-using MetroDigger.Gameplay.Entities.Tiles;
+using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.GameObjects;
+using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,15 +25,15 @@ namespace MetroDigger.Gameplay
         private readonly int _height;
         private readonly TopBar _topBar;
         private readonly int _width;
-        public Board Board;
+        public readonly Board Board;
 
-        public List<IDynamicEntity> DynamicEntities = new List<IDynamicEntity>();
-        public List<Character> Enemies = new List<Character>();
-        public List<IDynamicEntity> NewlyAddedDynamicEntities = new List<IDynamicEntity>();
+        public readonly List<IDynamicEntity> DynamicEntities = new List<IDynamicEntity>();
+        public readonly List<Character> Enemies = new List<Character>();
+        public readonly List<IDynamicEntity> NewlyAddedDynamicEntities = new List<IDynamicEntity>();
         public int StationsCount;
         private bool _isStarted;
         private Player _player;
-
+        private WaterSpiller _ws;
         #region LoadFromSave
 
         public Level(int width, int height)
@@ -49,20 +50,23 @@ namespace MetroDigger.Gameplay
             Board = new Board(Width, Height);
             _topBar = new TopBar();
             _collisionDetector = new RectangleDetector();
+            _ws = new WaterSpiller(Board, GravityVector);
         }
 
         public void RegisterPlayer(Player p)
         {
             _player = p;
-            Player.Shoot += (sender, bullet) =>
+            Player.Shoot += (sender) =>
             {
-                bullet = new Bullet(new StraightDriver(Tile.Size, Board), sender);
+                var bullet = new Bullet(new StraightDriver(Tile.Size, Board), sender);
                 bullet.Update();
                 bullet.Hit += (bullet1, tile) =>
                 {
                     bool b;
                     Player.Score += tile.Clear(ref StationsCount, out b);
                     bullet1.IsToRemove = b;
+                    if (tile.Accessibility!=Accessibility.Water)
+                        _ws.Spill(tile.X, tile.Y);
                 };
                 NewlyAddedDynamicEntities.Add(bullet);
             };
@@ -79,7 +83,8 @@ namespace MetroDigger.Gameplay
 
             Player.Drilled += (character, tile) =>
             {
-                /*tile.Clear();*/
+                tile.Clear(ref StationsCount);
+                _ws.Spill(tile.X,tile.Y);
             };
             Board.StartTile = Player.OccupiedTile;
         }
@@ -89,7 +94,11 @@ namespace MetroDigger.Gameplay
             var drillers = Enemies.OfType<IDriller>();
             foreach (var enemy in drillers) //TODO to jeswt nie tak
             {
-                enemy.Drilled += (character, tile) => Player.Score += tile.Clear(ref StationsCount);
+                enemy.Drilled += (character, tile) =>
+                {
+                    Player.Score += tile.Clear(ref StationsCount);
+                    _ws.Spill(tile.X, tile.Y);
+                };
             }
             DynamicEntities.AddRange(Enemies);
             DynamicEntities.Add(_player);
@@ -150,9 +159,11 @@ namespace MetroDigger.Gameplay
             _topBar.Update(Player.LivesCount, Player.Score, Player.PowerCellCount);
             for (int i = 0; i < DynamicEntities.Count; i++)
             {
+                IDynamicEntity u1 = DynamicEntities[i];
+                if(!u1.IsWaterProof && u1.OccupiedTile.Accessibility==Accessibility.Water)
+                    u1.Harm();
                 for (int j = i + 1; j < DynamicEntities.Count; j++)
                 {
-                    IDynamicEntity u1 = DynamicEntities[i];
                     IDynamicEntity u2 = DynamicEntities[j];
                     if (_collisionDetector.CheckCollision(u1, u2))
                     {
@@ -290,5 +301,8 @@ namespace MetroDigger.Gameplay
                 return _width;
             return _height;
         }
+
+        public int Width { get { return _width; } }
+        public int Height { get { return _height; } }
     }
 }

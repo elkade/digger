@@ -16,6 +16,11 @@ namespace MetroDigger.Screens
 
         public GameplayScreen(Level level)//do wczytania levelu z save'a
         {
+            if (level == null)
+            {
+                //coœ siê popsu³o
+                return;
+            }
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
             _level = level;
@@ -30,6 +35,11 @@ namespace MetroDigger.Screens
             int lvlNo = (new Random()).Next(GameManager.Instance.MaxLevel);
             if (!GameManager.Instance.GetLevel(lvlNo, out _level))
             {
+                if (_level == null)
+                {
+                    //coœ siê popsu³o
+                    return;
+                }
                 _level.LevelAccomplished += OnLevelAccomplished;
 
             }
@@ -41,6 +51,11 @@ namespace MetroDigger.Screens
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
             if (!GameManager.Instance.GetLevel(lvlNo, out _level))
             {
+                if (_level == null)
+                {
+                    //coœ siê popsu³o
+                    return;
+                }
                 _level.IsStarted = true;
                 _level.LevelAccomplished += OnLevelAccomplished;
 

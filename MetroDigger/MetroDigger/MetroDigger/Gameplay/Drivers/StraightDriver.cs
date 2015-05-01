@@ -1,5 +1,5 @@
 ﻿using MetroDigger.Gameplay.Entities.Characters;
-using MetroDigger.Gameplay.Entities.Tiles;
+using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay.Drivers

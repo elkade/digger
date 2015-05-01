@@ -2,7 +2,7 @@
 using MetroDigger.Effects;
 using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Entities.Others;
-using MetroDigger.Gameplay.Entities.Tiles;
+using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay.Entities.Characters

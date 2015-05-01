@@ -63,10 +63,7 @@ public class Animation
         /// <summary>
         /// Gets the height of a frame in the animation.
         /// </summary>
-        public int FrameHeight
-        {
-            get { return Texture.Height; }
-        }
+        public int FrameHeight { get; private set; }
 
         public Vector2 Scale
     {
@@ -77,16 +74,17 @@ public class Animation
     /// <summary>
         /// Constructs a new animation with a predefined with.
         /// </summary>        
-        public Animation(Texture2D texture, float frameTime, bool isLooping, int frameWidth, Vector2 scale)
+        public Animation(Texture2D texture, float frameTime, bool isLooping, int frameWidth, Vector2 scale,int frameHeight=0)
         {
             this.texture = texture;
             this.frameTime = frameTime;
             this.isLooping = isLooping;
             _scale = scale;
             if (frameWidth == 0)
-                this.FrameWidth = texture.Height;
+                this.FrameWidth = texture.Width;
             else if (frameWidth > 0)
                 this.FrameWidth = frameWidth;
+            FrameHeight = frameHeight == 0 ? texture.Height : frameHeight;
         }
         ///// <summary>
         ///// Constructs a new animation with the width being the same as the height.

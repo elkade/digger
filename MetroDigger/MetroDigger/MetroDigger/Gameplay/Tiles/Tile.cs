@@ -3,7 +3,7 @@ using MetroDigger.Gameplay.Entities.Terrains;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MetroDigger.Gameplay.Entities.Tiles
+namespace MetroDigger.Gameplay.Tiles
 {
     public class Tile
     {
@@ -16,7 +16,7 @@ namespace MetroDigger.Gameplay.Entities.Tiles
         public int Clear(ref int stationsCount, out bool isCollision)
         {
             isCollision = true;
-            if (Item == null && Accessibility == Accessibility.Free)
+            if (Item == null && (Accessibility == Accessibility.Free || Accessibility == Accessibility.Water))
                 isCollision = false;
             return Clear(ref stationsCount);
         }
@@ -33,7 +33,7 @@ namespace MetroDigger.Gameplay.Entities.Tiles
                 points *= 2;
             else if (Accessibility == Accessibility.Water)
                 points *= 3;
-
+            if (Accessibility != Accessibility.Water && Accessibility != Accessibility.Free)
             Terrain = new Free();
             return points;
         }
