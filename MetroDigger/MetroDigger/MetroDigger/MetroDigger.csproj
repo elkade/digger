@@ -103,6 +103,7 @@
     <Compile Include="Gameplay\IShooter.cs" />
     <Compile Include="Gameplay\MovementHandler.cs" />
     <Compile Include="Manager\GameManager.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Screens\LevelAccomplishedScreen.cs" />
     <Compile Include="Screens\ChooseLevelScreen.cs" />
     <Compile Include="Screens\LoadMenuScreen.cs" />

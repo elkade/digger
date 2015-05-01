@@ -62,7 +62,8 @@ namespace MetroDigger.Gameplay.Entities.Characters
 
         public override void CollideWith(ICollideable character)
         {
-            base.CollideWith(character);
+            if (character.OccupiedTile.Y > OccupiedTile.Y)
+                base.CollideWith(character);
             if(character.OccupiedTile != OccupiedTile)//character przeżył kolizję więc podchodził od boku
                 Shift(character.Direction);
         }

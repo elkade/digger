@@ -2,7 +2,6 @@
 using MetroDigger.Gameplay.Entities.Terrains;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-//using Buffer = MetroDigger.Gameplay.Entities.Terrains.Buffer;
 
 namespace MetroDigger.Gameplay.Entities.Tiles
 {
@@ -21,8 +20,11 @@ namespace MetroDigger.Gameplay.Entities.Tiles
                 isCollision = false;
             return Clear(ref stationsCount);
         }
+
         public int Clear(ref int stationsCount)
         {
+            if (Accessibility == Accessibility.Buffer)
+                return 0;
             int points = 0;
             Item = null;
             if (Metro != null)
@@ -35,17 +37,9 @@ namespace MetroDigger.Gameplay.Entities.Tiles
             Terrain = new Free();
             return points;
         }
-        public virtual int Value
-        {
-            get { return _value; }
-        }
 
         private readonly int _x;
         private readonly int _y;
-        private readonly Terrain _terrain;
-        private static ulong _c;
-
-        public ulong Number { get; set; }
 
         public static Vector2 Size = new Vector2(300*0.3f,300*0.3f);
         public static int Width
@@ -58,9 +52,6 @@ namespace MetroDigger.Gameplay.Entities.Tiles
             get { return (int) Size.Y; }
         }
 
-        Vector2 _position;
-        private const int _value = 0;
-
         public Tile(int x, int y, Terrain terrain = null, Item item = null, Metro metro = null)
         {
             _x = x;
@@ -70,14 +61,10 @@ namespace MetroDigger.Gameplay.Entities.Tiles
             Metro = metro;
             Metro = null;
             Item = null;
-            Position = new Vector2(X*Width+Width/2f, Y*Height+Height/2f);
-
-            Number = _c++;
-
-           
+            Position = new Vector2(X*Width+Width/2f, Y*Height+Height/2f);          
         }
 
-        public Vector2 Position { get; set; }
+        public Vector2 Position { get; private set; }
 
         public int X
         {
@@ -99,20 +86,12 @@ namespace MetroDigger.Gameplay.Entities.Tiles
                 Item.Draw(gameTime, spriteBatch, Position);
         }
 
-        public virtual Accessibility Accessibility
+        public Accessibility Accessibility
         {
             get
             {
                 return Terrain != null ? Terrain.Accessibility : Accessibility.Rock;
             }
         }
-
-        //public static event Action<Tile, Character> Destroyed;
-
-        //public void RaiseDestroyed(Character destroyer)
-        //{
-        //    if (Destroyed != null)
-        //        Destroyed(this, destroyer);
-        //}
     }
 }

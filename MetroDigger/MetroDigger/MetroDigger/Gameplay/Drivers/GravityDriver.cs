@@ -20,7 +20,13 @@ namespace MetroDigger.Gameplay.Drivers
             if (state == EntityState.Moving) return;
             if (state != EntityState.StartingMoving)
                 mh.Direction = _gravityDirection;
-            var dirVec = new Vector2(mh.Direction.X * Unit.X, mh.Direction.Y * Unit.Y);
+
+            var dirVec = new Vector2(_gravityDirection.X * Unit.X, _gravityDirection.Y * Unit.Y);
+
+            var tileBelow = PosToTile(dirVec + mh.Position);
+
+            if(tileBelow.Accessibility!=Accessibility.Free && tileBelow.Accessibility != Accessibility.Water)
+                dirVec = new Vector2(mh.Direction.X * Unit.X, mh.Direction.Y * Unit.Y);
 
             if (dirVec != Vector2.Zero && Vector2.Normalize(dirVec)!=new Vector2(0,-1))
             {
