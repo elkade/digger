@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MetroDigger.Manager;
-using MetroDigger.Manager.Settings;
 using XNA_GSM.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
@@ -10,22 +8,29 @@ namespace MetroDigger.Screens
     {
         private readonly MenuLabel[] _congratsLabels;
         private readonly List<MenuLabel> _bestScoresLabels;
+        private MenuCheckField _levelPicker;
 
-        public RankingScreen(int? score = null)
+
+        public RankingScreen(int? score = null, int? lvl=null)
             : base("Ranking")
         {
+            string[] levelsLabels = new string[GameManager.Instance.MaxLevel+1];
+            levelsLabels[0] = "all";
+            for (int j = 1; j < levelsLabels.Length; j++)
+                levelsLabels[j] = j.ToString();
+            _levelPicker = new MenuCheckField("Which level: ", levelsLabels, (lvl??-1)+1);
+
             if (score != null)
             {
                 string text1 = "Congratulations " + GameManager.Instance.UserName;
                 string text2 = "You have finished MetroDigger!";
                 string text3 = "Your score: " + score.Value;
-
                 _congratsLabels = new[] { new MenuLabel(text1), new MenuLabel(text2), new MenuLabel(text3), };
             }
             _bestScoresLabels = new List<MenuLabel>();
             _bestScoresLabels.Add(new MenuLabel("Best scores:"));
 
-            var bestScores = GameManager.Instance.LoadBestScores();
+            var bestScores = GameManager.Instance.LoadBestScores(lvl);
             int i = 1;
             foreach (var bestScore in bestScores)
             {
@@ -35,14 +40,22 @@ namespace MetroDigger.Screens
 
             MenuEntry back = new MenuEntry("Back");
             back.Selected += OnCancel;
-            
+            _levelPicker.Selected +=
+                (sender, args) =>
+                {
+                    int? lvlNo = ((MenuCheckField) sender).Number - 1 == -1
+                        ? (int?) null
+                        : ((MenuCheckField) sender).Number - 1;
+                    ScreenManager.SwitchScreen(new RankingScreen(null, lvlNo));
+                };
+
             if(_congratsLabels!=null)
                 foreach (var congratsLabel in _congratsLabels)
                     MenuObjects.Add(congratsLabel);
 
             foreach (var label in _bestScoresLabels)
                 MenuObjects.Add(label);
-
+            MenuObjects.Add(_levelPicker);
             MenuObjects.Add(back);
         }
 

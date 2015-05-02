@@ -6,7 +6,6 @@ using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Utils;
-using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Serialization
 {
@@ -100,6 +99,13 @@ namespace MetroDigger.Serialization
                     {
                         Position = new Position {X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y}
                     });
+                else if (enemy is Ranger)
+                    dto.Rangers.Add(new RangerDto
+                    {
+                        Position = new Position { X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y },
+                        PowerCells = enemy.PowerCellCount,
+                        HasDrill = enemy.HasDrill,
+                    });
                 else if (enemy is Stone)
                     dto.Stones.Add(new StoneDto
                     {
@@ -153,13 +159,17 @@ namespace MetroDigger.Serialization
                 foreach (EntityDto item in dto.MetroStations)
                 {
                     plain.Board[item.Position.X, item.Position.Y].Metro = new Station();
-                    if (plain.Board[item.Position.X, item.Position.Y].Terrain.Accessibility != Accessibility.Free)
-                        plain.StationsCount++;
-                    else
-                        plain.Board[item.Position.X, item.Position.Y].Metro.IsCleared = true;
+                    plain.StationTiles.Add(plain.Board[item.Position.X, item.Position.Y]);
+                    //if (plain.Board[item.Position.X, item.Position.Y].Terrain.Accessibility != Accessibility.Free)
+                    //    plain.StationsCount++;
+                    //else
+                    //    plain.Board[item.Position.X, item.Position.Y].Metro.IsCleared = true;
                 }
                 foreach (EntityDto item in dto.MetroTunnels)
+                {
                     plain.Board[item.Position.X, item.Position.Y].Metro = new Tunnel();
+                    plain.TunnelTiles.Add(plain.Board[item.Position.X, item.Position.Y]);
+                }
                 foreach (EntityDto item in dto.PowerCells)
                     plain.Board[item.Position.X, item.Position.Y].Item = new PowerCell();
                 foreach (EntityDto item in dto.Drills)
@@ -185,6 +195,10 @@ namespace MetroDigger.Serialization
                 foreach (MinerDto item in dto.Miners)
                     plain.Enemies.Add(new Miner(new AStarDriver(Tile.Size, plain.Board, plain.Player),
                         plain.Board[item.Position.X, item.Position.Y]));
+
+                foreach (RangerDto item in dto.Rangers)
+                    plain.Enemies.Add(new Ranger(new AStarDriver(Tile.Size, plain.Board, plain.Player),
+                        plain.Board[item.Position.X, item.Position.Y], item.HasDrill, item.PowerCells));
 
                 foreach (StoneDto item in dto.Stones)
                     plain.Enemies.Add(new Stone(new GravityDriver(Tile.Size, plain.Board, Level.GravityVector),

@@ -6,32 +6,36 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Screens
 {
-    class GameplayScreen : GameScreen
+    internal class GameplayScreen : GameScreen
     {
         private Level _level;
 
         private float _pauseAlpha;
 
+        private void SetTransition()
+        {
+            TransitionOnTime = TimeSpan.FromSeconds(1.5);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+        }
+
         #region Initialization
 
-        public GameplayScreen(Level level)//do wczytania levelu z save'a
+        public GameplayScreen(Level level) //do wczytania levelu z save'a lub kontynuacji
         {
+            SetTransition();
             if (level == null)
             {
                 //coœ siê popsu³o
                 return;
             }
-            TransitionOnTime = TimeSpan.FromSeconds(1.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
             _level = level;
             _level.IsStarted = true;
             _level.LevelAccomplished += OnLevelAccomplished;
         }
 
-        public GameplayScreen()//do t³a
+        public GameplayScreen() //do t³a
         {
-            TransitionOnTime = TimeSpan.FromSeconds(1.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            SetTransition();
             int lvlNo = (new Random()).Next(GameManager.Instance.MaxLevel);
             if (!GameManager.Instance.GetLevel(lvlNo, out _level))
             {
@@ -45,11 +49,11 @@ namespace MetroDigger.Screens
             }
         }
 
-        public GameplayScreen(int lvlNo)//do wczytania levelu o konkretnym numerze
+        public GameplayScreen(int lvlNo)
+            //do wczytania levelu o konkretnym numerze
         {
-            TransitionOnTime = TimeSpan.FromSeconds(1.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
-            if (!GameManager.Instance.GetLevel(lvlNo, out _level))
+            SetTransition();
+            if (!GameManager.Instance.GetLevel(lvlNo, out _level, true))
             {
                 if (_level == null)
                 {
@@ -60,37 +64,43 @@ namespace MetroDigger.Screens
                 _level.LevelAccomplished += OnLevelAccomplished;
 
             }
-            else ;//osi¹gniêto max level
+            else ; //osi¹gniêto max level
         }
 
-        private void OnLevelAccomplished(Level level, bool b)
+        private void OnLevelAccomplished(Level level, bool isWon) //isWon-pora¿ka
         {
-            if (GameManager.Instance.NextLevel(ref _level))
+            if (isWon)
             {
-                _level.IsStarted = false;
-                GameManager.Instance.AddToBestScores(_level.Player.Score);
-                GameManager.Instance.SaveAccomplishedLevel(_level.Number-1, _level.Player.Score, _level.Player.LivesCount);
-                LoadingScreen.Load(ScreenManager, false, new GameplayScreen(), new StartScreen(),
-                    new RankingScreen(_level.Player.Score));
+                GameManager.Instance.AddToBestScores(_level.GainedScore, _level.Number);
+                GameManager.Instance.SaveAccomplishedLevel(_level.Number, _level.TotalScore,_level.TotalLives);
+            }
+            //dodajemy wynik z tego levela do rankingu
+            int gainedScore = _level.GainedScore;
+            //pytamy,czy ponowiæ
+            Level levelToRetry;
+            if (!GameManager.Instance.GetLevel(_level.Number, out levelToRetry))
+            {
+                levelToRetry.InitLives = _level.InitLives;
+                levelToRetry.InitScore = _level.InitScore;
+            }
+            else ;//wyst¹pi³ b³¹d
+
+            Level levelToContinue;
+            if (!GameManager.Instance.GetLevel(_level.Number + 1, out levelToContinue))
+            {
+                levelToContinue.InitLives = _level.TotalLives;
+                levelToContinue.InitScore = _level.TotalScore;
             }
             else
             {
-                if (b)
-                {
-                    ScreenManager.AddScreen(new LevelAccomplishedScreen(true, _level.Number-1, _level.Player.Score));
-                    _level.IsStarted = true;
-                    _level.LevelAccomplished += OnLevelAccomplished;
-                }
-                else
-                {
-                    LoadingScreen.Load(ScreenManager, false, this, new StartScreen(),
-                        new LevelAccomplishedScreen(false, _level.Number-1, _level.Player.Score));
-                }
+                levelToContinue = null;
+                if (isWon)
+                    GameManager.Instance.AddToBestScores(_level.TotalScore);
             }
-        }
+            ScreenManager.AddScreen(new LevelAccomplishedScreen(isWon, levelToRetry, levelToContinue, gainedScore));
+    }
 
-
-        /// <summary>
+/// <summary>
         /// Load graphics content for the game.
         /// </summary>
         public override void LoadContent()

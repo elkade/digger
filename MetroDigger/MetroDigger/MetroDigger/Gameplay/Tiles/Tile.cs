@@ -31,8 +31,8 @@ namespace MetroDigger.Gameplay.Tiles
                 points = Metro.Clear(ref stationsCount);
             if (Accessibility == Accessibility.Free)
                 points *= 2;
-            else if (Accessibility == Accessibility.Water)
-                points *= 3;
+            //else if (Accessibility == Accessibility.Water)
+            //    points *= 3;
             if (Accessibility != Accessibility.Water && Accessibility != Accessibility.Free)
             Terrain = new Free();
             return points;

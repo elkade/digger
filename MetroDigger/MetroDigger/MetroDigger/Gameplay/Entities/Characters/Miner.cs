@@ -30,7 +30,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
             Value = 500;
             Aggressiveness = Aggressiveness.Enemy;
             MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
-            IsWaterProof = false;
+            IsWaterProof = true;
         }
         private void LoadContent()
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
@@ -9,7 +10,7 @@ namespace MetroDigger.Gameplay
 {
     interface ISpiller
     {
-        void Spill(int x, int y);
+        int Spill(int x, int y);
     }
     class WaterSpiller : ISpiller
     {
@@ -25,17 +26,18 @@ namespace MetroDigger.Gameplay
         /// </summary>
         /// <param name="x">x pola z wodą garniczącego z polem pustym</param>
         /// <param name="y">y pola z wodą garniczącego z polem pustym</param>
-        public void Spill(int x, int y)
+        public int Spill(int x, int y)
         {
             bool[,] visited = new bool[_board.Width,_board.Height];
             int volumeOver = CheckWater(x, y, visited,true);
-            if (volumeOver == 0) return;
+            if (volumeOver == 0) return 0;
             GetTilesToFlood(volumeOver, x, y);
-            DrawWater();
+            return DrawWater(visited);
         }
 
-        private void DrawWater()
+        private int DrawWater(bool[,] wateredPreviously)
         {
+            int score = 0;
             foreach (var tile in _board)
             {
                 if (tile.Accessibility == Accessibility.Water)
@@ -43,7 +45,18 @@ namespace MetroDigger.Gameplay
                     Water w = tile.Terrain as Water;
                     tile.Terrain = new Water(w.Level, w.IsFull, _board[tile.X, tile.Y - 1].Accessibility != Accessibility.Free && _board[tile.X, tile.Y - 1].Accessibility != Accessibility.Buffer);
                 }
+                else
+                {
+                    if (wateredPreviously[tile.X, tile.Y])
+                        if(tile.Metro is Tunnel)
+                            if (!tile.Metro.IsCleared)
+                            {
+                                tile.Metro.IsCleared = true;
+                                score += 150;
+                            }
+                }
             }
+            return score;
         }
 
         private void GetTilesToFlood(int volumeOver, int x, int y)
@@ -91,6 +104,7 @@ namespace MetroDigger.Gameplay
             switch (_board[x, y].Accessibility)
             {
                 case Accessibility.Water:
+                    if (wasUp) return 0;
                     s += (_board[x, y].Terrain as Water).IsFull ? 1 : 0;
                     _board[x, y].Terrain = new Free();
                     break;
@@ -101,9 +115,9 @@ namespace MetroDigger.Gameplay
             }
             visited[x, y] = true;
             s += CheckFree(x, y - 1, visited, true);
-            s += CheckFree(x - 1, y, visited);
-            s += CheckFree(x + 1, y, visited);
-            s += CheckFree(x, y + 1, visited);
+            s += CheckFree(x - 1, y, visited,wasUp);
+            s += CheckFree(x + 1, y, visited,wasUp);
+            s += CheckFree(x, y + 1, visited,wasUp);
             return s;
         }
 

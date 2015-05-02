@@ -45,8 +45,11 @@ namespace MetroDigger.Gameplay.Entities.Characters
             set
             {
                 _hasDrill = value;
-                if (_hasDrill && Animations != null)
+                if (Animations == null) return;
+                if (_hasDrill)
                     Sprite.PlayAnimation(Animations[1]);
+                else
+                    Sprite.PlayAnimation(Animations[0]);
             }
         }
 

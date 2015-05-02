@@ -1,22 +1,25 @@
 ﻿using System;
-using System.Linq;
-using MetroDigger.Manager;
+using MetroDigger.Gameplay;
 using XNA_GSM.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
 {
     class LevelAccomplishedScreen : MenuScreen
     {
+        private readonly Level _levelToRetry;
+        private readonly Level _levelToContinue;
+        private readonly int _gainedScore;
+
         #region Initialization
 
-        private int _levelNo;
-
-        public LevelAccomplishedScreen(bool isWon, int lvlNo, int score=0)
+        public LevelAccomplishedScreen(bool isWon, Level levelToRetry, Level levelToContinue, int gainedScore=0)
             : base("Level Accomplished")
         {
-            _levelNo = lvlNo;
+            _levelToRetry = levelToRetry;
+            _levelToContinue = levelToContinue;
+            _gainedScore = gainedScore;
             string scoreText;
-            scoreText = isWon ? String.Format("Your score: {0}", score) : "You have lost";
+            scoreText = isWon ? String.Format("Your score: {0}", levelToRetry.TotalScore) : "You have lost";
             string labelText = "Do you want to retry?";
 
             string quitText = isWon ? "Continue" : "Quit";
@@ -27,7 +30,15 @@ namespace MetroDigger.Screens
             MenuEntry exitEntry = new MenuEntry(quitText);
 
             retryEntry.Selected += RetrySelected;
-            exitEntry.Selected += OnCancel;
+            if (!isWon)
+                exitEntry.Selected += OnCancel;
+            else
+            {
+                if(levelToContinue==null)
+                    exitEntry.Selected += RankingSelected;
+                else
+                    exitEntry.Selected += ContinueSelected;
+            }
 
             MenuObjects.Add(scoreLabel);
             MenuObjects.Add(questionLabel);
@@ -38,8 +49,24 @@ namespace MetroDigger.Screens
 
         private void RetrySelected(object sender, EventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, new GameplayScreen(_levelNo));
+            LoadingScreen.Load(ScreenManager, true ,new GameplayScreen(_levelToRetry));
         }
+
+        private void RankingSelected(object sender, EventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, true, new GameplayScreen(), new StartScreen(), new RankingScreen(_levelToRetry.TotalScore + _gainedScore));
+        }
+
+        private void ContinueSelected(object sender, EventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, true, new GameplayScreen(_levelToContinue));
+        }
+
+        protected override void OnCancel()
+        {
+            LoadingScreen.Load(ScreenManager, false, new GameplayScreen(),new StartScreen());
+        }
+
         #endregion
 
     }

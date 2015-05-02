@@ -14,6 +14,7 @@ namespace MetroDigger.Serialization
         public List<EntityDto> MetroStations { get; set; }
         public List<EntityDto> MetroTunnels { get; set; }
         public List<MinerDto> Miners { get; set; }
+        public List<RangerDto> Rangers { get; set; }
         public List<StoneDto> Stones { get; set; }
         public int Number { get; set; }
 
@@ -28,9 +29,15 @@ namespace MetroDigger.Serialization
         
     }
 
+    public class RangerDto : EntityDto
+    {
+        public bool HasDrill { get; set; }
+        public int PowerCells { get; set; }
+    }
+
     public class MinerDto : EntityDto
     {
-        
+
     }
 
     public class TerrainDto : EntityDto

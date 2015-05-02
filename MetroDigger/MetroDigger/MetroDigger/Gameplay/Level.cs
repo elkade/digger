@@ -34,6 +34,9 @@ namespace MetroDigger.Gameplay
         private bool _isStarted;
         private Player _player;
         private WaterSpiller _ws;
+
+        public List<Tile> StationTiles = new List<Tile>();
+        public List<Tile> TunnelTiles = new List<Tile>(); 
         #region LoadFromSave
 
         public Level(int width, int height)
@@ -66,7 +69,7 @@ namespace MetroDigger.Gameplay
                     Player.Score += tile.Clear(ref StationsCount, out b);
                     bullet1.IsToRemove = b;
                     if (tile.Accessibility!=Accessibility.Water)
-                        _ws.Spill(tile.X, tile.Y);
+                        Player.Score += _ws.Spill(tile.X, tile.Y);
                 };
                 NewlyAddedDynamicEntities.Add(bullet);
             };
@@ -83,8 +86,8 @@ namespace MetroDigger.Gameplay
 
             Player.Drilled += (character, tile) =>
             {
-                tile.Clear(ref StationsCount);
-                _ws.Spill(tile.X,tile.Y);
+                Player.Score += tile.Clear(ref StationsCount);
+                Player.Score += _ws.Spill(tile.X, tile.Y);
             };
             Board.StartTile = Player.OccupiedTile;
         }
@@ -97,7 +100,7 @@ namespace MetroDigger.Gameplay
                 enemy.Drilled += (character, tile) =>
                 {
                     Player.Score += tile.Clear(ref StationsCount);
-                    _ws.Spill(tile.X, tile.Y);
+                    Player.Score+=_ws.Spill(tile.X, tile.Y);
                 };
             }
             DynamicEntities.AddRange(Enemies);
@@ -146,6 +149,24 @@ namespace MetroDigger.Gameplay
 
         public int Number { get; set; }
 
+        public int GainedScore
+        {
+            get { return Player.Score; }
+        }
+
+        public int TotalScore
+        {
+            get { return InitScore + Player.Score; }
+        }
+
+        public int InitLives { get; set; }
+        public int InitScore { get; set; }
+
+        public int TotalLives
+        {
+            get { return Player.LivesCount + InitLives; }
+        }
+
         public void Update(GameTime gameTime)
         {
             if (!_isStarted)
@@ -156,7 +177,7 @@ namespace MetroDigger.Gameplay
                 dynamicEntity.Update();
             }
 
-            _topBar.Update(Player.LivesCount, Player.Score, Player.PowerCellCount);
+            _topBar.Update(TotalLives, TotalScore, Player.PowerCellCount);
             for (int i = 0; i < DynamicEntities.Count; i++)
             {
                 IDynamicEntity u1 = DynamicEntities[i];
@@ -184,7 +205,24 @@ namespace MetroDigger.Gameplay
 
         private void CheckProgress()
         {
-            if (StationsCount == 0)
+            //int tunnelsScore = 0;
+            //foreach (var tunnelTile in TunnelTiles)
+            //{
+            //    if (tunnelTile.Metro == null)
+            //        continue;
+            //    if (tunnelTile.Accessibility != Accessibility.Free)
+            //        continue;
+            //    int s=0;
+            //    if (tunnelTile.Metro.ClearedOf == Accessibility.Soil)
+            //        s = 50;
+            //    else if (tunnelTile.Metro.ClearedOf == Accessibility.Water)
+            //        s = 100;
+            //    if (tunnelTile.Metro.IsVisitedInSequence)
+            //        s *= 2;
+            //    tunnelsScore += s;
+            //}
+            //Player.Score = _baseScore + tunnelsScore;
+            if (StationTiles.TrueForAll(t=>t.Accessibility==Accessibility.Free))
                 RaiseLevelAccomplished(true);
             if (Player.LivesCount == 0)
                 RaiseLevelAccomplished(false);

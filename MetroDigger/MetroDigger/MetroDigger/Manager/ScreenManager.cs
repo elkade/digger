@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MetroDigger.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -140,5 +141,17 @@ namespace MetroDigger.Manager
         }
 
 
+        public void SwitchScreen(GameScreen screen)
+        {
+            screen.ScreenManager = this;
+            screen.IsExiting = false;
+
+            if (_isInitialized)
+            {
+                screen.LoadContent();
+            }
+            (_screens[_screens.Count - 1]).ExitScreen();
+            _screens.Add(screen);
+        }
     }
 }
