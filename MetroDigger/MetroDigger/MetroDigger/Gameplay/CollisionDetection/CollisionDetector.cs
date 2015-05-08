@@ -1,4 +1,4 @@
-﻿using MetroDigger.Gameplay.Entities;
+﻿using MetroDigger.Gameplay.Abstract;
 
 namespace MetroDigger.Gameplay.CollisionDetection
 {

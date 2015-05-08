@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.CollisionDetection;
 using MetroDigger.Gameplay.Drivers;
-using MetroDigger.Gameplay.Entities;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.GameObjects;
 using MetroDigger.Gameplay.Tiles;
+using MetroDigger.Logging;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Buffer = MetroDigger.Gameplay.Entities.Terrains.Buffer;
 
 namespace MetroDigger.Gameplay
 {
@@ -27,58 +25,57 @@ namespace MetroDigger.Gameplay
         private readonly int _width;
         public readonly Board Board;
 
-        public readonly List<IDynamicEntity> DynamicEntities = new List<IDynamicEntity>();
-        public readonly List<Character> Enemies = new List<Character>();
-        public readonly List<IDynamicEntity> NewlyAddedDynamicEntities = new List<IDynamicEntity>();
-        public int StationsCount;
+        private readonly List<IDynamicEntity> _dynamicEntities = new List<IDynamicEntity>();
+        public readonly List<IDynamicEntity> Enemies = new List<IDynamicEntity>();
+        private readonly List<IDynamicEntity> _newlyAddedDynamicEntities = new List<IDynamicEntity>();
+        private int _stationsCount;
         private bool _isStarted;
         private Player _player;
-        private WaterSpiller _ws;
+        private readonly ISpiller _ws;
 
-        public List<Tile> StationTiles = new List<Tile>();
-        public List<Tile> TunnelTiles = new List<Tile>(); 
+        public readonly List<Tile> StationTiles = new List<Tile>();
+        public readonly List<Tile> TunnelTiles = new List<Tile>(); 
         #region LoadFromSave
 
         public Level(int width, int height)
         {
-            StationsCount = 0;
+            _stationsCount = 0;
             _width = width;
             _height = height;
-            float h = (float) MediaManager.Instance.Height/height;
-            float w = (float) MediaManager.Instance.Width/width;
-            float min = Math.Min(h, w);
-            Tile.Size = new Vector2(min, min);
-            MediaManager.Instance.Scale = new Vector2(min/300, min/300);
+            MediaManager.Instance.SetDimensions(_width,_height);
             _isStarted = false;
             Board = new Board(Width, Height);
             _topBar = new TopBar();
             _collisionDetector = new RectangleDetector();
             _ws = new WaterSpiller(Board, GravityVector);
+
+            Logger.Log("New level created");
+
         }
 
         public void RegisterPlayer(Player p)
         {
             _player = p;
-            Player.Shoot += (sender) =>
+            Player.Shoot += sender =>
             {
                 var bullet = new Bullet(new StraightDriver(Tile.Size, Board), sender);
                 bullet.Update();
                 bullet.Hit += (bullet1, tile) =>
                 {
                     bool b;
-                    Player.Score += tile.Clear(ref StationsCount, out b);
+                    Player.Score += tile.Clear(ref _stationsCount, out b);
                     bullet1.IsToRemove = b;
                     if (tile.Accessibility!=Accessibility.Water)
                         Player.Score += _ws.Spill(tile.X, tile.Y);
                 };
-                NewlyAddedDynamicEntities.Add(bullet);
+                _newlyAddedDynamicEntities.Add(bullet);
             };
 
             Player.Visited += (collector, tile1, tile2) =>
             {
                 if (tile2.Item != null)
                     tile2.Item.GetCollected(collector);
-                int score = tile2.Clear(ref StationsCount);
+                int score = tile2.Clear(ref _stationsCount);
                 if (tile1.Metro is Tunnel && score > 0)
                     score += 50;
                 Player.Score += score;
@@ -86,10 +83,9 @@ namespace MetroDigger.Gameplay
 
             Player.Drilled += (character, tile) =>
             {
-                Player.Score += tile.Clear(ref StationsCount);
+                Player.Score += tile.Clear(ref _stationsCount);
                 Player.Score += _ws.Spill(tile.X, tile.Y);
             };
-            Board.StartTile = Player.OccupiedTile;
         }
 
         public void RegisterEnemies()
@@ -99,31 +95,15 @@ namespace MetroDigger.Gameplay
             {
                 enemy.Drilled += (character, tile) =>
                 {
-                    Player.Score += tile.Clear(ref StationsCount);
+                    Player.Score += tile.Clear(ref _stationsCount);
                     Player.Score+=_ws.Spill(tile.X, tile.Y);
                 };
             }
-            DynamicEntities.AddRange(Enemies);
-            DynamicEntities.Add(_player);
+            _dynamicEntities.AddRange(Enemies);
+            _dynamicEntities.Add(_player);
         }
 
         #endregion
-
-        //public Level(int width, int height, bool isStarted)
-        //{
-        //    StationsCount = 0;
-        //    _width = width;
-        //    _height = height;
-        //    _isStarted = isStarted;
-        //    Board = new Tile[Width, Height];
-        //    _bullets = new List<Bullet>();
-        //    InitMap();
-        //    _topBar = new TopBar();
-        //    _player = new Player(new KeyboardDriver(Tile.Size, Board), Board[0, 0]);
-
-        //    _collisionDetector = new RectangleDetector();
-        //    InitEvents();
-        //}
 
         public int Width
         {
@@ -167,180 +147,77 @@ namespace MetroDigger.Gameplay
             get { return Player.LivesCount + InitLives; }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update()
         {
             if (!_isStarted)
                 return;
 
-            foreach (IDynamicEntity dynamicEntity in DynamicEntities)
-            {
+            foreach (IDynamicEntity dynamicEntity in _dynamicEntities)
                 dynamicEntity.Update();
-            }
 
-            _topBar.Update(TotalLives, TotalScore, Player.PowerCellCount);
-            for (int i = 0; i < DynamicEntities.Count; i++)
+            _topBar.Update(TotalLives, TotalScore, Player.PowerCellsCount);
+            for (int i = 0; i < _dynamicEntities.Count; i++)
             {
-                IDynamicEntity u1 = DynamicEntities[i];
+                IDynamicEntity u1 = _dynamicEntities[i];
                 if(!u1.IsWaterProof && u1.OccupiedTile.Accessibility==Accessibility.Water)
                     u1.Harm();
-                for (int j = i + 1; j < DynamicEntities.Count; j++)
+                for (int j = i + 1; j < _dynamicEntities.Count; j++)
                 {
-                    IDynamicEntity u2 = DynamicEntities[j];
+                    IDynamicEntity u2 = _dynamicEntities[j];
                     if (_collisionDetector.CheckCollision(u1, u2))
                     {
-                        Debug.WriteLine("Collision Detected");
+                        Logger.Log("Collision Detected");
                         u1.CollideWith(u2);
                         u2.CollideWith(u1);
                     }
                 }
             }
+            if (_newlyAddedDynamicEntities.Count != 0)
+            {
+                _dynamicEntities.AddRange(_newlyAddedDynamicEntities);
+                _dynamicEntities.Sort(new ZIndexComparer());
+            }
+            _newlyAddedDynamicEntities.Clear();
 
-            DynamicEntities.AddRange(NewlyAddedDynamicEntities);
-            NewlyAddedDynamicEntities.Clear();
-
-            DynamicEntities.RemoveAll(character => character.IsToRemove);
+            _dynamicEntities.RemoveAll(character => character.IsToRemove);
 
             CheckProgress();
         }
 
         private void CheckProgress()
         {
-            //int tunnelsScore = 0;
-            //foreach (var tunnelTile in TunnelTiles)
-            //{
-            //    if (tunnelTile.Metro == null)
-            //        continue;
-            //    if (tunnelTile.Accessibility != Accessibility.Free)
-            //        continue;
-            //    int s=0;
-            //    if (tunnelTile.Metro.ClearedOf == Accessibility.Soil)
-            //        s = 50;
-            //    else if (tunnelTile.Metro.ClearedOf == Accessibility.Water)
-            //        s = 100;
-            //    if (tunnelTile.Metro.IsVisitedInSequence)
-            //        s *= 2;
-            //    tunnelsScore += s;
-            //}
-            //Player.Score = _baseScore + tunnelsScore;
             if (StationTiles.TrueForAll(t=>t.Accessibility==Accessibility.Free))
                 RaiseLevelAccomplished(true);
-            if (Player.LivesCount == 0)
+            if (TotalLives == 0)
                 RaiseLevelAccomplished(false);
-        }
-
-        private void DrawTiles(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            for (int y = 0; y < Height; ++y)
-            {
-                for (int x = 0; x < Width; ++x)
-                {
-                    Board[x, y].Draw(gameTime, spriteBatch);
-                }
-            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            DrawTiles(gameTime, spriteBatch);
-            foreach (IDynamicEntity dynamicEntity in DynamicEntities)
+            foreach (var tile in Board)
+                tile.Draw(gameTime, spriteBatch);
+            foreach (var dynamicEntity in _dynamicEntities)
                 dynamicEntity.Draw(gameTime, spriteBatch);
             _topBar.Draw(spriteBatch);
         }
-
-
-        //private void InitMap()
-        //{
-        //    for (int i = 0; i < Width; i++)
-        //    {
-        //        for (int j = 0; j < Height; j++)
-        //        {
-        //            Board[i, j] = new Tile(i, j, new Soil());
-        //        }
-        //    }
-        //    for (int i = 1; i < Width - 1; i++)
-        //    {
-        //        int j = 1;
-        //        Board[j, i] = new Tile(j, i, new Rock());
-        //    }
-        //    for (int i = 1; i < Width; i++)
-        //    {
-        //        int j = 2;
-        //        Board[j, i].Metro = new Tunnel();
-        //    }
-        //    Board[4, 4].Item = new Drill();
-        //    Board[5, 5].Item = new PowerCell();
-        //    Board[0, 6].Metro = new Station();
-        //    StationsCount++;
-        //    Board[4, 6].Metro = new Station();
-        //    StationsCount++; //TODO WTF
-        //}
 
         private void RaiseLevelAccomplished(bool b)
         {
             if (LevelAccomplished != null)
                 LevelAccomplished(this, b);
+            Logger.Log(b ? "level won" : "level lost");
         }
 
         public event Action<Level, bool> LevelAccomplished;
     }
 
-    public class Board : IEnumerable<Tile>
+    class ZIndexComparer : IComparer<IDynamicEntity>
     {
-        private readonly int _height;
-        private readonly Tile[,] _tiles;
-        private readonly int _width;
-
-        public Board(int width, int height)
+        public int Compare(IDynamicEntity x, IDynamicEntity y)
         {
-            _width = width;
-            _height = height;
-            _tiles = new Tile[width + 2, height + 2];
-            for (int i = 0; i < width + 2; i++)
-            {
-                for (int j = 0; j < height + 2; j++)
-                {
-                    _tiles[i, j] = new Tile(i - 1, j - 1, new Buffer());
-                }
-            }
+            if (x.ZIndex < y.ZIndex)
+                return -1;
+            return 1;
         }
-
-        public Tile this[int x, int y]
-        {
-            get
-            {
-                if (x + 1 < 0 || x > _width || y + 1 < 0 || y > _height)
-                    return null;
-                return _tiles[x + 1, y + 1];
-            }
-            set { _tiles[x + 1, y + 1] = value; }
-        }
-
-        public Tile StartTile { get; set; }
-
-        public IEnumerator<Tile> GetEnumerator()
-        {
-            for (int i = 0; i < _width; i++)
-            {
-                for (int j = 0; j < _height; j++)
-                {
-                    yield return this[i, j];
-                }
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public int GetLength(int p0)
-        {
-            if (p0 == 0)
-                return _width;
-            return _height;
-        }
-
-        public int Width { get { return _width; } }
-        public int Height { get { return _height; } }
     }
 }

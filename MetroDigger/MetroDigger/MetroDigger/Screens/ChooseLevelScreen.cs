@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MetroDigger.Manager;
+using MetroDigger.Screens.MenuObjects;
 using XNA_GSM.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
@@ -13,8 +14,8 @@ namespace MetroDigger.Screens
         public ChooseLevelScreen()
             : base("Choose Level")
         {
-            
-            MenuObject[] levelsList = new MenuObject[GameManager.Instance.MaxLevel];
+
+            MenuObject[] levelsList = new MenuObject[GameManager.Instance.GetMaxLevel()];
 
             var unlockedLvls = new List<int>(GameManager.Instance.UnlockedLevels());
             unlockedLvls.Add(unlockedLvls.Count);

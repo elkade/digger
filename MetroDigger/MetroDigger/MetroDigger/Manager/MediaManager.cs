@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MetroDigger.Gameplay;
+using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Manager.Settings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -21,7 +23,6 @@ namespace MetroDigger.Manager
             _soundInfos = new List<SoundInfo>();
             _gameOptions = GameOptions.Instance;
             DrillingPracticles = new List<Texture2D>();
-            RedBullet = new Texture2D[2];
         }
 
         public int Width { get; set; }
@@ -51,8 +52,11 @@ namespace MetroDigger.Manager
             if(soundInfo==null)
                 throw new Exception("There's no sound with this name.");
             SoundEffectInstance player = soundInfo.SoundEffectInstance;
-            //if(player.State==SoundState.Playing || player.State == SoundState.Paused)
-            //    player.Stop();
+            if (player.State == SoundState.Playing || player.State == SoundState.Paused)
+            {
+                player.Stop();
+                player = soundInfo.SoundEffectInstance;
+            }
             if (soundInfo.SoundType == SoundType.Music)
                 player.Volume = _gameOptions.IsMusicEnabled ? 1f : 0f;
             else if (soundInfo.SoundType == SoundType.SoundEffect)
@@ -85,30 +89,63 @@ namespace MetroDigger.Manager
             public SoundType SoundType { get; set; }
         }
         #region Graphics
-        public Texture2D Free { get; set; }
-        public Texture2D Rock { get; set; }
-        public Texture2D Soil { get; set; }
-        public Texture2D PlayerIdle { get; set; }
+
+        readonly Dictionary<string,Texture2D> _graphicsDictionary = new Dictionary<string, Texture2D>();
+        private const float ImageWidth = 300;
+        private const float ImageHeight = 300;
+
+        public Animation GetStaticAnimation(string name, float h = ImageHeight)
+        {
+            if (!_graphicsDictionary.ContainsKey(name))
+                return null;
+            return new Animation(_graphicsDictionary[name], 1, false, (int)h, Scale);
+        }
+
+        public Animation GetDynamicAnimation(string name)
+        {
+            if (!_graphicsDictionary.ContainsKey(name))
+                return null;
+            return new Animation(_graphicsDictionary[name], 1, true, (int)ImageHeight, Scale);
+        }
+
+        public void LoadGraphics(string name, Texture2D texture)
+        {
+            //if (!_graphicsDictionary.ContainsKey(name)) throw new Exception("Such name already exists.");
+            _graphicsDictionary[name] = texture;
+        }
+
+        //public Texture2D Free { get; set; }
+        //public Texture2D Rock { get; set; }
+        //public Texture2D Soil { get; set; }
+        //public Texture2D PlayerIdle { get; set; }
         public List<Texture2D> DrillingPracticles { get; set; }
-        public Texture2D MetroStation { get; set; }
-        public Texture2D MetroTunnel { get; set; }
+        //public Texture2D MetroStation { get; set; }
+        //public Texture2D MetroTunnel { get; set; }
 
-        public Texture2D PowerCell { get; set; }
-        public Texture2D Drill { get; set; }
+        //public Texture2D PowerCell { get; set; }
+        //public Texture2D Drill { get; set; }
 
-        public Texture2D[] RedBullet;
+        //public Texture2D[] RedBullet;
 
         public SpriteFont Font { get; set; }
         public SpriteFont TopBarFont { get; set; }
-        public Texture2D PlayerWithDrill { get; set; }
-        public Texture2D Miner { get; set; }
-        public Texture2D Ranger { get; set; }
-        public Texture2D Stone { get; set; }
+        //public Texture2D PlayerWithDrill { get; set; }
+        //public Texture2D Miner { get; set; }
+        //public Texture2D Ranger { get; set; }
+        //public Texture2D Stone { get; set; }
         public Vector2 Scale { get; set; }
-        public Texture2D Water { get; set; }
+        //public Texture2D Water { get; set; }
 
         #endregion
 
+        public void SetDimensions(int width, int height)
+        {
+            float h = (float)Height / height;
+            float w = (float)Width / width;
+            float min = Math.Min(h, w);
+            Tile.Size = new Vector2(min, min);
+            Scale = new Vector2(min / ImageWidth, min / ImageHeight);
+        }
     }
 
     public enum SoundType

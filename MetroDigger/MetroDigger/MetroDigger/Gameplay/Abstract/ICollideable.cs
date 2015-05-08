@@ -1,6 +1,6 @@
-using MetroDigger.Gameplay.Entities.Characters;
+using MetroDigger.Gameplay.Entities;
 
-namespace MetroDigger.Gameplay.Entities
+namespace MetroDigger.Gameplay.Abstract
 {
     public interface ICollideable : IBoardObject
     {

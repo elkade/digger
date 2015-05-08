@@ -1,4 +1,5 @@
-﻿using MetroDigger.Gameplay.Entities.Characters;
+﻿using MetroDigger.Gameplay.Entities;
+using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
 

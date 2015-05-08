@@ -11,6 +11,7 @@
 using System;
 using MetroDigger.Manager;
 using MetroDigger.Manager.Settings;
+using MetroDigger.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endregion

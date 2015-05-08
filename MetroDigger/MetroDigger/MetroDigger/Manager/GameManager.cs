@@ -21,7 +21,6 @@ namespace MetroDigger.Manager
         private GameManager()
         {
             _levelAssembler = new LevelAssembler();
-            MaxLevel = 2;
         }
 
         private LevelDto _levelDto;
@@ -30,28 +29,57 @@ namespace MetroDigger.Manager
 
         public string UserName { get; set; }
 
-        public int MaxLevel { get; set; }
+        public int GetMaxLevel()
+        {
+            if (!Directory.Exists(LevelDirectory))
+                Directory.CreateDirectory(LevelDirectory);
+            int i;
+            for (i = 0; i < int.MaxValue; i++)
+            {
+                string path = LevelDirectory + "level_" + i;
+                if (!File.Exists(path))
+                    break;
+            }
+            return i;
+        }
 
         public void SignIn(string text)
         {
             UserName = text;
         }
 
+        private const string SaveDirectory = "saved_games/";
+        private const string BestDirectory = "best_scores/";
+        private const string UserDirectory = "users/";
+        private const string LevelDirectory = "levels/";
+
+
         public void SaveGameToFile(string text)
         {
-            text = Directory.GetCurrentDirectory() + "\\" + text;
-            if (File.Exists(text)) return;
+            if (!Directory.Exists(SaveDirectory))
+                Directory.CreateDirectory(SaveDirectory);
+
             XmlSerializer xmlSerializer = new XmlSerializer(_levelDto.GetType());
-            using (TextWriter writer = new StreamWriter(text))
+            using (TextWriter writer = new StreamWriter(SaveDirectory+text))
                 xmlSerializer.Serialize(writer, _levelDto);
         }
 
         public void LoadLevelFromFile(string filename)
         {
-            if (!File.Exists(filename)) return;
+            string path;
+            if (!Directory.Exists(SaveDirectory))
+                Directory.CreateDirectory(SaveDirectory);
+            path = SaveDirectory + filename;
+            if (!File.Exists(path))
+            {
+                if (!Directory.Exists(LevelDirectory))
+                    Directory.CreateDirectory(LevelDirectory);
+                path = LevelDirectory + filename;
+                if (!File.Exists(path)) return;
+            }
 
             XmlSerializer serializer = new XmlSerializer(typeof(LevelDto));
-            using (FileStream fs = new FileStream(filename, FileMode.Open))
+            using (FileStream fs = new FileStream(path, FileMode.Open))
             {
                 XmlReader reader = XmlReader.Create(fs);
                 _levelDto = (LevelDto) serializer.Deserialize(reader);
@@ -71,7 +99,7 @@ namespace MetroDigger.Manager
         public bool GetLevel(int lvlNo, out Level level, bool isNew=false)
         {
             level = null;
-            if (lvlNo == MaxLevel)
+            if (lvlNo == GetMaxLevel())
                 return true;
             LoadLevelFromFile("level_" + lvlNo);
             level = _levelAssembler.GetPlain(_levelDto);
@@ -105,6 +133,10 @@ namespace MetroDigger.Manager
 
             XmlSerializer serializer = new XmlSerializer(typeof(List<ScoreInfo>));
 
+            if (!Directory.Exists(BestDirectory))
+                Directory.CreateDirectory(BestDirectory);
+            fileName = BestDirectory + fileName;
+
             if (!File.Exists(fileName))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ScoreInfo>));
@@ -129,6 +161,12 @@ namespace MetroDigger.Manager
             var scores = LoadBestScores(lvlNo);
             scores.Add(score);
             scores = scores.OrderByDescending((info => info.Score)).Take(SavedScoresCount).ToList();
+
+            if (!Directory.Exists(BestDirectory))
+                Directory.CreateDirectory(BestDirectory);
+            fileName = BestDirectory + fileName;
+
+
             XmlSerializer xmlSerializer = new XmlSerializer(scores.GetType());
             using (TextWriter writer = new StreamWriter(fileName))
                 xmlSerializer.Serialize(writer, scores);
@@ -138,6 +176,12 @@ namespace MetroDigger.Manager
         {
             UserData userData;
             string path = UserName+"_data";
+
+            if (!Directory.Exists(UserDirectory))
+                Directory.CreateDirectory(UserDirectory);
+            path = UserDirectory + path;
+
+
             if (!File.Exists(path))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(UserData));
@@ -167,8 +211,12 @@ namespace MetroDigger.Manager
 
         public void SaveUserData(UserData userData)
         {
+            var path = UserName + "_data";
+            if (!Directory.Exists(UserDirectory))
+                Directory.CreateDirectory(UserDirectory);
+            path = UserDirectory + path;
             XmlSerializer xmlSerializer = new XmlSerializer(userData.GetType());
-            using (TextWriter writer = new StreamWriter(UserName + "_data"))
+            using (TextWriter writer = new StreamWriter(path))
                 xmlSerializer.Serialize(writer, userData);
         }
 

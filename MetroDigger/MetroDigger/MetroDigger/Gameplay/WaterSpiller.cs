@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using MetroDigger.Gameplay.Entities.Others;
+﻿using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
-using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay
@@ -43,7 +39,8 @@ namespace MetroDigger.Gameplay
                 if (tile.Accessibility == Accessibility.Water)
                 {
                     Water w = tile.Terrain as Water;
-                    tile.Terrain = new Water(w.Level, w.IsFull, _board[tile.X, tile.Y - 1].Accessibility != Accessibility.Free && _board[tile.X, tile.Y - 1].Accessibility != Accessibility.Buffer);
+                    if (w != null)
+                        tile.Terrain = new Water(w.Level, w.IsFull, _board[tile.X, tile.Y - 1].Accessibility != Accessibility.Free && _board[tile.X, tile.Y - 1].Accessibility != Accessibility.Buffer);
                 }
                 else
                 {
@@ -105,7 +102,8 @@ namespace MetroDigger.Gameplay
             {
                 case Accessibility.Water:
                     if (wasUp) return 0;
-                    s += (_board[x, y].Terrain as Water).IsFull ? 1 : 0;
+                    var water = _board[x, y].Terrain as Water;
+                    s += water != null && water.IsFull ? 1 : 0;
                     _board[x, y].Terrain = new Free();
                     break;
                 default:
@@ -135,12 +133,16 @@ namespace MetroDigger.Gameplay
                 s = 0;
             }
             else
-                s += (_board[x, y].Terrain as Water).IsFull ? 1 : 0;
+            {
+                var water = _board[x, y].Terrain as Water;
+                s += water != null && water.IsFull ? 1 : 0;
+            }
             visited[x, y] = true;
             _board[x,y].Terrain = new Free();
             s += CheckWater(x - 1, y, visited);
             s += CheckWater(x + 1, y, visited);
             s += CheckWater(x, y - 1, visited);
+            s += CheckWater(x, y + 1, visited);
             return s;
         }
     }

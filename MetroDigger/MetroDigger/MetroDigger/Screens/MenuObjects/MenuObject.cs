@@ -1,11 +1,9 @@
 ﻿using System;
-using MetroDigger;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
-namespace XNA_GSM.Screens.MenuObjects
+namespace MetroDigger.Screens.MenuObjects
 {
     abstract class MenuObject
     {
@@ -106,15 +104,7 @@ namespace XNA_GSM.Screens.MenuObjects
         /// </summary>
         public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
-            // there is no such thing as a selected item on Windows Phone, so we always
-            // force isSelected to be false
-#if WINDOWS_PHONE
-            isSelected = false;
-#endif
 
-            // When the menu selection changes, entries gradually fade between
-            // their selected and deselected appearance, rather than instantly
-            // popping to the new state.
             float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
 
             if (isSelected)
@@ -123,27 +113,21 @@ namespace XNA_GSM.Screens.MenuObjects
                 selectionFade = Math.Max(selectionFade - fadeSpeed, 0);
         }
 
-
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
         /// </summary>
         public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
-            // there is no such thing as a selected item on Windows Phone, so we always
-            // force isSelected to be false
-#if WINDOWS_PHONE
-            isSelected = false;
-#endif
 
             // Draw the selected entry in yellow, otherwise white.
-            Color color = isSelected ? Color.Yellow : Color.White;
+            Color color = isSelected ? Color.LightGreen : Color.White;
 
             // Pulsate the size of the selected menu entry.
-            double time = gameTime.TotalGameTime.TotalSeconds;
+            //double time = gameTime.TotalGameTime.TotalSeconds;
 
-            float pulsate = (float)Math.Sin(time * 6) + 1;
+            //float pulsate = (float)Math.Sin(time * 6) + 1;
 
-            float scale = 1 + pulsate * 0.05f * selectionFade;
+            //float scale = 1 + pulsate * 0.05f * selectionFade;
 
             // Modify the alpha to fade _text out during transitions.
             color *= screen.TransitionAlpha;
@@ -156,7 +140,7 @@ namespace XNA_GSM.Screens.MenuObjects
             Vector2 origin = new Vector2(0, font.LineSpacing / 2);
 
             spriteBatch.DrawString(font, Text, position, color, 0,
-                                   origin, scale, SpriteEffects.None, 0);
+                                   origin, 1, SpriteEffects.None, 0);
         }
 
 

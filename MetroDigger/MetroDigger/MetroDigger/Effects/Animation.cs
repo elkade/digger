@@ -89,7 +89,7 @@ public class Animation
         ///// <summary>
         ///// Constructs a new animation with the width being the same as the height.
         ///// </summary>        
-        //public Animation(Texture2D texture, float frameTime, bool isLooping, float scale)
+        //public AnimationPlayer(Texture2D texture, float frameTime, bool isLooping, float scale)
         //{
         //    this.texture = texture;
         //    this.frameTime = frameTime;

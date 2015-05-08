@@ -1,4 +1,6 @@
-﻿using MetroDigger.Manager;
+﻿using System.Collections.Generic;
+using MetroDigger.Logging;
+using MetroDigger.Manager;
 using MetroDigger.Manager.Settings;
 using MetroDigger.Screens;
 using Microsoft.Xna.Framework;
@@ -22,6 +24,9 @@ namespace MetroDigger
 
         public MetroDiggerGame()
         {
+            Logger.Config("log");
+            Logger.Log("start");
+            Logger.Log("setting resolution");
             MediaManager.Instance.Width = 800;
             MediaManager.Instance.Height = 700;
             Content.RootDirectory = "Content";
@@ -45,7 +50,7 @@ namespace MetroDigger
         protected override void Initialize()
         {
             base.Initialize();
-
+            Logger.Log("initializing screens");
             screenManager.AddScreen(new GameplayScreen());
             screenManager.AddScreen(new LogScreen());
 
@@ -54,41 +59,37 @@ namespace MetroDigger
         protected override void LoadContent()
         {
             base.LoadContent();
-
+            Logger.Log("loading media");
             var mm = _mediaManager;
 
             mm.LoadSound("menuSong", Content.Load<SoundEffect>("DST-PrinterFriendlyVersion"), SoundType.Music);
             mm.LoadSound("laser", Content.Load<SoundEffect>("Laser Sound Effect"), SoundType.SoundEffect);
             mm.PlaySound("menuSong");
 
-            mm.Free = Content.Load<Texture2D>("background");
-            mm.Soil = Content.Load<Texture2D>("ziemia");
-            mm.Rock = Content.Load<Texture2D>("skala");
-
-            mm.PlayerIdle = Content.Load<Texture2D>("haniaIdle");
-            mm.PlayerWithDrill = Content.Load<Texture2D>("haniaswider1");
-
-            mm.DrillingPracticles.Add(Content.Load<Texture2D>("circle"));
-            mm.DrillingPracticles.Add(Content.Load<Texture2D>("star"));
-            mm.DrillingPracticles.Add(Content.Load<Texture2D>("diamond"));
-
-            mm.RedBullet[0] = Content.Load<Texture2D>("redHor");
-            mm.RedBullet[1] = Content.Load<Texture2D>("redVer");
-
-            mm.MetroTunnel = Content.Load<Texture2D>("znacznik");
-            mm.MetroStation = Content.Load<Texture2D>("stacja");
+            mm.LoadGraphics("Free", Content.Load<Texture2D>("background"));
+            mm.LoadGraphics("Soil", Content.Load<Texture2D>("ziemia"));
+            mm.LoadGraphics("Rock", Content.Load<Texture2D>("skala"));
+            mm.LoadGraphics("PlayerIdle", Content.Load<Texture2D>("haniaIdle"));
+            mm.LoadGraphics("PlayerWithDrill", Content.Load<Texture2D>("haniaswider1"));
+            mm.DrillingPracticles = new List<Texture2D>
+            {
+                Content.Load<Texture2D>("circle"),
+                Content.Load<Texture2D>("star"),
+                Content.Load<Texture2D>("diamond")
+            };
+            //mm.LoadGraphics("Bullet", Content.Load<Texture2D>("redHor"));
+            mm.LoadGraphics("Bullet", Content.Load<Texture2D>("redVer"));
+            mm.LoadGraphics("Tunnel", Content.Load<Texture2D>("znacznik"));
+            mm.LoadGraphics("Station", Content.Load<Texture2D>("stacja"));
+            mm.LoadGraphics("PowerCell", Content.Load<Texture2D>("bateria"));
+            mm.LoadGraphics("Drill", Content.Load<Texture2D>("swider"));
+            mm.LoadGraphics("Miner", Content.Load<Texture2D>("kopacz1"));
+            mm.LoadGraphics("Ranger", Content.Load<Texture2D>("zwiadowca1"));
+            mm.LoadGraphics("Stone", Content.Load<Texture2D>("kamien"));
+            mm.LoadGraphics("Water", Content.Load<Texture2D>("wodaEx"));
 
             mm.Font = Content.Load<SpriteFont>("menufont");
             mm.TopBarFont = Content.Load<SpriteFont>("gamefont");
-
-            mm.PowerCell = Content.Load<Texture2D>("bateria");
-            mm.Drill = Content.Load<Texture2D>("swider");
-
-            mm.Miner = Content.Load<Texture2D>("kopacz1");
-            mm.Ranger = Content.Load<Texture2D>("zwiadowca1");
-
-            mm.Stone = Content.Load<Texture2D>("kamien");
-            mm.Water = Content.Load<Texture2D>("wodaEx");
         }
     }
 

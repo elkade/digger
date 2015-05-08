@@ -1,6 +1,13 @@
-﻿namespace MetroDigger.Gameplay.Entities.Terrains
+﻿using MetroDigger.Gameplay.Abstract;
+
+namespace MetroDigger.Gameplay.Entities.Terrains
 {
-    public abstract class Terrain : StaticEntity
+    public interface ITerrain : IDrawable
+    {
+         Accessibility Accessibility { get; }
+    }
+
+    public abstract class Terrain : StaticEntity, ITerrain
     {
         protected Accessibility _accessibility;
 
@@ -11,6 +18,8 @@
 
         public Terrain()
         {
+            ZIndex = -1000;
+
             _accessibility = Accessibility.Rock;
         }
     }

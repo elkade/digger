@@ -1,7 +1,8 @@
 using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
+using IUpdateable = MetroDigger.Gameplay.Entities.IUpdateable;
 
-namespace MetroDigger.Gameplay.Entities
+namespace MetroDigger.Gameplay.Abstract
 {
     public interface IBoardObject : IMoveable
     {
@@ -13,7 +14,6 @@ namespace MetroDigger.Gameplay.Entities
 
     public interface IMoveable : IUpdateable
     {
-        Vector2 Position { get; }
         float MovementSpeed { get; set; }
     }
 }

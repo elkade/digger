@@ -9,7 +9,7 @@ namespace MetroDigger.Gameplay.Tiles
     {
         public Item Item;
 
-        public Terrain Terrain;
+        public ITerrain Terrain;
 
         public Metro Metro;
 
@@ -52,7 +52,7 @@ namespace MetroDigger.Gameplay.Tiles
             get { return (int) Size.Y; }
         }
 
-        public Tile(int x, int y, Terrain terrain = null, Item item = null, Metro metro = null)
+        public Tile(int x, int y, ITerrain terrain = null, Item item = null, Metro metro = null)
         {
             _x = x;
             _y = y;
@@ -79,11 +79,20 @@ namespace MetroDigger.Gameplay.Tiles
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (Terrain != null)
-                Terrain.Draw(gameTime, spriteBatch, Position);
+            {
+                Terrain.Position = Position;
+                Terrain.Draw(gameTime, spriteBatch);
+            }
             if (Metro != null)
-                Metro.Draw(gameTime, spriteBatch, Position);
-            if(Item!=null)
-                Item.Draw(gameTime, spriteBatch, Position);
+            {
+                Metro.Position = Position;
+                Metro.Draw(gameTime, spriteBatch);
+            }
+            if (Item != null)
+            {
+                Item.Position = Position;
+                Item.Draw(gameTime, spriteBatch);
+            }
         }
 
         public Accessibility Accessibility

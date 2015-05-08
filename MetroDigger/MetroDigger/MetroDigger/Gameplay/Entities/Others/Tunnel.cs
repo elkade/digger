@@ -1,5 +1,4 @@
-﻿using System;
-using MetroDigger.Manager;
+﻿using MetroDigger.Manager;
 
 namespace MetroDigger.Gameplay.Entities.Others
 {
@@ -8,8 +7,7 @@ namespace MetroDigger.Gameplay.Entities.Others
         public Tunnel()
         {
             var grc = MediaManager.Instance;
-            Animations = new[] {new Animation(grc.MetroTunnel, 1, false, 0, MediaManager.Instance.Scale)};
-            Sprite.PlayAnimation(Animations[0]);
+            AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Tunnel"));
         }
         public override int Clear(ref int stationsCount)
         {

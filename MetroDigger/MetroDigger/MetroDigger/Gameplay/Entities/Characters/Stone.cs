@@ -1,4 +1,5 @@
 ﻿using MetroDigger.Effects;
+using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Manager;
@@ -7,38 +8,29 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
-    public class Stone : Character
+    public class Stone : DynamicEntity
     {
         private MediaManager _grc;
 
         public Stone(IDriver driver, Tile occupiedTile)
-            : base(driver, 5f, occupiedTile, new Vector2(0, -1))
+            : base(driver, occupiedTile, new Vector2(0, -1), 5f)
         {
-            PowerCellCount = 0;
+            PowerCellsCount = 0;
             HasDrill = true;
             _grc = MediaManager.Instance;
-            Direction = new Vector2(0, 1);
-            _occupiedTile = occupiedTile;
+            MovementHandler.Direction = new Vector2(0, 1);
+            OccupiedTile = occupiedTile;
             Position = OccupiedTile.Position;
-            LoadContent();
-            Sprite.PlayAnimation(Animations[0]);
+            AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Stone"));
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
             Value = 500;
             Aggressiveness = Aggressiveness.None;
-        }
-        private void LoadContent()
-        {
-            Animations = new[]
-            {
-                new Animation(_grc.Stone, 1f, true, 300, MediaManager.Instance.Scale),
-            };
             MovementHandler.Finished += (handler, tile1, tile2) =>
             {
                 Aggressiveness = Aggressiveness.None;
                 State = EntityState.Idle;
             };
         }
-
         public override void Update()
         {
             ParticleEngine.EmitterLocation = Position;
@@ -48,12 +40,11 @@ namespace MetroDigger.Gameplay.Entities.Characters
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Sprite.Draw(gameTime, spriteBatch, Position, SpriteEffects.None, Color.White);
+            AnimationPlayer.Draw(gameTime, spriteBatch, Position, SpriteEffects.None, Color.White);
 
         }
 
-        public int PowerCellCount { get; set; }
-        public override void StartMoving(Tile destinationTile)
+        protected override void StartMoving(Tile destinationTile)
         {
             if (MovementHandler.Direction == Level.GravityVector)
                 Aggressiveness = Aggressiveness.All;

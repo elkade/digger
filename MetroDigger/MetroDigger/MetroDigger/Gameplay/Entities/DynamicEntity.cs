@@ -1,27 +1,24 @@
-﻿using MetroDigger.Gameplay.Drivers;
-using MetroDigger.Gameplay.Entities.Characters;
+﻿using System;
+using MetroDigger.Effects;
+using MetroDigger.Gameplay.Abstract;
+using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities
 {
-
-    public interface IDynamicEntity : ICollideable, IDrawable
-    {
-    }
     public abstract class DynamicEntity : Entity, IDynamicEntity
     {
-//todo to jest fatalnie
+        private readonly IDriver _driver;
+        protected float Angle;
+        protected readonly IMover MovementHandler;
+        protected ParticleEngine ParticleEngine;
 
-        protected float Angle = 0.0f;
-        protected IMover MovementHandler;
-        private IDriver _driver;
-
-        protected Tile _occupiedTile;
+        private Tile _occupiedTile;
         private EntityState _state;
 
-        public DynamicEntity(IDriver driver, Tile firstTile, Vector2 firstDirection)
+        protected DynamicEntity(IDriver driver, Tile firstTile, Vector2 firstDirection, float movementSpeed)
         {
             MovementHandler = new MovementHandler(firstTile, firstDirection);
             MovementHandler.Started += (handler, tile1, tile2) => State = EntityState.Moving;
@@ -34,31 +31,44 @@ namespace MetroDigger.Gameplay.Entities
             _driver = driver;
             _driver.Move += StartMoving;
             IsWaterProof = true;
+            IsToRemove = false;
+            MovementSpeed = movementSpeed;
+            Driver.Drill += tile =>
+            {
+                if (HasDrill) StartDrilling(tile);
+                else MovementHandler.Direction = Vector2.Normalize(tile.Position - OccupiedTile.Position);
+            };
+            Driver.Move += StartMoving;
+            Driver.Turn += vector2 => MovementHandler.Direction = vector2;
+            Aggressiveness = Aggressiveness.None;
         }
 
-        public IDriver Driver
+        protected IDriver Driver
         {
             get { return _driver; }
         }
 
-
-        public EntityState State
+        protected EntityState State
         {
             get { return _state; }
             set { _state = value; }
         }
 
+        public virtual bool HasDrill { get; set; }
+
+        public int PowerCellsCount { get; set; }
+        public event Action<ICollector, Tile, Tile> Visited;
+
         public float Width
         {
-            get { return Sprite.Animation.FrameWidth*Sprite.Animation.Scale.X; }
+            get { return AnimationPlayer.Animation.FrameWidth*AnimationPlayer.Animation.Scale.X; }
         }
 
         public float Height
         {
-            get { return Sprite.Animation.FrameHeight*Sprite.Animation.Scale.Y; }
+            get { return AnimationPlayer.Animation.FrameHeight*AnimationPlayer.Animation.Scale.Y; }
         }
 
-        public Vector2 Position { get; set; }
         public float MovementSpeed { get; set; }
 
         public bool IsToRemove { get; set; }
@@ -67,17 +77,12 @@ namespace MetroDigger.Gameplay.Entities
         public Tile OccupiedTile
         {
             get { return _occupiedTile; }
-        }
-
-        public override Vector2 Direction
-        {
-            get { return MovementHandler.Direction; }
-            set { MovementHandler.Direction = value; }
+            protected set { _occupiedTile = value; }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Sprite.Draw(gameTime, spriteBatch, Position, SpriteEffects.None, Color.White, Angle);
+            AnimationPlayer.Draw(gameTime, spriteBatch, Position, SpriteEffects.None, Color.White, Angle);
         }
 
         public virtual void Update()
@@ -117,20 +122,43 @@ namespace MetroDigger.Gameplay.Entities
 
         public bool IsWaterProof { get; set; }
 
-        public virtual void StartMoving(Tile destinationTile)
+        protected virtual void StartMoving(Tile destinationTile)
         {
             if (MovementHandler.IsMoving || destinationTile == null)
                 return;
             MovementHandler.MakeMove(_occupiedTile, destinationTile, MovementSpeed);
         }
 
-        protected void UpdateMoving()
+        private void UpdateMoving()
         {
             if (!MovementHandler.IsMoving)
                 return;
             MovementHandler.Update();
             Position = MovementHandler.Position;
         }
+
+        public virtual void StartDrilling(Tile destination)
+        {
+            if (MovementHandler.IsMoving || destination == null)
+                return;
+            MovementHandler.MakeMove(_occupiedTile, destination, MovementSpeed/3f);
+            State = EntityState.Drilling;
+        }
     }
 
+    public enum EntityState
+    {
+        Idle,
+        Drilling,
+        Moving,
+        StartingMoving
+    }
+
+    public enum Aggressiveness
+    {
+        None,
+        Player,
+        Enemy,
+        All
+    }
 }

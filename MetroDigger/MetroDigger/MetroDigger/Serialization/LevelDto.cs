@@ -18,6 +18,7 @@ namespace MetroDigger.Serialization
         public List<StoneDto> Stones { get; set; }
         public int Number { get; set; }
 
+        public Position StartPosition { get; set; }
         //stone
         //bullet
         //miner

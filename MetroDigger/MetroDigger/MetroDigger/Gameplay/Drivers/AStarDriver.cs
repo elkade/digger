@@ -39,7 +39,7 @@ namespace MetroDigger.Gameplay.Drivers
                     destTile = _path[_i++];
                 else
                     return;
-                if (destTile != null && destTile != mh.StartTile)
+                if (destTile != null && destTile != mh.StartTile && destTile != Board.StartTile)
                 {
                     if (AreNeighbours(destTile, mh.StartTile))
                         //destTile = Board[mh.StartTile.X + (new Random()).Next(2) - 1, mh.StartTile.Y + (new Random()).Next(2) - 1];

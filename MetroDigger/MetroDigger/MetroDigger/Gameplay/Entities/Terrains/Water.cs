@@ -18,9 +18,8 @@ namespace MetroDigger.Gameplay.Entities.Terrains
                 lvl = WaterLevel.FullOpen;
             _level = lvl;
             var grc = MediaManager.Instance;
-            Animations = new[] { new Animation(grc.Water, 1, false, 300, MediaManager.Instance.Scale, 300) };
-            Sprite.CustomIndex = (int)_level;
-            Sprite.PlayAnimation(Animations[0], false);
+            AnimationPlayer.CustomIndex = (int)_level;
+            AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Water"), false);
             _accessibility = Accessibility.Water;
             IsFull = isFull;
         }
@@ -36,9 +35,8 @@ namespace MetroDigger.Gameplay.Entities.Terrains
             else
                 _level = WaterLevel.Quarter;
             var grc = MediaManager.Instance;
-            Animations = new[] { new Animation(grc.Water, 1, false, 300, MediaManager.Instance.Scale,300) };
-            Sprite.CustomIndex = (int)_level;
-            Sprite.PlayAnimation(Animations[0],false);
+            AnimationPlayer.CustomIndex = (int)_level;
+            AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Water"),false);
             _accessibility = Accessibility.Water;
             IsFull = isFull;
         }
@@ -50,8 +48,8 @@ namespace MetroDigger.Gameplay.Entities.Terrains
             set
             {
                 _level = value;
-                Sprite.CustomIndex = (int) _level;
-                Sprite.PlayAnimation(Animations[0],false);
+                AnimationPlayer.CustomIndex = (int) _level;
+                AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Water"), false);
             }
             get { return _level; }
         }

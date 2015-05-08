@@ -1,4 +1,5 @@
 ﻿using System;
+using MetroDigger.Gameplay.Entities;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Tiles;

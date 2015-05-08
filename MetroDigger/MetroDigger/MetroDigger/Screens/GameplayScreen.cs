@@ -1,5 +1,6 @@
 using System;
 using MetroDigger.Gameplay;
+using MetroDigger.Logging;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,6 +17,7 @@ namespace MetroDigger.Screens
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            Logger.Log("GameplayScreen loaded");
         }
 
         #region Initialization
@@ -36,7 +38,7 @@ namespace MetroDigger.Screens
         public GameplayScreen() //do t³a
         {
             SetTransition();
-            int lvlNo = (new Random()).Next(GameManager.Instance.MaxLevel);
+            int lvlNo = (new Random()).Next(GameManager.Instance.GetMaxLevel());
             if (!GameManager.Instance.GetLevel(lvlNo, out _level))
             {
                 if (_level == null)
@@ -138,7 +140,7 @@ namespace MetroDigger.Screens
 
             if (IsActive)
             {
-                _level.Update(gameTime);
+                _level.Update();
             }
         }
 

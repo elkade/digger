@@ -1,5 +1,6 @@
 ﻿using System;
 using MetroDigger.Effects;
+using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Manager;
@@ -8,52 +9,49 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
-    public class Player : Character, ICollector, IDriller, IShooter
+    public class Player : DynamicEntity, ICollector, IDriller, IShooter
     {
         private readonly MediaManager _grc;
 
         private int _score;
 
         private readonly Tile _startTile;
+        private bool _hasDrill1;
 
-        public Player(IDriver driver, Tile occupiedTile)
-            : base(driver, 5f, occupiedTile, new Vector2(0,1))
+        public Player(IDriver driver, Tile occupiedTile, Tile startTile)
+            : base(driver, occupiedTile, new Vector2(0, 1), 5f)
         {
-            PowerCellCount = 0;
+            PowerCellsCount = 0;
             HasDrill = false;
             _grc = MediaManager.Instance;
-            Direction = new Vector2(0, 1);
-            _occupiedTile = occupiedTile;
+            MovementHandler.Direction = new Vector2(0, 1);
+            OccupiedTile = occupiedTile;
             Position = OccupiedTile.Position;
-            LoadContent();
-            Sprite.PlayAnimation(Animations[0]);
+            AnimationPlayer.PlayAnimation(Mm.GetDynamicAnimation("PlayerIdle"));
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
-            _startTile = _occupiedTile;
+            _startTile = startTile;
             Aggressiveness = Aggressiveness.Player;
             MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
-            Driver.Shoot += RaiseShoot;
-        }
-        private void LoadContent()
-        {
-            Animations = new[]
-            {
-                new Animation(_grc.PlayerIdle, 1f, true, 300, MediaManager.Instance.Scale),
-                new Animation(_grc.PlayerWithDrill, 1f, true, 300, MediaManager.Instance.Scale)
-            };
+            Driver.Shoot += StartShooting;
+            ZIndex = 1000;
             MovementHandler.Halved += (handler, tile1, tile2) =>
             {
-                if (State==EntityState.Drilling)
+                if (State == EntityState.Drilling)
                     RaiseDrilled(tile2);
             };
+
         }
 
+        public override Vector2 Direction
+        {
+            get { return MovementHandler.Direction; }
+            protected set { MovementHandler.Direction = value; }
+        }
 
         public event Action<IShooter> Shoot;
 
         private void RaiseShoot()
         {
-            if (PowerCellCount <= 0) return;
-            //PowerCellCount--;
             Shoot(this);
         }
 
@@ -79,9 +77,9 @@ namespace MetroDigger.Gameplay.Entities.Characters
         }
         public void StartShooting()
         {
-            if (PowerCellCount <= 0) return;
+            if (/*PowerCellCount <= 0 ||*/ State!=EntityState.Idle) return;
             RaiseShoot();
-            PowerCellCount--;
+            PowerCellsCount--;
         }
         public int LivesCount { get; set; }
 
@@ -96,12 +94,12 @@ namespace MetroDigger.Gameplay.Entities.Characters
             }
         }
 
-        public void Reset()
+        private void Reset()
         {
             LivesCount--;
             State = EntityState.Idle;
             MovementHandler.Reset(_startTile, new Vector2(0,1));
-            _occupiedTile = _startTile;
+            OccupiedTile = _startTile;
             Position = _startTile.Position;
         }
 
@@ -116,7 +114,15 @@ namespace MetroDigger.Gameplay.Entities.Characters
         }
         public event Action<ICollector, Tile, Tile> Visited;
 
-
+        public override bool HasDrill
+        {
+            get { return base.HasDrill; }
+            set
+            {
+                base.HasDrill = value;
+                AnimationPlayer.PlayAnimation(Mm.GetDynamicAnimation("PlayerWithDrill"));
+            }
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using MetroDigger.Effects;
+using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.Drivers;
-using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
@@ -9,38 +9,25 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
-    public class Ranger : Character, ICollector, IDriller
+    public class Ranger : DynamicEntity, ICollector, IDriller
     {
-        private MediaManager _grc;
-
-        public int Score = 0;
+        private readonly MediaManager _grc;
 
         public Ranger(IDriver driver, Tile occupiedTile, bool hasDrill, int energyCells)
-            : base(driver, 5f, occupiedTile, new Vector2(0, -1))
+            : base(driver, occupiedTile, new Vector2(0, -1), 5f)
         {
-            PowerCellCount = 0;
-            HasDrill = true;
             _grc = MediaManager.Instance;
-            Direction = new Vector2(0, 1);
-            _occupiedTile = occupiedTile;
+            MovementHandler.Direction = new Vector2(0, 1);
+            OccupiedTile = occupiedTile;
             Position = OccupiedTile.Position;
-            LoadContent();
-            Sprite.PlayAnimation(Animations[0]);
+            AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Ranger"));
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
             Value = 500;
             Aggressiveness = Aggressiveness.Enemy;
             MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
             IsWaterProof = false;
-            PowerCellCount = energyCells;
+            PowerCellsCount = energyCells;
             HasDrill = hasDrill;
-        }
-        private void LoadContent()
-        {
-            Animations = new[]
-            {
-                new Animation(_grc.Ranger, 1f, true, 300, MediaManager.Instance.Scale),
-                new Animation(_grc.Miner, 1f, true, 300, MediaManager.Instance.Scale),
-            };
             MovementHandler.Halved += (handler, tile1, tile2) =>
             {
                 if (State == EntityState.Drilling)
@@ -50,7 +37,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
 
         public event Action<IDriller, Tile> Drilled;
 
-        protected void RaiseDrilled(Tile tile)
+        private void RaiseDrilled(Tile tile)
         {
             if (Drilled != null)
                 Drilled(this, tile);
@@ -63,9 +50,16 @@ namespace MetroDigger.Gameplay.Entities.Characters
             base.Update();
         }
 
+        public override Vector2 Direction
+        {
+            get { return MovementHandler.Direction; }
+            protected set { MovementHandler.Direction = value; }
+        }
+
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (base.State == EntityState.Drilling)
+            if (State == EntityState.Drilling)
                 ParticleEngine.Draw(spriteBatch);
             base.Draw(gameTime, spriteBatch);
         }

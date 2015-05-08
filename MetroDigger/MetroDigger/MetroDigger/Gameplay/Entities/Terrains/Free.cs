@@ -1,6 +1,4 @@
 ﻿using MetroDigger.Manager;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Terrains
 {
@@ -8,9 +6,7 @@ namespace MetroDigger.Gameplay.Entities.Terrains
     {
         public Free()
         {
-            var grc = MediaManager.Instance;
-            Animations = new[]{new Animation(grc.Free,1,false,300, MediaManager.Instance.Scale)};
-            Sprite.PlayAnimation(Animations[0]);
+            AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Free"));
             _accessibility = Accessibility.Free;
         }
     }

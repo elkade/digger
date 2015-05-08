@@ -11,6 +11,7 @@
 
 using System;
 using MetroDigger;
+using MetroDigger.Screens.MenuObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

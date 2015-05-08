@@ -1,7 +1,6 @@
 ﻿using System;
-using MetroDigger.Gameplay.Entities;
 
-namespace MetroDigger.Gameplay
+namespace MetroDigger.Gameplay.Abstract
 {
     public interface IShooter : IDynamicEntity
     {

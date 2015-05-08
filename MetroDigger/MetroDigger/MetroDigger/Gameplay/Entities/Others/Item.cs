@@ -1,4 +1,5 @@
 ﻿using System;
+using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.Entities.Characters;
 
 namespace MetroDigger.Gameplay.Entities.Others

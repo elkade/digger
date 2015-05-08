@@ -14,7 +14,7 @@ namespace MetroDigger.Screens
         public RankingScreen(int? score = null, int? lvl=null)
             : base("Ranking")
         {
-            string[] levelsLabels = new string[GameManager.Instance.MaxLevel+1];
+            string[] levelsLabels = new string[GameManager.Instance.GetMaxLevel()+1];
             levelsLabels[0] = "all";
             for (int j = 1; j < levelsLabels.Length; j++)
                 levelsLabels[j] = j.ToString();

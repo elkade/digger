@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace MetroDigger.Gameplay
 {
     /// <summary>
-    /// Controls playback of an Animation.
+    /// Controls playback of an AnimationPlayer.
     /// </summary>
     public struct AnimationPlayer
     {
@@ -80,10 +80,10 @@ namespace MetroDigger.Gameplay
         //public void DrawSprite(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
         //{
         //    // Calculate the source rectangle of the current frame.
-        //    Rectangle source = new Rectangle(_frameIndex * Animation.FrameWidth, _shift, Animation.FrameWidth, Animation.FrameHeight + _shift);
+        //    Rectangle source = new Rectangle(_frameIndex * AnimationPlayer.FrameWidth, _shift, AnimationPlayer.FrameWidth, AnimationPlayer.FrameHeight + _shift);
 
         //    // Draw the current frame.
-        //    spriteBatch.Draw(Animation.Texture, position, source, Color.White, 0.0f, Origin, Animation.Scale, spriteEffects, 0.0f);
+        //    spriteBatch.Draw(AnimationPlayer.Texture, position, source, Color.White, 0.0f, Origin, AnimationPlayer.Scale, spriteEffects, 0.0f);
         //}
 
         #region Draw

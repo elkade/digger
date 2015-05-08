@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using MetroDigger.Gameplay;
 using MetroDigger.Gameplay.Drivers;
+using MetroDigger.Gameplay.Entities;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
@@ -21,10 +22,12 @@ namespace MetroDigger.Serialization
                 MetroStations = new List<EntityDto>(),
                 Terrains = new List<TerrainDto>(),
                 Miners = new List<MinerDto>(),
+                Rangers = new List<RangerDto>(),
                 Stones = new List<StoneDto>(),
                 Width = plain.Width,
                 Height = plain.Height,
                 Number = plain.Number,
+                StartPosition = new Position{X=plain.Board.StartTile.X, Y=plain.Board.StartTile.Y}
             };
             foreach (Tile tile in plain.Board)
             {
@@ -85,14 +88,14 @@ namespace MetroDigger.Serialization
                 },
                 Score = plain.Player.Score,
                 Lives = plain.Player.LivesCount,
-                PowerCells = plain.Player.PowerCellCount
+                PowerCells = plain.Player.PowerCellsCount
             };
 
             #endregion
 
             #region Enemies
 
-            foreach (Character enemy in plain.Enemies)
+            foreach (var enemy in plain.Enemies)
             {
                 if (enemy is Miner)
                     dto.Miners.Add(new MinerDto
@@ -103,7 +106,7 @@ namespace MetroDigger.Serialization
                     dto.Rangers.Add(new RangerDto
                     {
                         Position = new Position { X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y },
-                        PowerCells = enemy.PowerCellCount,
+                        PowerCells = enemy.PowerCellsCount,
                         HasDrill = enemy.HasDrill,
                     });
                 else if (enemy is Stone)
@@ -124,8 +127,8 @@ namespace MetroDigger.Serialization
             {
                 Number = dto.Number
             };
-            try
-            {
+            //try
+            //{
 
                 for (int i = 0; i < dto.Width; i++)
                     for (int j = 0; j < dto.Height; j++)
@@ -176,13 +179,16 @@ namespace MetroDigger.Serialization
                     plain.Board[item.Position.X, item.Position.Y].Item = new Drill();
 
                 #endregion
+                if(dto.StartPosition==null)
+                    plain.Board.StartTile = plain.Board[dto.Player.Position.X,dto.Player.Position.Y];
+                else plain.Board.StartTile = plain.Board[dto.StartPosition.X,dto.StartPosition.Y];
 
                 #region Player
 
                 var player = new Player(new KeyboardDriver(Tile.Size, plain.Board),
-                    plain.Board[dto.Player.Position.X, dto.Player.Position.Y])
+                    plain.Board[dto.Player.Position.X, dto.Player.Position.Y], plain.Board.StartTile)
                 {
-                    PowerCellCount = dto.Player.PowerCells,
+                    PowerCellsCount = dto.Player.PowerCells,
                     LivesCount = dto.Player.Lives,
                     Score = dto.Player.Score
                 };
@@ -208,11 +214,11 @@ namespace MetroDigger.Serialization
                 plain.RegisterEnemies();
 
                 #endregion
-            }
-            catch
-            {
-                plain = null;
-            }
+            //}
+            //catch
+            //{
+            //    plain = null;
+            //}
 
             return plain;
         }

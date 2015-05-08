@@ -1,7 +1,5 @@
-﻿using MetroDigger.Gameplay.Entities.Characters;
+﻿using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Manager;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Others
 {
@@ -9,14 +7,12 @@ namespace MetroDigger.Gameplay.Entities.Others
     {
         public PowerCell()
         {
-            var grc = MediaManager.Instance;
-            Animations = new[] { new Animation(grc.PowerCell, 1, false, 300, MediaManager.Instance.Scale) };
-            Sprite.PlayAnimation(Animations[0]);
+            AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("PowerCell"));
         }
 
         public override void GetCollected(ICollector collector)
         {
-            collector.PowerCellCount++;
+            collector.PowerCellsCount++;
             base.GetCollected(collector);
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace XNA_GSM.Screens.MenuObjects
+﻿using MetroDigger.Screens.MenuObjects;
+
+namespace XNA_GSM.Screens.MenuObjects
 {
     class MenuCheckField : MenuObject
     {

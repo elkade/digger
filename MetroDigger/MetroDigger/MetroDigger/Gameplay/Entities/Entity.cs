@@ -1,26 +1,29 @@
 ﻿using System;
+using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using IDrawable = MetroDigger.Gameplay.Abstract.IDrawable;
 
 namespace MetroDigger.Gameplay.Entities
 {
     public abstract class Entity : IDrawable
     {
-        protected Animation[] Animations;
+        private MediaManager _mm;
 
-        protected AnimationPlayer Sprite;
+        protected AnimationPlayer AnimationPlayer;
         private Vector2 _direction;
 
         public virtual Vector2 Direction
         {
             get { return _direction; }
-            set { _direction = value; }
+            protected set { _direction = value; }
         }
 
         protected Entity()
         {
+            Mm = MediaManager.Instance;
             _direction = new Vector2(1, 0);
-            Sprite = new AnimationPlayer();
+            AnimationPlayer = new AnimationPlayer();
         }
 
         protected float GetAngle(Vector2 vector)
@@ -28,10 +31,20 @@ namespace MetroDigger.Gameplay.Entities
             return (float)(Math.Atan2(vector.Y, vector.X) - Math.PI/2);
         }
 
-        public int Value { get; set; }
+        protected int Value { private get; set; }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+        }
+
+        public Vector2 Position { get; set; }
+
+        public int ZIndex { get; set; }
+
+        protected MediaManager Mm
+        {
+            get { return _mm; }
+            set { _mm = value; }
         }
     }
 }

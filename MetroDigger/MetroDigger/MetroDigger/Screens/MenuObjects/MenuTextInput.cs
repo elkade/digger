@@ -3,7 +3,6 @@ using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using XNA_GSM;
-using XNA_GSM.Screens.MenuObjects;
 
 namespace MetroDigger.Screens.MenuObjects
 {
@@ -31,8 +30,11 @@ namespace MetroDigger.Screens.MenuObjects
 
         public override void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
-            _textRegistrator.Update(gameTime.TotalGameTime.TotalSeconds);
-            Text = _textRegistrator.Output();
+            if (isSelected)
+            {
+                _textRegistrator.Update(gameTime.TotalGameTime.TotalSeconds);
+                Text = _textRegistrator.Output();
+            }
             base.Update(screen, isSelected, gameTime);
         }
 

@@ -5,10 +5,9 @@ namespace MetroDigger.Gameplay.Entities
 {
     public abstract class StaticEntity : Entity
     {
-
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Sprite.Draw(gameTime, spriteBatch, position, SpriteEffects.None,Color.White);
+            AnimationPlayer.Draw(gameTime, spriteBatch, Position, SpriteEffects.None,Color.White);
         }
     }
 }

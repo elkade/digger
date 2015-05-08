@@ -10,8 +10,11 @@
 #region Using Statements
 using System;
 using System.Collections.Generic;
+using MetroDigger.Logging;
 using MetroDigger.Manager;
 using MetroDigger.Manager.Settings;
+using MetroDigger.Screens;
+using MetroDigger.Screens.MenuObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using XNA_GSM.Screens.MenuObjects;
@@ -56,6 +59,7 @@ namespace MetroDigger
         /// </summary>
         public MenuScreen(string menuTitle)
         {
+            Logger.Log(menuTitle +" loaded");
             this._menuTitle = menuTitle;
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);

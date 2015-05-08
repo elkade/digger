@@ -1,7 +1,5 @@
-﻿using MetroDigger.Gameplay.Entities.Characters;
+﻿using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Manager;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Others
 {
@@ -10,8 +8,7 @@ namespace MetroDigger.Gameplay.Entities.Others
         public Drill()
         {
             var grc = MediaManager.Instance;
-            Animations = new[] { new Animation(grc.Drill, 1, false, 300, MediaManager.Instance.Scale) };
-            Sprite.PlayAnimation(Animations[0]);
+            AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Drill"));
         }
 
         public override void GetCollected(ICollector collector)

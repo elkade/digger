@@ -1,20 +1,8 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// GameScreen.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
 using System;
 using MetroDigger.Manager;
 using Microsoft.Xna.Framework;
 
-#endregion
-
-namespace MetroDigger
+namespace MetroDigger.Screens
 {
     /// <summary>
     /// Enum describes the screen transition state.
