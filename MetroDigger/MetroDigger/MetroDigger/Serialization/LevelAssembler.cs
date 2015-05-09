@@ -103,16 +103,20 @@ namespace MetroDigger.Serialization
                         Position = new Position {X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y}
                     });
                 else if (enemy is Ranger)
+                {
+                    Ranger ranger = enemy as Ranger;
                     dto.Rangers.Add(new RangerDto
                     {
-                        Position = new Position { X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y },
-                        PowerCells = enemy.PowerCellsCount,
-                        HasDrill = enemy.HasDrill,
+
+                        Position = new Position {X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y},
+                        PowerCells = ranger.PowerCellsCount,
+                        HasDrill = ranger.HasDrill,
                     });
+                }
                 else if (enemy is Stone)
                     dto.Stones.Add(new StoneDto
                     {
-                        Position = new Position { X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y }
+                        Position = new Position {X = enemy.OccupiedTile.X, Y = enemy.OccupiedTile.Y}
                     });
             }
 
@@ -203,7 +207,7 @@ namespace MetroDigger.Serialization
                         plain.Board[item.Position.X, item.Position.Y]));
 
                 foreach (RangerDto item in dto.Rangers)
-                    plain.Enemies.Add(new Ranger(new AStarDriver(Tile.Size, plain.Board, plain.Player),
+                    plain.Enemies.Add(new Ranger(new AStarDriver(Tile.Size, plain.Board, plain.Player,false),
                         plain.Board[item.Position.X, item.Position.Y], item.HasDrill, item.PowerCells));
 
                 foreach (StoneDto item in dto.Stones)

@@ -96,12 +96,12 @@ namespace MetroDigger.Gameplay
             if (visited[x, y])
                 return 0;
             int s = 0;
-            if (y>0&&visited[x, y - 1] && wasUp)
-                return 0;
+            //if (y>0&&visited[x, y - 1] && wasUp)
+            //    return 0;
             switch (_board[x, y].Accessibility)
             {
                 case Accessibility.Water:
-                    if (wasUp) return 0;
+                    //if (wasUp) return 0;
                     var water = _board[x, y].Terrain as Water;
                     s += water != null && water.IsFull ? 1 : 0;
                     _board[x, y].Terrain = new Free();

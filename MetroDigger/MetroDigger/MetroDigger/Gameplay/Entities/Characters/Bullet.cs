@@ -50,6 +50,8 @@ namespace MetroDigger.Gameplay.Entities.Characters
 
         public override void CollideWith(ICollideable character)
         {
+            if(character is Bullet)
+                if ((character as Bullet).Shooter == Shooter) return;
             if (character == Shooter) return;
             character.Harm();
             Harm();

@@ -9,14 +9,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
-    public class Player : DynamicEntity, ICollector, IDriller, IShooter
+    public class Player : DynamicEntity, IDriller, IShooter, ICollector
     {
         private readonly MediaManager _grc;
 
         private int _score;
 
         private readonly Tile _startTile;
-        private bool _hasDrill1;
 
         public Player(IDriver driver, Tile occupiedTile, Tile startTile)
             : base(driver, occupiedTile, new Vector2(0, 1), 5f)
@@ -37,7 +36,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
             MovementHandler.Halved += (handler, tile1, tile2) =>
             {
                 if (State == EntityState.Drilling)
-                    RaiseDrilled(tile2);
+                    RaiseDrilled(tile1,tile2);
             };
 
         }
@@ -55,12 +54,12 @@ namespace MetroDigger.Gameplay.Entities.Characters
             Shoot(this);
         }
 
-        public event Action<IDriller, Tile> Drilled;
+        public event Action<IDriller, Tile, Tile> Drilled;
 
-        private void RaiseDrilled(Tile tile)
+        private void RaiseDrilled(Tile tile1,Tile tile2)
         {
             if (Drilled != null)
-                Drilled(this, tile);
+                Drilled(this, tile1,tile2);
         }
         public override void Update()
         {
@@ -77,7 +76,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
         }
         public void StartShooting()
         {
-            if (/*PowerCellCount <= 0 ||*/ State!=EntityState.Idle) return;
+            if (/*PowerCellsCount <= 0 ||*/ State!=EntityState.Idle) return;
             RaiseShoot();
             PowerCellsCount--;
         }
@@ -120,7 +119,8 @@ namespace MetroDigger.Gameplay.Entities.Characters
             set
             {
                 base.HasDrill = value;
-                AnimationPlayer.PlayAnimation(Mm.GetDynamicAnimation("PlayerWithDrill"));
+                if(value)
+                    AnimationPlayer.PlayAnimation(Mm.GetDynamicAnimation("PlayerWithDrill"));
             }
         }
     }

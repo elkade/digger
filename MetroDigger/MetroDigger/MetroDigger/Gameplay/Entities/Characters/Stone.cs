@@ -23,7 +23,6 @@ namespace MetroDigger.Gameplay.Entities.Characters
             Position = OccupiedTile.Position;
             AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Stone"));
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
-            Value = 500;
             Aggressiveness = Aggressiveness.None;
             MovementHandler.Finished += (handler, tile1, tile2) =>
             {
@@ -31,17 +30,10 @@ namespace MetroDigger.Gameplay.Entities.Characters
                 State = EntityState.Idle;
             };
         }
-        public override void Update()
-        {
-            ParticleEngine.EmitterLocation = Position;
-            ParticleEngine.Update();
-            base.Update();
-        }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             AnimationPlayer.Draw(gameTime, spriteBatch, Position, SpriteEffects.None, Color.White);
-
         }
 
         protected override void StartMoving(Tile destinationTile)

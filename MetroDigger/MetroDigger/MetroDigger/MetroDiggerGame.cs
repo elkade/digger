@@ -45,6 +45,7 @@ namespace MetroDigger
             _gameOptions.Controls = Controls.Arrows;
 
             _mediaManager = MediaManager.Instance;
+
         }
 
         protected override void Initialize()
@@ -86,7 +87,7 @@ namespace MetroDigger
             mm.LoadGraphics("Miner", Content.Load<Texture2D>("kopacz1"));
             mm.LoadGraphics("Ranger", Content.Load<Texture2D>("zwiadowca1"));
             mm.LoadGraphics("Stone", Content.Load<Texture2D>("kamien"));
-            mm.LoadGraphics("Water", Content.Load<Texture2D>("wodaEx"));
+            mm.LoadGraphics("Water", Content.Load<Texture2D>("woda"));
 
             mm.Font = Content.Load<SpriteFont>("menufont");
             mm.TopBarFont = Content.Load<SpriteFont>("gamefont");

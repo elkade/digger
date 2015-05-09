@@ -18,9 +18,8 @@ namespace MetroDigger.Screens
             _levelToRetry = levelToRetry;
             _levelToContinue = levelToContinue;
             _gainedScore = gainedScore;
-            string scoreText;
-            scoreText = isWon ? String.Format("Your score: {0}", levelToRetry.TotalScore) : "You have lost";
-            string labelText = "Do you want to retry?";
+            string scoreText = isWon ? String.Format("Your score: {0}", gainedScore) : "You have lost";
+            const string labelText = "Do you want to retry?";
 
             string quitText = isWon ? "Continue" : "Quit";
 

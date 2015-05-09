@@ -16,11 +16,16 @@ namespace MetroDigger.Screens
         {
 
             MenuObject[] levelsList = new MenuObject[GameManager.Instance.GetMaxLevel()];
+            MenuEntry exitMenuEntry = new MenuEntry("Back");
 
             var unlockedLvls = new List<int>(GameManager.Instance.UnlockedLevels());
             unlockedLvls.Add(unlockedLvls.Count);
+            if (levelsList.Length == 0)
+            {
+                MenuObjects.Add(new MenuLabel("No levels in database."));
 
-            for (int i = 0; i < levelsList.Length; i++)
+            }
+            else for (int i = 0; i < levelsList.Length; i++)
             {
                 if(unlockedLvls.Contains(i))
                 {
@@ -32,6 +37,9 @@ namespace MetroDigger.Screens
                     levelsList[i] = new MenuLabel(i.ToString());
                 MenuObjects.Add(levelsList[i]);
             }
+            exitMenuEntry.Selected += OnCancel;
+
+            MenuObjects.Add(exitMenuEntry);
 
         }
 

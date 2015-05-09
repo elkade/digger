@@ -39,7 +39,13 @@ namespace MetroDigger.Screens
             }
 
             MenuEntry back = new MenuEntry("Back");
+            MenuEntry clear = new MenuEntry("Clear");
             back.Selected += OnCancel;
+            clear.Selected += (sender, args) =>
+            {
+                GameManager.Instance.ClearRanking(lvl);
+                ScreenManager.SwitchScreen(new RankingScreen(null,lvl));
+            };
             _levelPicker.Selected +=
                 (sender, args) =>
                 {
@@ -56,6 +62,7 @@ namespace MetroDigger.Screens
             foreach (var label in _bestScoresLabels)
                 MenuObjects.Add(label);
             MenuObjects.Add(_levelPicker);
+            MenuObjects.Add(clear);
             MenuObjects.Add(back);
         }
 

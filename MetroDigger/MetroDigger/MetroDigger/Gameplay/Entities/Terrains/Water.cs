@@ -18,7 +18,7 @@ namespace MetroDigger.Gameplay.Entities.Terrains
                 lvl = WaterLevel.FullOpen;
             _level = lvl;
             var grc = MediaManager.Instance;
-            AnimationPlayer.CustomIndex = (int)_level;
+            AnimationPlayer.CustomIndex = 0;//(int)_level;
             AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Water"), false);
             _accessibility = Accessibility.Water;
             IsFull = isFull;
@@ -34,8 +34,7 @@ namespace MetroDigger.Gameplay.Entities.Terrains
                 _level = WaterLevel.Half;
             else
                 _level = WaterLevel.Quarter;
-            var grc = MediaManager.Instance;
-            AnimationPlayer.CustomIndex = (int)_level;
+            AnimationPlayer.CustomIndex = 0;//(int)_level;
             AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Water"),false);
             _accessibility = Accessibility.Water;
             IsFull = isFull;
@@ -48,7 +47,7 @@ namespace MetroDigger.Gameplay.Entities.Terrains
             set
             {
                 _level = value;
-                AnimationPlayer.CustomIndex = (int) _level;
+                AnimationPlayer.CustomIndex = 0;//(int) _level;
                 AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Water"), false);
             }
             get { return _level; }

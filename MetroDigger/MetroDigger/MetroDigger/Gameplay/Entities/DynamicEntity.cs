@@ -1,5 +1,4 @@
-﻿using System;
-using MetroDigger.Effects;
+﻿using MetroDigger.Effects;
 using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.Drivers;
 using MetroDigger.Gameplay.Tiles;
@@ -41,6 +40,7 @@ namespace MetroDigger.Gameplay.Entities
             Driver.Move += StartMoving;
             Driver.Turn += vector2 => MovementHandler.Direction = vector2;
             Aggressiveness = Aggressiveness.None;
+            Value = 0;
         }
 
         protected IDriver Driver
@@ -57,7 +57,6 @@ namespace MetroDigger.Gameplay.Entities
         public virtual bool HasDrill { get; set; }
 
         public int PowerCellsCount { get; set; }
-        public event Action<ICollector, Tile, Tile> Visited;
 
         public float Width
         {
@@ -144,6 +143,8 @@ namespace MetroDigger.Gameplay.Entities
             MovementHandler.MakeMove(_occupiedTile, destination, MovementSpeed/3f);
             State = EntityState.Drilling;
         }
+
+        public int Value { get; set; }
     }
 
     public enum EntityState

@@ -229,11 +229,23 @@ namespace MetroDigger.Manager
                 lvl = new UserLevel {Number = lvlNo};
                 userData.Levels.Add(lvl);
             }
-            if (lvl.BestScore >= score && lvl.IsUnlocked) return;
+            if (lvl.BestScore > score && lvl.IsUnlocked) return;
             lvl.BestScore = score;
             lvl.IsUnlocked = true;
             lvl.MaxLives = lives;
             SaveUserData(userData);
+        }
+
+        public void ClearRanking(int? lvlNo)
+        {
+            string num = lvlNo == null ? "" : lvlNo.ToString();
+            string fileName = BestScoresFileName + "_" + num;
+
+            if (!Directory.Exists(BestDirectory))
+                Directory.CreateDirectory(BestDirectory);
+            fileName = BestDirectory + fileName;
+            if(File.Exists(fileName))
+                File.Delete(fileName);
         }
     }
 

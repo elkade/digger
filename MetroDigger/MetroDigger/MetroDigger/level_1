@@ -9,10 +9,37 @@
       <Y>1</Y>
     </Position>
     <Score>0</Score>
-    <Lives>2</Lives>
+    <Lives>0</Lives>
     <PowerCells>0</PowerCells>
     <HasDrill>false</HasDrill>
   </Player>
+  <Rangers>
+	<RangerDto>
+	      <Position>
+        <X>3</X>
+        <Y>3</Y>
+      </Position>
+	      <PowerCells>0</PowerCells>
+    <HasDrill>false</HasDrill>
+	</RangerDto>
+		<RangerDto>
+	      <Position>
+        <X>1</X>
+        <Y>6</Y>
+      </Position>
+	      <PowerCells>0</PowerCells>
+    <HasDrill>false</HasDrill>
+	</RangerDto>
+  </Rangers>
+  <Stones>
+	<StoneDto>
+	      <Position>
+        <X>3</X>
+        <Y>0</Y>
+      </Position>
+	</StoneDto>
+  
+  </Stones>
   <Drills>
     <EntityDto>
       <Position>
@@ -329,21 +356,21 @@
         <X>6</X>
         <Y>0</Y>
       </Position>
-      <Type>Free</Type>
+      <Type>Water</Type>
     </TerrainDto>
     <TerrainDto>
       <Position>
         <X>6</X>
         <Y>1</Y>
       </Position>
-      <Type>Free</Type>
+      <Type>Water</Type>
     </TerrainDto>
     <TerrainDto>
       <Position>
         <X>6</X>
         <Y>2</Y>
       </Position>
-      <Type>Free</Type>
+      <Type>Water</Type>
     </TerrainDto>
     <TerrainDto>
       <Position>
@@ -378,21 +405,21 @@
         <X>7</X>
         <Y>0</Y>
       </Position>
-      <Type>Free</Type>
+      <Type>Water</Type>
     </TerrainDto>
     <TerrainDto>
       <Position>
         <X>7</X>
         <Y>1</Y>
       </Position>
-      <Type>Free</Type>
+      <Type>Water</Type>
     </TerrainDto>
     <TerrainDto>
       <Position>
         <X>7</X>
         <Y>2</Y>
       </Position>
-      <Type>Free</Type>
+      <Type>Water</Type>
     </TerrainDto>
     <TerrainDto>
       <Position>

@@ -301,7 +301,7 @@
         <X>5</X>
         <Y>2</Y>
       </Position>
-      <Type>Free</Type>
+      <Type>Soil</Type>
     </TerrainDto>
     <TerrainDto>
       <Position>
@@ -350,7 +350,7 @@
         <X>6</X>
         <Y>2</Y>
       </Position>
-      <Type>Free</Type>
+      <Type>Soil</Type>
     </TerrainDto>
     <TerrainDto>
       <Position>

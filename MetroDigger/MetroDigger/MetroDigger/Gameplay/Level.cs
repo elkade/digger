@@ -42,7 +42,7 @@ namespace MetroDigger.Gameplay
             _stationsCount = 0;
             _width = width;
             _height = height;
-            MediaManager.Instance.SetDimensions(_width,_height);
+            MediaManager.Instance.SetDimensions(_width, _height);
             _isStarted = false;
             Board = new Board(Width, Height);
             _topBar = new TopBar();
@@ -81,23 +81,53 @@ namespace MetroDigger.Gameplay
                 Player.Score += score;
             };
 
-            Player.Drilled += (character, tile) =>
+            Player.Drilled += (driller, tile1, tile2) =>
             {
-                Player.Score += tile.Clear(ref _stationsCount);
-                Player.Score += _ws.Spill(tile.X, tile.Y);
+                int score = tile2.Clear(ref _stationsCount);
+                if (tile1.Metro is Tunnel && score > 0)
+                    score += 50;
+                Player.Score += score;
+                Player.Score += _ws.Spill(tile2.X, tile2.Y);
             };
         }
 
         public void RegisterEnemies()
         {
             var drillers = Enemies.OfType<IDriller>();
-            foreach (var enemy in drillers) //TODO to jeswt nie tak
+            foreach (var enemy in drillers)
             {
-                enemy.Drilled += (character, tile) =>
+                enemy.Drilled += (character, tile1, tile2) =>
                 {
-                    Player.Score += tile.Clear(ref _stationsCount);
-                    Player.Score+=_ws.Spill(tile.X, tile.Y);
+                    Player.Score += tile2.Clear(ref _stationsCount);
+                    Player.Score+=_ws.Spill(tile2.X, tile2.Y);
                 };
+            }
+            var collectors = Enemies.OfType<ICollector>();
+            foreach (var enemy in collectors)
+            {
+                enemy.Visited += (collector, tile1, tile2) =>
+                {
+                    if (tile2.Item != null)
+                        tile2.Item.GetCollected(collector);
+                    tile2.Clear(ref _stationsCount);
+                };
+            }
+            var shooters = Enemies.OfType<IShooter>();
+            foreach (var enemy in shooters)
+            {
+                enemy.Shoot += sender =>
+            {
+                var bullet = new Bullet(new StraightDriver(Tile.Size, Board), sender);
+                bullet.Update();
+                bullet.Hit += (bullet1, tile) =>
+                {
+                    bool b;
+                    tile.Clear(ref _stationsCount, out b);
+                    bullet1.IsToRemove = b;
+                };
+                _newlyAddedDynamicEntities.Add(bullet);
+            };
+
             }
             _dynamicEntities.AddRange(Enemies);
             _dynamicEntities.Add(_player);
@@ -169,6 +199,8 @@ namespace MetroDigger.Gameplay
                         Logger.Log("Collision Detected");
                         u1.CollideWith(u2);
                         u2.CollideWith(u1);
+                        if (u1.IsToRemove) Player.Score += u1.Value;
+                        if (u2.IsToRemove) Player.Score += u2.Value;
                     }
                 }
             }

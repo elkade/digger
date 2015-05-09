@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
-    public class Miner : DynamicEntity, ICollector, IDriller
+    public class Miner : DynamicEntity, IDriller
     {
         private readonly MediaManager _grc;
 
@@ -26,21 +26,19 @@ namespace MetroDigger.Gameplay.Entities.Characters
             ParticleEngine = new ParticleEngine(_grc.DrillingPracticles, Position);
             Value = 500;
             Aggressiveness = Aggressiveness.Enemy;
-            MovementHandler.Finished += (handler, tile1, tile2) => RaiseVisited(tile1, tile2);
             IsWaterProof = true;
             MovementHandler.Halved += (handler, tile1, tile2) =>
             {
                 if (State == EntityState.Drilling)
-                    RaiseDrilled(tile2);
+                    RaiseDrilled(tile1, tile2);
             };
-
         }
-        public event Action<IDriller, Tile> Drilled;
+        public event Action<IDriller, Tile, Tile> Drilled;
 
-        private void RaiseDrilled(Tile tile)
+        private void RaiseDrilled(Tile tile1, Tile tile2)
         {
             if (Drilled != null)
-                Drilled(this, tile);
+                Drilled(this, tile1, tile2);
         }
 
         public override Vector2 Direction
@@ -63,13 +61,6 @@ namespace MetroDigger.Gameplay.Entities.Characters
                 ParticleEngine.Draw(spriteBatch);
             base.Draw(gameTime, spriteBatch);
         }
-        private void RaiseVisited(Tile tile1, Tile tile2)
-        {
-            if (Visited != null)
-                Visited(this, tile1, tile2);
-        }
-
-        public event Action<ICollector, Tile, Tile> Visited;
     }
 
 }

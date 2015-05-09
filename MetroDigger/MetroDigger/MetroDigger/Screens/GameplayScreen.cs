@@ -33,6 +33,7 @@ namespace MetroDigger.Screens
             _level = level;
             _level.IsStarted = true;
             _level.LevelAccomplished += OnLevelAccomplished;
+            MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
         }
 
         public GameplayScreen() //do t³a
@@ -49,6 +50,8 @@ namespace MetroDigger.Screens
                 _level.LevelAccomplished += OnLevelAccomplished;
 
             }
+            MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
+
         }
 
         public GameplayScreen(int lvlNo)
@@ -67,13 +70,15 @@ namespace MetroDigger.Screens
 
             }
             else ; //osi¹gniêto max level
+            MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
+
         }
 
         private void OnLevelAccomplished(Level level, bool isWon) //isWon-pora¿ka
         {
+            GameManager.Instance.AddToBestScores(_level.GainedScore, _level.Number);
             if (isWon)
             {
-                GameManager.Instance.AddToBestScores(_level.GainedScore, _level.Number);
                 GameManager.Instance.SaveAccomplishedLevel(_level.Number, _level.TotalScore,_level.TotalLives);
             }
             //dodajemy wynik z tego levela do rankingu
@@ -96,7 +101,7 @@ namespace MetroDigger.Screens
             else
             {
                 levelToContinue = null;
-                if (isWon)
+                //if (isWon)
                     GameManager.Instance.AddToBestScores(_level.TotalScore);
             }
             ScreenManager.AddScreen(new LevelAccomplishedScreen(isWon, levelToRetry, levelToContinue, gainedScore));
