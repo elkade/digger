@@ -35,7 +35,15 @@ namespace MetroDigger.Screens
 
         void OkSelected(object sender, EventArgs e)
         {
-            GameManager.Instance.LoadLevelFromFile(_textInput.Text);
+            try
+            {
+                GameManager.Instance.LoadLevelFromFile(_textInput.Text,true);
+            }
+            catch
+            {
+                ScreenManager.AddScreen(new MessageBoxScreen("Unable to load file of specific name."));
+                return;
+            }
             LoadingScreen.Load(ScreenManager,false,new GameplayScreen(GameManager.Instance.LoadSavedLevelFromMemory()));
         }
         #endregion

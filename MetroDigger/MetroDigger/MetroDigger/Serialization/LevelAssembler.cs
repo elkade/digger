@@ -6,6 +6,7 @@ using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Tiles;
+using MetroDigger.Logging;
 using MetroDigger.Utils;
 
 namespace MetroDigger.Serialization
@@ -27,6 +28,8 @@ namespace MetroDigger.Serialization
                 Width = plain.Width,
                 Height = plain.Height,
                 Number = plain.Number,
+                InitScore = plain.InitScore,
+                InitLives = plain.InitLives,
                 StartPosition = new Position{X=plain.Board.StartTile.X, Y=plain.Board.StartTile.Y}
             };
             foreach (Tile tile in plain.Board)
@@ -95,7 +98,7 @@ namespace MetroDigger.Serialization
 
             #region Enemies
 
-            foreach (var enemy in plain.Enemies)
+            foreach (var enemy in plain.DynamicEntities)
             {
                 if (enemy is Miner)
                     dto.Miners.Add(new MinerDto
@@ -121,6 +124,7 @@ namespace MetroDigger.Serialization
             }
 
             #endregion
+            Logger.Log("Level Data Transfer Object Created");
 
             return dto;
         }
@@ -129,10 +133,10 @@ namespace MetroDigger.Serialization
         {
             var plain = new Level(dto.Width, dto.Height)
             {
-                Number = dto.Number
+                Number = dto.Number,
+                InitLives = dto.InitLives,
+                InitScore = dto.InitScore
             };
-            //try
-            //{
 
                 for (int i = 0; i < dto.Width; i++)
                     for (int j = 0; j < dto.Height; j++)
@@ -218,11 +222,7 @@ namespace MetroDigger.Serialization
                 plain.RegisterEnemies();
 
                 #endregion
-            //}
-            //catch
-            //{
-            //    plain = null;
-            //}
+                Logger.Log("Plain Level Created");
 
             return plain;
         }

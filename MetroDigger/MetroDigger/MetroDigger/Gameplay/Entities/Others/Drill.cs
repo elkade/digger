@@ -1,4 +1,5 @@
 ﻿using MetroDigger.Gameplay.Abstract;
+using MetroDigger.Logging;
 using MetroDigger.Manager;
 
 namespace MetroDigger.Gameplay.Entities.Others
@@ -7,7 +8,6 @@ namespace MetroDigger.Gameplay.Entities.Others
     {
         public Drill()
         {
-            var grc = MediaManager.Instance;
             AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Drill"));
         }
 
@@ -15,6 +15,7 @@ namespace MetroDigger.Gameplay.Entities.Others
         {
             collector.HasDrill = true;
             base.GetCollected(collector);
+            Logger.Log("Drill picked");
         }
 
     }

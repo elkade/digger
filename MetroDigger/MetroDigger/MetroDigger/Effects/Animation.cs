@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MetroDigger.Gameplay
+namespace MetroDigger.Effects
 {
 /// <summary>
     /// Represents an animated texture.

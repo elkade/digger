@@ -4,6 +4,7 @@ using System.Linq;
 using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.CollisionDetection;
 using MetroDigger.Gameplay.Drivers;
+using MetroDigger.Gameplay.Entities;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
@@ -25,7 +26,7 @@ namespace MetroDigger.Gameplay
         private readonly int _width;
         public readonly Board Board;
 
-        private readonly List<IDynamicEntity> _dynamicEntities = new List<IDynamicEntity>();
+        public readonly List<IDynamicEntity> DynamicEntities = new List<IDynamicEntity>();
         public readonly List<IDynamicEntity> Enemies = new List<IDynamicEntity>();
         private readonly List<IDynamicEntity> _newlyAddedDynamicEntities = new List<IDynamicEntity>();
         private int _stationsCount;
@@ -129,8 +130,8 @@ namespace MetroDigger.Gameplay
             };
 
             }
-            _dynamicEntities.AddRange(Enemies);
-            _dynamicEntities.Add(_player);
+            DynamicEntities.AddRange(Enemies);
+            DynamicEntities.Add(_player);
         }
 
         #endregion
@@ -182,18 +183,18 @@ namespace MetroDigger.Gameplay
             if (!_isStarted)
                 return;
 
-            foreach (IDynamicEntity dynamicEntity in _dynamicEntities)
+            foreach (IDynamicEntity dynamicEntity in DynamicEntities)
                 dynamicEntity.Update();
 
             _topBar.Update(TotalLives, TotalScore, Player.PowerCellsCount);
-            for (int i = 0; i < _dynamicEntities.Count; i++)
+            for (int i = 0; i < DynamicEntities.Count; i++)
             {
-                IDynamicEntity u1 = _dynamicEntities[i];
+                IDynamicEntity u1 = DynamicEntities[i];
                 if(!u1.IsWaterProof && u1.OccupiedTile.Accessibility==Accessibility.Water)
                     u1.Harm();
-                for (int j = i + 1; j < _dynamicEntities.Count; j++)
+                for (int j = i + 1; j < DynamicEntities.Count; j++)
                 {
-                    IDynamicEntity u2 = _dynamicEntities[j];
+                    IDynamicEntity u2 = DynamicEntities[j];
                     if (_collisionDetector.CheckCollision(u1, u2))
                     {
                         Logger.Log("Collision Detected");
@@ -206,18 +207,25 @@ namespace MetroDigger.Gameplay
             }
             if (_newlyAddedDynamicEntities.Count != 0)
             {
-                _dynamicEntities.AddRange(_newlyAddedDynamicEntities);
-                _dynamicEntities.Sort(new ZIndexComparer());
+                DynamicEntities.AddRange(_newlyAddedDynamicEntities);
+                DynamicEntities.Sort(new ZIndexComparer());
             }
             _newlyAddedDynamicEntities.Clear();
 
-            _dynamicEntities.RemoveAll(character => character.IsToRemove);
+            DynamicEntities.RemoveAll(character => character.IsToRemove);
 
             CheckProgress();
         }
 
+        private int _nextTreshold = 10000;
+
         private void CheckProgress()
         {
+            if (TotalScore >= _nextTreshold)
+            {
+                Player.LivesCount++;
+                _nextTreshold += 10000;
+            }
             if (StationTiles.TrueForAll(t=>t.Accessibility==Accessibility.Free))
                 RaiseLevelAccomplished(true);
             if (TotalLives == 0)
@@ -228,7 +236,7 @@ namespace MetroDigger.Gameplay
         {
             foreach (var tile in Board)
                 tile.Draw(gameTime, spriteBatch);
-            foreach (var dynamicEntity in _dynamicEntities)
+            foreach (var dynamicEntity in DynamicEntities)
                 dynamicEntity.Draw(gameTime, spriteBatch);
             _topBar.Draw(spriteBatch);
         }

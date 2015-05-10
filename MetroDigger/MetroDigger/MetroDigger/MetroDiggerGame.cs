@@ -25,9 +25,9 @@ namespace MetroDigger
         public MetroDiggerGame()
         {
             Logger.Config("log");
-            Logger.Log("start");
+            Logger.Log("game started");
             Logger.Log("setting resolution");
-            MediaManager.Instance.Width = 800;
+            MediaManager.Instance.Width = 700;
             MediaManager.Instance.Height = 700;
             Content.RootDirectory = "Content";
 
@@ -52,7 +52,7 @@ namespace MetroDigger
         {
             base.Initialize();
             Logger.Log("initializing screens");
-            screenManager.AddScreen(new GameplayScreen());
+            screenManager.Start(new StartScreen());
             screenManager.AddScreen(new LogScreen());
 
         }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LevelDto xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Width>8</Width>
-  <Height>7</Height>
+  <Height>8</Height>
   <Number>2</Number>
   <Player>
     <Position>
@@ -25,11 +25,18 @@
     <EntityDto>
       <Position>
         <X>0</X>
-        <Y>6</Y>
+        <Y>7</Y>
       </Position>
     </EntityDto>
   </Drills>
   <Terrains>
+      <TerrainDto>
+      <Position>
+        <X>0</X>
+        <Y>7</Y>
+      </Position>
+      <Type>Free</Type>
+    </TerrainDto>
     <TerrainDto>
       <Position>
         <X>0</X>
@@ -434,11 +441,59 @@
     <EntityDto>
       <Position>
         <X>7</X>
+        <Y>7</Y>
+      </Position>
+    </EntityDto>
+	    <EntityDto>
+      <Position>
+        <X>7</X>
         <Y>2</Y>
       </Position>
     </EntityDto>
   </MetroStations>
   <MetroTunnels>
+         <EntityDto>
+      <Position>
+        <X>7</X>
+        <Y>6</Y>
+      </Position>
+    </EntityDto>
+        <EntityDto>
+      <Position>
+        <X>6</X>
+        <Y>7</Y>
+      </Position>
+    </EntityDto>
+      <EntityDto>
+      <Position>
+        <X>5</X>
+        <Y>7</Y>
+      </Position>
+    </EntityDto>
+	    <EntityDto>
+      <Position>
+        <X>4</X>
+        <Y>7</Y>
+      </Position>
+    </EntityDto>
+	    <EntityDto>
+      <Position>
+        <X>3</X>
+        <Y>7</Y>
+      </Position>
+    </EntityDto>
+	    <EntityDto>
+      <Position>
+        <X>2</X>
+        <Y>7</Y>
+      </Position>
+    </EntityDto>
+	    <EntityDto>
+      <Position>
+        <X>1</X>
+        <Y>7</Y>
+      </Position>
+    </EntityDto>
     <EntityDto>
       <Position>
         <X>7</X>

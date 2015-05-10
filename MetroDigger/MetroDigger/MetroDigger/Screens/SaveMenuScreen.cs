@@ -35,7 +35,15 @@ namespace MetroDigger.Screens
 
         void OkSelected(object sender, EventArgs e)
         {
-            GameManager.Instance.SaveGameToFile(_textInput.Text);
+            try
+            {
+                GameManager.Instance.SaveGameToFile(_textInput.Text);
+            }
+            catch (Exception)
+            {
+                ScreenManager.AddScreen(new MessageBoxScreen("File with specified name already exists."));
+                return;
+            }
             OnCancel();
         }
         #endregion

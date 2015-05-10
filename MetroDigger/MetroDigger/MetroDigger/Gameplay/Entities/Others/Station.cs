@@ -1,4 +1,5 @@
-﻿using MetroDigger.Manager;
+﻿using MetroDigger.Logging;
+using MetroDigger.Manager;
 
 namespace MetroDigger.Gameplay.Entities.Others
 {
@@ -17,6 +18,8 @@ namespace MetroDigger.Gameplay.Entities.Others
                 stationsCount--;
             }
             base.Clear(ref stationsCount);
+            Logger.Log("Station cleared");
+
             return 0;
         }
     }

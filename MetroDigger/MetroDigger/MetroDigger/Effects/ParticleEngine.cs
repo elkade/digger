@@ -40,7 +40,7 @@ namespace MetroDigger.Effects
             for (int particle = 0; particle < _particles.Count; particle++)
             {
                 _particles[particle].Update();
-                if (_particles[particle].TTL <= 0)
+                if (_particles[particle].Ttl <= 0)
                 {
                     _particles.RemoveAt(particle);
                     particle--;

@@ -1,4 +1,5 @@
-﻿using MetroDigger.Manager;
+﻿using MetroDigger.Logging;
+using MetroDigger.Manager;
 
 namespace MetroDigger.Gameplay.Entities.Others
 {
@@ -6,7 +7,6 @@ namespace MetroDigger.Gameplay.Entities.Others
     {
         public Tunnel()
         {
-            var grc = MediaManager.Instance;
             AnimationPlayer.PlayAnimation(Mm.GetStaticAnimation("Tunnel"));
         }
         public override int Clear(ref int stationsCount)
@@ -15,6 +15,8 @@ namespace MetroDigger.Gameplay.Entities.Others
             if (!IsCleared)
                 points = 50;
             base.Clear(ref stationsCount);
+            Logger.Log("Tunnel cleared");
+
             return points;
         }
     }

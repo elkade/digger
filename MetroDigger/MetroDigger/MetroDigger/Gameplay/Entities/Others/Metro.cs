@@ -1,4 +1,5 @@
 ﻿using MetroDigger.Gameplay.Entities.Terrains;
+using MetroDigger.Logging;
 
 namespace MetroDigger.Gameplay.Entities.Others
 {
@@ -16,6 +17,7 @@ namespace MetroDigger.Gameplay.Entities.Others
         public virtual int Clear(ref int stationsCount)
         {
             IsCleared = true;
+
             return 0;
         }
 

@@ -1,5 +1,6 @@
 ﻿using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
+using MetroDigger.Logging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,7 +19,10 @@ namespace MetroDigger.Gameplay.Tiles
             isCollision = true;
             if (Item == null && (Accessibility == Accessibility.Free || Accessibility == Accessibility.Water))
                 isCollision = false;
+            Logger.Log("Tile cleared");
+
             return Clear(ref stationsCount);
+
         }
 
         public int Clear(ref int stationsCount)

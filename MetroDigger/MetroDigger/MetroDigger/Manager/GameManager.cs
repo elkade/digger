@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -59,25 +60,21 @@ namespace MetroDigger.Manager
             if (!Directory.Exists(SaveDirectory))
                 Directory.CreateDirectory(SaveDirectory);
 
+            if(File.Exists(SaveDirectory+text))
+                throw new Exception("File with specified name already exists.");
             XmlSerializer xmlSerializer = new XmlSerializer(_levelDto.GetType());
             using (TextWriter writer = new StreamWriter(SaveDirectory+text))
                 xmlSerializer.Serialize(writer, _levelDto);
         }
 
-        public void LoadLevelFromFile(string filename)
+        public void LoadLevelFromFile(string filename, bool isFromSave = false)
         {
-            string path;
-            if (!Directory.Exists(SaveDirectory))
-                Directory.CreateDirectory(SaveDirectory);
-            path = SaveDirectory + filename;
+            string directory = isFromSave ? SaveDirectory : LevelDirectory;
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+            string path = directory + filename;
             if (!File.Exists(path))
-            {
-                if (!Directory.Exists(LevelDirectory))
-                    Directory.CreateDirectory(LevelDirectory);
-                path = LevelDirectory + filename;
-                if (!File.Exists(path)) return;
-            }
-
+                throw new Exception("Unable to load file of specified name.");
             XmlSerializer serializer = new XmlSerializer(typeof(LevelDto));
             using (FileStream fs = new FileStream(path, FileMode.Open))
             {
@@ -95,7 +92,13 @@ namespace MetroDigger.Manager
         {
             return _levelAssembler.GetPlain(_levelDto);
         }
-
+        /// <summary>
+        /// Ładuje poziom o konkretnym numerze z uwzględnieniem dotychczasowych wyników.
+        /// </summary>
+        /// <param name="lvlNo"></param>
+        /// <param name="level"></param>
+        /// <param name="isNew"></param>
+        /// <returns></returns>
         public bool GetLevel(int lvlNo, out Level level, bool isNew=false)
         {
             level = null;
@@ -112,18 +115,18 @@ namespace MetroDigger.Manager
             return false;
         }
 
-        public bool NextLevel(ref Level level)
-        {
-            Level bufLevel;
-            bool b = GetLevel(level.Number + 1, out bufLevel);
-            if(!b)
-            {
-                bufLevel.Player.Score = level.Player.Score;
-                bufLevel.Player.LivesCount = level.Player.LivesCount;
-                level = bufLevel;
-            }
-            return b;
-        }
+        //public bool NextLevel(ref Level level)
+        //{
+        //    Level bufLevel;
+        //    bool b = GetLevel(level.Number + 1, out bufLevel);
+        //    if(!b)
+        //    {
+        //        bufLevel.Player.Score = level.Player.Score;
+        //        bufLevel.Player.LivesCount = level.Player.LivesCount;
+        //        level = bufLevel;
+        //    }
+        //    return b;
+        //}
 
         public List<ScoreInfo> LoadBestScores(int? lvlNo=null)
         {
@@ -156,16 +159,23 @@ namespace MetroDigger.Manager
         {
             string num = lvlNo == null ? "" : lvlNo.ToString();
             string fileName = BestScoresFileName + "_" + num;
-
-            ScoreInfo score = new ScoreInfo {Score = scoreValue, Name = UserName};
-            var scores = LoadBestScores(lvlNo);
-            scores.Add(score);
-            scores = scores.OrderByDescending((info => info.Score)).Take(SavedScoresCount).ToList();
-
             if (!Directory.Exists(BestDirectory))
                 Directory.CreateDirectory(BestDirectory);
             fileName = BestDirectory + fileName;
+            List<ScoreInfo> scores;
+            try
+            {
+                scores = LoadBestScores(lvlNo);
+            }
+            catch
+            {
+                scores = new List<ScoreInfo>();
+                File.Delete(fileName);
+            }
 
+            ScoreInfo score = new ScoreInfo {Score = scoreValue, Name = UserName};
+            scores.Add(score);
+            scores = scores.OrderByDescending((info => info.Score)).Take(SavedScoresCount).ToList();
 
             XmlSerializer xmlSerializer = new XmlSerializer(scores.GetType());
             using (TextWriter writer = new StreamWriter(fileName))
@@ -188,13 +198,29 @@ namespace MetroDigger.Manager
                 using (TextWriter writer = new StreamWriter(path))
                     xmlSerializer.Serialize(writer, new UserData(UserName,new List<UserLevel>{}));
             }
-
-            XmlSerializer serializer = new XmlSerializer(typeof(UserData));
-
-            using (FileStream fs = new FileStream(path, FileMode.Open))
+            try
             {
-                XmlReader reader = XmlReader.Create(fs);
-                userData = (UserData)serializer.Deserialize(reader);
+                XmlSerializer serializer = new XmlSerializer(typeof (UserData));
+
+                using (FileStream fs = new FileStream(path, FileMode.Open))
+                {
+                    XmlReader reader = XmlReader.Create(fs);
+                    userData = (UserData) serializer.Deserialize(reader);
+                }
+            }
+            catch
+            {
+                File.Delete(path);
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(UserData));
+                using (TextWriter writer = new StreamWriter(path))
+                    xmlSerializer.Serialize(writer, new UserData(UserName, new List<UserLevel> { }));
+                XmlSerializer serializer = new XmlSerializer(typeof(UserData));
+
+                using (FileStream fs = new FileStream(path, FileMode.Open))
+                {
+                    XmlReader reader = XmlReader.Create(fs);
+                    userData = (UserData)serializer.Deserialize(reader);
+                }
             }
             return userData;
         }

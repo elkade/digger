@@ -5,6 +5,7 @@ using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.Entities;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Tiles;
+using MetroDigger.Logging;
 using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay.Drivers
@@ -157,6 +158,7 @@ namespace MetroDigger.Gameplay.Drivers
                 next = previous[next.X, next.Y];
             } while (next != null && next != s);
             path.Reverse();
+            Logger.Log("A* new path created");
             return path.ToArray();
         }
 

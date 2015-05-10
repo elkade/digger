@@ -14,6 +14,9 @@ namespace MetroDigger.Screens
         public RankingScreen(int? score = null, int? lvl=null)
             : base("Ranking")
         {
+            MenuEntry back = new MenuEntry("Back");
+            MenuEntry clear = new MenuEntry("Clear");
+
             string[] levelsLabels = new string[GameManager.Instance.GetMaxLevel()+1];
             levelsLabels[0] = "all";
             for (int j = 1; j < levelsLabels.Length; j++)
@@ -29,8 +32,10 @@ namespace MetroDigger.Screens
             }
             _bestScoresLabels = new List<MenuLabel>();
             _bestScoresLabels.Add(new MenuLabel("Best scores:"));
+            try
+            {
+                var bestScores = GameManager.Instance.LoadBestScores(lvl);
 
-            var bestScores = GameManager.Instance.LoadBestScores(lvl);
             int i = 1;
             foreach (var bestScore in bestScores)
             {
@@ -38,8 +43,6 @@ namespace MetroDigger.Screens
                 i++;
             }
 
-            MenuEntry back = new MenuEntry("Back");
-            MenuEntry clear = new MenuEntry("Clear");
             back.Selected += OnCancel;
             clear.Selected += (sender, args) =>
             {
@@ -63,6 +66,11 @@ namespace MetroDigger.Screens
                 MenuObjects.Add(label);
             MenuObjects.Add(_levelPicker);
             MenuObjects.Add(clear);
+            }
+            catch
+            {
+                ScreenManager.AddScreen(new MessageBoxScreen("Error occured."));
+            }
             MenuObjects.Add(back);
         }
 

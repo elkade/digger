@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using MetroDigger.Gameplay;
 using MetroDigger.Manager;
 using MetroDigger.Screens.MenuObjects;
 using XNA_GSM.Screens.MenuObjects;
@@ -31,7 +30,9 @@ namespace MetroDigger.Screens
                 {
                     levelsList[i] = new MenuEntry(i.ToString());
                     int levelNo = i;
-                    levelsList[i].Selected += (sender, args) => LoadingScreen.Load(ScreenManager, true, new GameplayScreen(levelNo));
+                    Level lvl;
+                    GameManager.Instance.GetLevel(levelNo, out lvl, true);
+                    levelsList[i].Selected += (sender, args) => LoadingScreen.Load(ScreenManager, true, new GameplayScreen(lvl));
                 }
                 else
                     levelsList[i] = new MenuLabel(i.ToString());

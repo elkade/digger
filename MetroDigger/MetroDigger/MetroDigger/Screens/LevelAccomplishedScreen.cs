@@ -53,7 +53,7 @@ namespace MetroDigger.Screens
 
         private void RankingSelected(object sender, EventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, new GameplayScreen(), new StartScreen(), new RankingScreen(_levelToRetry.TotalScore + _gainedScore));
+            ScreenManager.Start(new StartScreen(), new RankingScreen(_levelToRetry.TotalScore + _gainedScore));
         }
 
         private void ContinueSelected(object sender, EventArgs e)
@@ -63,7 +63,7 @@ namespace MetroDigger.Screens
 
         protected override void OnCancel()
         {
-            LoadingScreen.Load(ScreenManager, false, new GameplayScreen(),new StartScreen());
+            ScreenManager.Start(new StartScreen());
         }
 
         #endregion

@@ -13,8 +13,6 @@ namespace MetroDigger.Gameplay.Entities.Characters
     {
         private readonly MediaManager _grc;
 
-        private int _score;
-
         private readonly Tile _startTile;
 
         public Player(IDriver driver, Tile occupiedTile, Tile startTile)
@@ -82,16 +80,7 @@ namespace MetroDigger.Gameplay.Entities.Characters
         }
         public int LivesCount { get; set; }
 
-        public int Score
-        {
-            get { return _score; }
-            set
-            {
-                if (value >= 10000 && _score < 10000)//trzeba pamiętać żeby przy wczytywaniu najpierw robić score a później życia
-                    LivesCount++;
-                _score = value;
-            }
-        }
+        public int Score { get; set; }
 
         private void Reset()
         {

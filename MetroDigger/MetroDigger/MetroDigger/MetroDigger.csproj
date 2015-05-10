@@ -113,7 +113,6 @@
     <Compile Include="Screens\ChooseLevelScreen.cs" />
     <Compile Include="Screens\LoadMenuScreen.cs" />
     <Compile Include="Screens\LogScreen.cs" />
-    <Compile Include="Screens\NewGameScreen.cs" />
     <Compile Include="Screens\PauseMenu2.cs" />
     <Compile Include="Screens\RankingScreen.cs" />
     <Compile Include="Serialization\LevelDto.cs" />
@@ -149,7 +148,7 @@
     <Compile Include="Screens\MenuObjects\MenuRadioField.cs" />
     <Compile Include="Screens\MenuObjects\MenuTextInput.cs" />
     <Compile Include="Screens\MenuScreen.cs" />
-    <Compile Include="Screens\old\MessageBoxScreen.cs" />
+    <Compile Include="Screens\MessageBoxScreen.cs" />
     <Compile Include="Screens\old\NewMenuScreen.cs" />
     <Compile Include="Screens\OptionsMenuScreen.cs" />
     <Compile Include="Screens\old\PauseMenuScreen.cs" />

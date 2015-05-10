@@ -17,6 +17,8 @@ namespace MetroDigger.Serialization
         public List<RangerDto> Rangers { get; set; }
         public List<StoneDto> Stones { get; set; }
         public int Number { get; set; }
+        public int InitScore { get; set; }
+        public int InitLives { get; set; }
 
         public Position StartPosition { get; set; }
         //stone

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MetroDigger.Effects;
 using MetroDigger.Gameplay;
 using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Manager.Settings;
@@ -140,9 +141,9 @@ namespace MetroDigger.Manager
 
         public void SetDimensions(int width, int height)
         {
-            float h = (float)Height / height;
-            float w = (float)Width / width;
-            float min = Math.Min(h, w);
+            double h = (float)Height / height;
+            double w = (float)Width / width;
+            float min = (float)Math.Min(h, w);
             Tile.Size = new Vector2(min, min);
             Scale = new Vector2(min / ImageWidth, min / ImageHeight);
         }

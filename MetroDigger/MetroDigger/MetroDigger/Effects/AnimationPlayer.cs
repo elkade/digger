@@ -1,8 +1,9 @@
 ﻿using System;
+using MetroDigger.Logging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MetroDigger.Gameplay
+namespace MetroDigger.Effects
 {
     /// <summary>
     /// Controls playback of an AnimationPlayer.

@@ -1,5 +1,6 @@
 ﻿using System;
 using MetroDigger.Gameplay.Tiles;
+using MetroDigger.Logging;
 using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay
@@ -92,6 +93,7 @@ namespace MetroDigger.Gameplay
 
         public void MakeMove(Tile startTile, Tile endTile, float speed)
         {
+            Logger.Log("Move started");
             _startTile = startTile;
             _endTile = endTile;
             Vector2 route = _endTile.Position - _startTile.Position;

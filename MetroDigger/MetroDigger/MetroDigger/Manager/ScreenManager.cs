@@ -1,4 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Net;
+using MetroDigger.Gameplay;
+using MetroDigger.Logging;
 using MetroDigger.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -109,6 +113,8 @@ namespace MetroDigger.Manager
             }
 
             _screens.Add(screen);
+            Logger.Log("Screen loaded");
+
         }
 
         public void RemoveScreen(GameScreen screen)
@@ -152,6 +158,22 @@ namespace MetroDigger.Manager
             }
             (_screens[_screens.Count - 1]).ExitScreen();
             _screens.Add(screen);
+        }
+
+        public void Start(params GameScreen[] screens)
+        {
+            foreach (GameScreen loadedScreen in GetScreens())
+                loadedScreen.ExitScreen();
+            try
+            {
+                Level lvl;
+                int lvlNo = (new Random()).Next(GameManager.Instance.GetMaxLevel());
+                GameManager.Instance.GetLevel(lvlNo, out lvl);
+                AddScreen(new GameplayScreen(lvl));
+            }catch
+            {}
+            foreach(var screen in screens)
+                AddScreen(screen);
         }
     }
 }

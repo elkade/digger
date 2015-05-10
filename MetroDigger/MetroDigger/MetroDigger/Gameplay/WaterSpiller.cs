@@ -1,5 +1,6 @@
 ﻿using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
+using MetroDigger.Logging;
 using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay
@@ -28,6 +29,7 @@ namespace MetroDigger.Gameplay
             int volumeOver = CheckWater(x, y, visited,true);
             if (volumeOver == 0) return 0;
             GetTilesToFlood(volumeOver, x, y);
+            Logger.Log("Water Spilled");
             return DrawWater(visited);
         }
 

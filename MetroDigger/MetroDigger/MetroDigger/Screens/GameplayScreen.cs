@@ -9,7 +9,7 @@ namespace MetroDigger.Screens
 {
     internal class GameplayScreen : GameScreen
     {
-        private Level _level;
+        private readonly Level _level;
 
         private float _pauseAlpha;
 
@@ -22,93 +22,77 @@ namespace MetroDigger.Screens
 
         #region Initialization
 
-        public GameplayScreen(Level level) //do wczytania levelu z save'a lub kontynuacji
+        public GameplayScreen(Level level, bool isStarted=true) //do wczytania levelu z save'a lub kontynuacji
         {
-            SetTransition();
             if (level == null)
-            {
-                //coœ siê popsu³o
-                return;
-            }
+                throw new NullReferenceException();
+            SetTransition();
             _level = level;
-            _level.IsStarted = true;
             _level.LevelAccomplished += OnLevelAccomplished;
+            _level.IsStarted = isStarted;
             MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
         }
 
-        public GameplayScreen() //do t³a
-        {
-            SetTransition();
-            int lvlNo = (new Random()).Next(GameManager.Instance.GetMaxLevel());
-            if (!GameManager.Instance.GetLevel(lvlNo, out _level))
-            {
-                if (_level == null)
-                {
-                    //coœ siê popsu³o
-                    return;
-                }
-                _level.LevelAccomplished += OnLevelAccomplished;
+        //public GameplayScreen() //do t³a
+        //{
+        //    SetTransition();
+        //    int lvlNo = (new Random()).Next(GameManager.Instance.GetMaxLevel());
+        //    if (!GameManager.Instance.GetLevel(lvlNo, out _level))
+        //        _level.LevelAccomplished += OnLevelAccomplished;
+        //    MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
+        //}
 
-            }
-            MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
-
-        }
-
-        public GameplayScreen(int lvlNo)
-            //do wczytania levelu o konkretnym numerze
-        {
-            SetTransition();
-            if (!GameManager.Instance.GetLevel(lvlNo, out _level, true))
-            {
-                if (_level == null)
-                {
-                    //coœ siê popsu³o
-                    return;
-                }
-                _level.IsStarted = true;
-                _level.LevelAccomplished += OnLevelAccomplished;
-
-            }
-            else ; //osi¹gniêto max level
-            MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
-
-        }
+        //public GameplayScreen(int lvlNo)
+        //    //do wczytania levelu o konkretnym numerze
+        //{
+        //    SetTransition();
+        //    if (!GameManager.Instance.GetLevel(lvlNo, out _level, true))
+        //    {
+        //        _level.IsStarted = true;
+        //        _level.LevelAccomplished += OnLevelAccomplished;
+        //    }
+        //    else ; //osi¹gniêto max level
+        //    MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
+        //}
 
         private void OnLevelAccomplished(Level level, bool isWon) //isWon-pora¿ka
         {
-            GameManager.Instance.AddToBestScores(_level.GainedScore, _level.Number);
-            if (isWon)
+            try
             {
-                GameManager.Instance.SaveAccomplishedLevel(_level.Number, _level.TotalScore,_level.TotalLives);
-            }
-            //dodajemy wynik z tego levela do rankingu
-            int gainedScore = _level.GainedScore;
-            //pytamy,czy ponowiæ
-            Level levelToRetry;
-            if (!GameManager.Instance.GetLevel(_level.Number, out levelToRetry))
-            {
-                levelToRetry.InitLives = _level.InitLives;
-                levelToRetry.InitScore = _level.InitScore;
-            }
-            else ;//wyst¹pi³ b³¹d
+                GameManager.Instance.AddToBestScores(_level.GainedScore, _level.Number);
+                if (isWon)
+                    GameManager.Instance.SaveAccomplishedLevel(_level.Number, _level.TotalScore, _level.TotalLives);
+                //dodajemy wynik z tego levela do rankingu
+                int gainedScore = _level.GainedScore;
+                //pytamy,czy ponowiæ
+                Level levelToRetry;
+                if (!GameManager.Instance.GetLevel(_level.Number, out levelToRetry))
+                {
+                    levelToRetry.InitLives = _level.InitLives;
+                    levelToRetry.InitScore = _level.InitScore;
+                }
+                else ; //wyst¹pi³ b³¹d
 
-            Level levelToContinue;
-            if (!GameManager.Instance.GetLevel(_level.Number + 1, out levelToContinue))
-            {
-                levelToContinue.InitLives = _level.TotalLives;
-                levelToContinue.InitScore = _level.TotalScore;
-            }
-            else
-            {
-                levelToContinue = null;
-                //if (isWon)
+                Level levelToContinue;
+                if (!GameManager.Instance.GetLevel(_level.Number + 1, out levelToContinue))
+                {
+                    levelToContinue.InitLives = _level.TotalLives;
+                    levelToContinue.InitScore = _level.TotalScore;
+                }
+                else
                     GameManager.Instance.AddToBestScores(_level.TotalScore);
+                ScreenManager.AddScreen(new LevelAccomplishedScreen(isWon, levelToRetry, levelToContinue, gainedScore));
             }
-            ScreenManager.AddScreen(new LevelAccomplishedScreen(isWon, levelToRetry, levelToContinue, gainedScore));
-    }
+            catch (Exception ex)
+            {
+                var msg = new MessageBoxScreen("Unable to load level.");
+                msg.Accept += () => ScreenManager.Start(new StartScreen());
+                ScreenManager.AddScreen(msg);
+            }
+        }
 
-/// <summary>
-        /// Load graphics content for the game.
+        /// <summary>
+        ///     Load graphics content for the game.
         /// </summary>
         public override void LoadContent()
         {
@@ -117,34 +101,34 @@ namespace MetroDigger.Screens
 
 
         /// <summary>
-        /// Unload graphics content used by the game.
+        ///     Unload graphics content used by the game.
         /// </summary>
         public override void UnloadContent()
         {
         }
 
-
         #endregion
 
         #region Update and Draw
 
-
         /// <summary>
-        /// Updates the state of the game. This method checks the GameScreen.IsActive
-        /// property, so the game will stop updating when the pause menu is active,
-        /// or if you tab away to a different application.
+        ///     Updates the state of the game. This method checks the GameScreen.IsActive
+        ///     property, so the game will stop updating when the pause menu is active,
+        ///     or if you tab away to a different application.
         /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
             if (coveredByOtherScreen)
-                _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
+                _pauseAlpha = Math.Min(_pauseAlpha + 1f/32, 1);
             else
-                _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
+                _pauseAlpha = Math.Max(_pauseAlpha - 1f/32, 0);
 
             if (IsActive)
-            {
+            {if(_level==null)
+                ScreenManager.AddScreen(new MessageBoxScreen("Unable to load level."));
+
                 _level.Update();
             }
         }
@@ -167,20 +151,18 @@ namespace MetroDigger.Screens
 
             spriteBatch.Begin();
 
-            if(_level!=null)
+            if (_level != null)
                 _level.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
 
             if (TransitionPosition > 0 || _pauseAlpha > 0)
             {
-                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, _pauseAlpha / 2);
+                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, _pauseAlpha/2);
 
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
-
         }
-
 
         #endregion
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LevelDto xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Width>8</Width>
-  <Height>7</Height>
+  <Height>8</Height>
   <Player>
     <Position>
       <X>1</X>
@@ -445,6 +445,12 @@
     </EntityDto>
   </MetroStations>
   <MetroTunnels>
+      <EntityDto>
+      <Position>
+        <X>4</X>
+        <Y>7</Y>
+      </Position>
+	  </EntityDto>
     <EntityDto>
       <Position>
         <X>5</X>
