@@ -32,7 +32,7 @@ namespace MetroDigger.Screens
             {
                 if(unlockedLvls.Contains(i))
                 {
-                    levelsList[i] = new MenuEntry(i.ToString());
+                    levelsList[i] = new MenuEntry((i+1).ToString());
                     int levelNo = i;
                     Level lvl;
                     GameManager.Instance.GetLevel(levelNo, out lvl, true);
