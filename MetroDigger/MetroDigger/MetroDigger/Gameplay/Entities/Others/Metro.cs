@@ -1,19 +1,28 @@
 ﻿using MetroDigger.Gameplay.Entities.Terrains;
-using MetroDigger.Logging;
 
 namespace MetroDigger.Gameplay.Entities.Others
 {
+    /// <summary>
+    /// Abstrakcyjna klasa bazowa dla znaczników metra
+    /// </summary>
     public abstract class Metro : StaticEntity
     {
+        /// <summary>
+        /// Określa, czy znacznik został już oczyszczony
+        /// </summary>
         public bool IsCleared { get; set; }
 
-        public Metro()
+        protected Metro()
         {
             IsCleared = false;
             IsVisitedInSequence = true;
             ClearedOf = Accessibility.Free;
         }
-
+        /// <summary>
+        /// Czyści znacznik
+        /// </summary>
+        /// <param name="stationsCount">reprezentuje liczbę stacji, które pozostały do oczyszczenia.</param>
+        /// <returns></returns>
         public virtual int Clear(ref int stationsCount)
         {
             IsCleared = true;
@@ -21,7 +30,7 @@ namespace MetroDigger.Gameplay.Entities.Others
             return 0;
         }
 
-        public bool IsVisitedInSequence { get; set; }
-        public Accessibility ClearedOf { get; set; }
+        private bool IsVisitedInSequence { get; set; }
+        private Accessibility ClearedOf { get; set; }
     }
 }

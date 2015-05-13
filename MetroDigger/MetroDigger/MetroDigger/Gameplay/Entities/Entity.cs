@@ -7,6 +7,9 @@ using IDrawable = MetroDigger.Gameplay.Abstract.IDrawable;
 
 namespace MetroDigger.Gameplay.Entities
 {
+    /// <summary>
+    /// Abstrakcyjna klasa bazowa dla obiektów, które mogą zostać narysowane na planszy
+    /// </summary>
     public abstract class Entity : IDrawable
     {
         private MediaManager _mm;
@@ -14,6 +17,9 @@ namespace MetroDigger.Gameplay.Entities
         protected AnimationPlayer AnimationPlayer;
         private Vector2 _direction;
 
+        /// <summary>
+        /// Określa kierunek, w którym jest zwrócony obiekt
+        /// </summary>
         public virtual Vector2 Direction
         {
             get { return _direction; }
@@ -31,15 +37,21 @@ namespace MetroDigger.Gameplay.Entities
         {
             return (float)(Math.Atan2(vector.Y, vector.X) - Math.PI/2);
         }
-
-        protected int Value { private get; set; }
-
+        /// <summary>
+        /// Rysuje obiekt na planszy
+        /// </summary>
+        /// <param name="gameTime">Czas gry</param>
+        /// <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
         }
-
+        /// <summary>
+        /// Położenie boiektu na ekranie
+        /// </summary>
         public Vector2 Position { get; set; }
-
+        /// <summary>
+        /// ZIndex obiektu
+        /// </summary>
         public int ZIndex { get; set; }
 
         protected MediaManager Mm

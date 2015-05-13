@@ -8,10 +8,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
+    /// <summary>
+    /// Kamień
+    /// </summary>
     public class Stone : DynamicEntity
     {
         private MediaManager _grc;
-
+        /// <summary>
+        /// Tworzy nowy kamień
+        /// </summary>
+        /// <param name="driver">sterownik, zgodnie z którym porusza się kamień</param>
+        /// <param name="occupiedTile">kafelek, w którym początkowo znajduje się kamień</param>
         public Stone(IDriver driver, Tile occupiedTile)
             : base(driver, occupiedTile, new Vector2(0, -1), 5f)
         {
@@ -43,12 +50,12 @@ namespace MetroDigger.Gameplay.Entities.Characters
             base.StartMoving(destinationTile);
         }
 
-        public override void CollideWith(ICollideable character)
+        public override void CollideWith(ICollideable collideable)
         {
-            if (character.OccupiedTile.Y > OccupiedTile.Y)
-                base.CollideWith(character);
-            if(character.OccupiedTile != OccupiedTile)//character przeżył kolizję więc podchodził od boku
-                Shift(character.Direction);
+            if (collideable.OccupiedTile.Y > OccupiedTile.Y)
+                base.CollideWith(collideable);
+            if(collideable.OccupiedTile != OccupiedTile)//collideable przeżył kolizję więc podchodził od boku
+                Shift(collideable.Direction);
         }
 
         private void Shift(Vector2 dir)

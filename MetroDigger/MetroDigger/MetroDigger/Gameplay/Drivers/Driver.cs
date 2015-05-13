@@ -1,37 +1,54 @@
 ﻿using System;
 using MetroDigger.Gameplay.Entities;
-using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay.Drivers
 {
+    /// <summary>
+    /// Abstrakcyjna klasa bazowa dla sterowników
+    /// </summary>
     public abstract class Driver : IDriver
     {
         private readonly Vector2 _unit;
         private readonly Board _board;
 
-        public Driver(Vector2 unit ,Board board)
+        protected Driver(Vector2 unit ,Board board)
         {
             _unit = unit;
             _board = board;
         }
 
-        public Vector2 Unit
+        protected Vector2 Unit
         {
             get { return _unit; }
         }
 
-        public Board Board
+        protected Board Board
         {
             get { return _board; }
         }
 
-        public abstract void UpdateMovement(IMover mh, EntityState state);
+        public abstract void UpdateMovement(IMover mover, EntityState state);
 
+        /// <summary>
+        /// Zdarzenie wywoływane gdy sterowany obiekt ma wykonać strzał
+        /// </summary>
         public event Action Shoot;
+        /// <summary>
+        /// Zdarzenie wywoływane gdy sterowany obiekt ma zacząć wiercić
+        /// </summary>
+        /// <remarks>Tile to kafelek, który ma zaostć wiercony</remarks>
         public event Action<Tile> Drill;
+        /// <summary>
+        /// Zdarzenie wywoływane gdy sterowany obiekt ma zacząć się poruszać
+        /// </summary>
+        /// <remarks>Tile to kafelek, w kierunku którego ma odbyć się ruch</remarks>
         public event Action<Tile> Move;
+        /// <summary>
+        /// Zdarzenie wywoływane gdy sterowany obiekt ma zacząć się obracać.
+        /// </summary>
+        /// <remarks>Vector2 - kierunek docelowy obrotu</remarks>
         public event Action<Vector2> Turn;
 
         protected void RaiseTurn(Vector2 direction)
@@ -58,7 +75,7 @@ namespace MetroDigger.Gameplay.Drivers
                 Move(destination);
         }
 
-        public Tile PosToTile(Vector2 dirVec)
+        protected Tile PosToTile(Vector2 dirVec)
         {
             int x = (int)Math.Floor(dirVec.X / Tile.Width);
             int y = (int)Math.Floor(dirVec.Y / Tile.Height);

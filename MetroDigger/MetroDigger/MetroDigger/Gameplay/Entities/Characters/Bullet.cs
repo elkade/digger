@@ -8,10 +8,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
+    /// <summary>
+    /// Pocisk, który może zostać wytrzelony przez IShootable.
+    /// </summary>
     public class Bullet : DynamicEntity
     {
         private readonly IShooter _shooter;
-
+        /// <summary>
+        /// Tworzy nowy pocisk
+        /// </summary>
+        /// <param name="driver">sterownik, zgodnie z którym porusza się pocisk</param>
+        /// <param name="shooter">Obiekt, który wystrzelił pocisk</param>
         public Bullet(IDriver driver, IShooter shooter)
             : base(driver, shooter.OccupiedTile, shooter.Direction, shooter.MovementSpeed*2)
         {
@@ -35,10 +42,16 @@ namespace MetroDigger.Gameplay.Entities.Characters
         {
             get { return _shooter; }
         }
-
+        /// <summary>
+        /// Zdarzenie wywoływane w momencie zderzenia z obiektem lub przejściem pomiędzy kafelkami
+        /// </summary>
         public event Action<Bullet, Tile> Hit;
 
-
+        /// <summary>
+        /// Rysuje obiekt na planszy
+        /// </summary>
+        /// <param name="gameTime">Czas gry</param>
+        /// <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.End();
@@ -48,12 +61,16 @@ namespace MetroDigger.Gameplay.Entities.Characters
             spriteBatch.Begin();
         }
 
-        public override void CollideWith(ICollideable character)
+        /// <summary>
+        /// Wywołuje zachowanie obiektu w momencie kolizji
+        /// </summary>
+        /// <param name="collideable">Obiekt, z którym zaszła kolizja.</param>
+        public override void CollideWith(ICollideable collideable)
         {
-            if(character is Bullet)
-                if ((character as Bullet).Shooter == Shooter) return;
-            if (character == Shooter) return;
-            character.Harm();
+            if(collideable is Bullet)
+                if ((collideable as Bullet).Shooter == Shooter) return;
+            if (collideable == Shooter) return;
+            collideable.Harm();
             Harm();
         }
 

@@ -10,11 +10,20 @@ using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay.Drivers
 {
+    /// <summary>
+    /// Odpowiada za sterowanie ruchem  obiektu zgodnie z algorytmem A*
+    /// </summary>
     internal class AStarDriver : Driver
     {
         private readonly IDynamicEntity _chasedEntity;
         private readonly bool _isDriller;
-
+        /// <summary>
+        /// Tworzy nowy sterownik A*
+        /// </summary>
+        /// <param name="unit">Rozmiar kafelków na planszy</param>
+        /// <param name="board">Plansza, po której porusza się obiekt</param>
+        /// <param name="chasedEntity">Obiekt, za którym ma podążać obiekt sterowany</param>
+        /// <param name="isDriller">określa, czy obiekt potrafi wiercić</param>
         public AStarDriver(Vector2 unit, Board board, IDynamicEntity chasedEntity, bool isDriller = true)
             : base(unit, board)
         {
@@ -29,8 +38,12 @@ namespace MetroDigger.Gameplay.Drivers
         private int _i;
         private int _soilWeight = 5;
         int _doShoot = 0;
-
-        public override void UpdateMovement(IMover mh, EntityState state)
+        /// <summary>
+        /// Aktualizuje ścieżkę, po której ma poruszać się sterowany obiekt
+        /// </summary>
+        /// <param name="mover">narzędzie dokonujące zmiany położenia obiektu</param>
+        /// <param name="state">okraśla stan, w jakim znajduje się obiekt</param>
+        public override void UpdateMovement(IMover mover, EntityState state)
         {
 
             if (state == EntityState.Idle)
@@ -44,7 +57,7 @@ namespace MetroDigger.Gameplay.Drivers
                 if (_nextUpdate<DateTime.Now)
                 {
                     _nextUpdate = DateTime.Now + TimeSpan.FromSeconds( (new Random()).Next(1, 3));
-                    _path = FindPath(Board, mh.StartTile, _chasedEntity.OccupiedTile);
+                    _path = FindPath(Board, mover.StartTile, _chasedEntity.OccupiedTile);
                     _i = 0;
                 }
                 if (_path!=null&&_i < _path.Length)
@@ -55,10 +68,10 @@ namespace MetroDigger.Gameplay.Drivers
                         _soilWeight = 5;
                     return;
                 }
-                if (destTile != null && destTile != mh.StartTile && destTile != Board.StartTile)
+                if (destTile != null && destTile != mover.StartTile && destTile != Board.StartTile)
                 {
-                    if (AreNeighbours(destTile, mh.StartTile))
-                        //destTile = Board[mh.StartTile.X + (new Random()).Next(2) - 1, mh.StartTile.Y + (new Random()).Next(2) - 1];
+                    if (AreNeighbours(destTile, mover.StartTile))
+                        //destTile = Board[mover.StartTile.X + (new Random()).Next(2) - 1, mover.StartTile.Y + (new Random()).Next(2) - 1];
                         switch (destTile.Accessibility)
                         {
                             case Accessibility.Free:

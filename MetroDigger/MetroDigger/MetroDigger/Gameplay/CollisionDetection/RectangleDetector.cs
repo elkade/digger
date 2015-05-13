@@ -3,9 +3,18 @@ using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay.CollisionDetection
 {
+    /// <summary>
+    /// Detektor kolizji, który sprawdza przecięcia prostokątu otaczającego obiekt
+    /// </summary>
     public class RectangleDetector : CollisionDetector
     {
-        public override bool CheckCollision(IDynamicEntity entity1, IDynamicEntity entity2)
+        /// <summary>
+        /// Sprawdza, czy zachodzi kolizja pomiędzy dwoma obiektami
+        /// </summary>
+        /// <param name="entity1">Obiekt, którego kolizja ma zostać sprawdzona</param>
+        /// <param name="entity2">Obiekt, którego kolizja ma zostać sprawdzona</param>
+        /// <returns></returns>
+        public override bool CheckCollision(ICollideable entity1, ICollideable entity2)
         {
             if (entity1 == null || entity2 == null)
                 return false;

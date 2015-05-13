@@ -1,5 +1,4 @@
 ﻿using MetroDigger.Gameplay.Entities;
-using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Manager;
@@ -9,6 +8,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MetroDigger.Gameplay.Drivers
 {
+    /// <summary>
+    /// Sterownik wyznaczający ścieżkę poruszania się obiektu zgodnie z rozkazami płynącymi z InputManagera
+    /// </summary>
     internal class KeyboardDriver : Driver
     {
         private readonly InputHandler _im;
@@ -17,8 +19,12 @@ namespace MetroDigger.Gameplay.Drivers
         {
             _im = InputHandler.Instance;
         }
-
-        public override void UpdateMovement(IMover mh, EntityState state)
+        /// <summary>
+        /// Aktualizuje ścieżkę, po której ma poruszać się sterowany obiekt
+        /// </summary>
+        /// <param name="mover">narzędzie dokonujące zmiany położenia obiektu</param>
+        /// <param name="state">okraśla stan, w jakim znajduje się obiekt</param>
+        public override void UpdateMovement(IMover mover, EntityState state)
         {
             bool wsad = GameOptions.Instance.Controls == Controls.Wsad;//to powinien ogarniac inputmanager
             int x = _im.Horizontal(wsad);
@@ -38,7 +44,7 @@ namespace MetroDigger.Gameplay.Drivers
 
             if (dirVec != Vector2.Zero)
             {
-                Tile destTile = PosToTile(dirVec + mh.Position);
+                Tile destTile = PosToTile(dirVec + mover.Position);
                 if (destTile != null && state == EntityState.Idle)
                     switch (destTile.Accessibility)
                     {

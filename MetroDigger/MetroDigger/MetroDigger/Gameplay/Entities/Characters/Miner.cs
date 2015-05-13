@@ -9,10 +9,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
+    /// <summary>
+    /// Robot górniczy
+    /// </summary>
     public class Miner : DynamicEntity, IDriller
     {
         private readonly MediaManager _grc;
-
+        /// <summary>
+        /// Tworzy nowego robota górniczego
+        /// </summary>
+        /// <param name="driver">sterownik, zgodnie z którym porusza się robot</param>
+        /// <param name="occupiedTile">kafelek, w którym poczatkowo przebywa obiekt</param>
         public Miner(IDriver driver, Tile occupiedTile)
             : base(driver, occupiedTile, new Vector2(0,-1), 5f)
         {

@@ -3,8 +3,22 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Effects
 {
+    /// <summary>
+    /// Cząstka będąca częścią animacji rozpraszających się cząstek.
+    /// </summary>
     public class Particle
     {
+        /// <summary>
+        /// Tworzy nową czastkę.
+        /// </summary>
+        /// <param name="texture">Tekstura zawierająca cząstkę.</param>
+        /// <param name="position">Miejsce wyświetlenia cząstki na ekranie.</param>
+        /// <param name="velocity">Prędkośc, z jaką ma się przesuwać cząstka.</param>
+        /// <param name="angle">kierunek ruchu cząstki.</param>
+        /// <param name="angularVelocity">prędkość kątowa</param>
+        /// <param name="color">kolor cząstki</param>
+        /// <param name="size">rozmiar cząstki</param>
+        /// <param name="ttl">czas zycia cząstki</param>
         public Particle(Texture2D texture, Vector2 position, Vector2 velocity,
             float angle, float angularVelocity, Color color, float size, int ttl)
         {
@@ -18,22 +32,30 @@ namespace MetroDigger.Effects
             Ttl = ttl;
         }
 
-        private Texture2D Texture { get; set; } // The texture that will be drawn to represent the particle
-        private Vector2 Position { get; set; } // The current position of the particle        
-        private Vector2 Velocity { get; set; } // The speed of the particle at the current instance
-        private float Angle { get; set; } // The current angle of rotation of the particle
-        private float AngularVelocity { get; set; } // The speed that the angle is changing
-        private Color Color { get; set; } // The color of the particle
-        private float Size { get; set; } // The size of the particle
-        public int Ttl { get; private set; } // The 'time to live' of the particle
-
+        private Texture2D Texture { get; set; }
+        private Vector2 Position { get; set; }     
+        private Vector2 Velocity { get; set; }
+        private float Angle { get; set; }
+        private float AngularVelocity { get; set; }
+        private Color Color { get; set; }
+        private float Size { get; set; }
+        /// <summary>
+        /// Time to live - liczba updatów, jaka pozostała cząstce do momentu, aż przestanie być wyświetlana
+        /// </summary>
+        public int Ttl { get; private set; }
+        /// <summary>
+        /// Aktualizuje kąt, położenie i czas życia cząstki
+        /// </summary>
         public void Update()
         {
             Ttl--;
             Position += Velocity;
             Angle += AngularVelocity;
         }
-
+        /// <summary>
+        /// Rysuje cząstkę na ekranie
+        /// </summary>
+        /// <param name="spriteBatch">obiekt XNA służący do ryzowania.</param>
         public void Draw(SpriteBatch spriteBatch)
         {
             var sourceRectangle = new Rectangle(0, 0, Texture.Width, Texture.Height);

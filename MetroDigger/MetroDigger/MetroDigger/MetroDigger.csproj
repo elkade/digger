@@ -101,7 +101,6 @@
     <Compile Include="Gameplay\Entities\Terrains\Buffer.cs" />
     <Compile Include="Gameplay\Entities\Terrains\Terrain.cs" />
     <Compile Include="Gameplay\Abstract\IDriller.cs" />
-    <Compile Include="Gameplay\Abstract\IMovable.cs" />
     <Compile Include="Gameplay\Abstract\IShooter.cs" />
     <Compile Include="Gameplay\MovementHandler.cs" />
     <Compile Include="Gameplay\WaterSpiller.cs" />

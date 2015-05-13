@@ -5,10 +5,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Effects
 {
+    /// <summary>
+    /// Silnik odpowiedzialny za tworzenie nowych cząstek.
+    /// </summary>
     public class ParticleEngine
     {
         private readonly Random _random;
-        public Vector2 EmitterLocation { get; set; }
+        /// <summary>
+        /// Określa położenie źródła cząstek.
+        /// </summary>
+        public Vector2 EmitterLocation { private get; set; }
         private readonly List<Particle> _particles;
         private readonly List<Texture2D> _textures;
         private readonly Color[] _colors =
@@ -19,7 +25,11 @@ namespace MetroDigger.Effects
             new Color(0x60, 0x20, 0x00),
             new Color(0x14, 0x0A, 0x00)
         };
-
+        /// <summary>
+        /// Tworzy nowy silnik cząstek.
+        /// </summary>
+        /// <param name="textures">Lista grafik, które mają przybierać cząstki</param>
+        /// <param name="location">początkowe położenie źródła cząstek</param>
         public ParticleEngine(List<Texture2D> textures, Vector2 location)
         {
             EmitterLocation = location;
@@ -27,7 +37,9 @@ namespace MetroDigger.Effects
             _particles = new List<Particle>();
             _random = new Random();
         }
-
+        /// <summary>
+        /// Aktualizuje cząstki - tworzy nowe i usuwa te, których czas życia się skończył.
+        /// </summary>
         public void Update()
         {
             const int total = 5;
@@ -63,14 +75,15 @@ namespace MetroDigger.Effects
 
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
         }
-
+        /// <summary>
+        /// Rysuje cząstki na ekranie.
+        /// </summary>
+        /// <param name="spriteBatch">Obiekt XNA służący do rysowania.</param>
         public void Draw(SpriteBatch spriteBatch)
         {
             //spriteBatch.Begin();
-            for (int index = 0; index < _particles.Count; index++)
-            {
-                _particles[index].Draw(spriteBatch);
-            }
+            foreach (Particle t in _particles)
+                t.Draw(spriteBatch);
             //spriteBatch.End();
         }
     }

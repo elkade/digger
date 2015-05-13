@@ -2,6 +2,9 @@
 
 namespace MetroDigger.Gameplay.Entities.Terrains
 {
+    /// <summary>
+    /// Teren z wodą.
+    /// </summary>
     class Water : Terrain
     {
         internal enum WaterLevel
@@ -11,7 +14,13 @@ namespace MetroDigger.Gameplay.Entities.Terrains
             Half=1,
             Quarter=0
         }
-
+        /// <summary>
+        /// Tworzy nowy tern z wodą
+        /// </summary>
+        /// <param name="lvl">Określa poziom wody w terenie</param>
+        /// <param name="isFull">Określa, czy teren przechowuje informacjęo tym, że przechowuje wodę.
+        /// Jest źródłem wody.</param>
+        /// <param name="isClosed">Określa, czy teren graniczy ze stropem</param>
         public Water(WaterLevel lvl, bool isFull = true, bool isClosed = true)
         {
             if (lvl == WaterLevel.FullClosed && !isClosed)
@@ -23,7 +32,13 @@ namespace MetroDigger.Gameplay.Entities.Terrains
             _accessibility = Accessibility.Water;
             IsFull = isFull;
         }
-
+        /// <summary>
+        /// Tworzy nowy teren z wodą
+        /// </summary>
+        /// <param name="lvl">Określa poziom wody w terenie</param>
+        /// <param name="isFull">Określa, czy teren przechowuje informacjęo tym, że przechowuje wodę.
+        /// Jest źródłem wody.</param>
+        /// <param name="isClosed">Określa, czy teren graniczy ze stropem</param>
         public Water(double lvl = 1, bool isFull = true, bool isClosed = true)
         {
             if (lvl > 0.66)
@@ -41,7 +56,9 @@ namespace MetroDigger.Gameplay.Entities.Terrains
         }
 
         private WaterLevel _level;
-
+        /// <summary>
+        /// Określa poziom wody w terenie
+        /// </summary>
         public WaterLevel Level
         {
             set
@@ -52,7 +69,9 @@ namespace MetroDigger.Gameplay.Entities.Terrains
             }
             get { return _level; }
         }
-
+        /// <summary>
+        /// Określa, czy teren jest źródłem wody
+        /// </summary>
         public bool IsFull { get; set; }
     }
 }

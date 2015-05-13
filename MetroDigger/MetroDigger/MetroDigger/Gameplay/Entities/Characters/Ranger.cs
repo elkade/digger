@@ -9,10 +9,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
+    /// <summary>
+    /// Robot zwiadowczy
+    /// </summary>
     public class Ranger : DynamicEntity, ICollector, IDriller, IShooter
     {
         private readonly MediaManager _grc;
 
+        /// <summary>
+        /// Tworzy nowego robota górniczego
+        /// </summary>
+        /// <param name="driver">sterownik, zgodnie z którym porusza się robot</param>
+        /// <param name="occupiedTile">kafelek, w którym poczatkowo przebywa obiekt</param>
+        /// <param name="hasDrill">określa czy robot ma wiertło</param>
+        /// <param name="energyCells">określa liczbę baterii posiadanych przez robota</param>
         public Ranger(IDriver driver, Tile occupiedTile, bool hasDrill, int energyCells)
             : base(driver, occupiedTile, new Vector2(0, -1), 5f)
         {

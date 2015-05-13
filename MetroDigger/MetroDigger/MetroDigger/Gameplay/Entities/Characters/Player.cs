@@ -9,12 +9,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay.Entities.Characters
 {
+    /// <summary>
+    /// Obiekt gracza
+    /// </summary>
     public class Player : DynamicEntity, IDriller, IShooter, ICollector
     {
         private readonly MediaManager _grc;
 
         private readonly Tile _startTile;
 
+        /// <summary>
+        /// Tworzy nowy obiekt gracza
+        /// </summary>
+        /// <param name="driver">Sterownik, zgodnie z którym porusza się obiekt gracza.</param>
+        /// <param name="occupiedTile">Kafelek zajmowany początkowo przez gracza.</param>
+        /// <param name="startTile">KAfelek, w którym odradza się gacz po byciu zranionym</param>
         public Player(IDriver driver, Tile occupiedTile, Tile startTile)
             : base(driver, occupiedTile, new Vector2(0, 1), 5f)
         {
@@ -74,12 +83,17 @@ namespace MetroDigger.Gameplay.Entities.Characters
         }
         public void StartShooting()
         {
-            if (/*PowerCellsCount <= 0 ||*/ State!=EntityState.Idle) return;
+            if (PowerCellsCount <= 0 || State!=EntityState.Idle) return;
             RaiseShoot();
             PowerCellsCount--;
         }
+        /// <summary>
+        /// Określa liczbę żyć gracza
+        /// </summary>
         public int LivesCount { get; set; }
-
+        /// <summary>
+        /// Określa wynik uzyskany przez gracza
+        /// </summary>
         public int Score { get; set; }
 
         private void Reset()
