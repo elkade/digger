@@ -2,14 +2,18 @@
 using MetroDigger.Gameplay;
 using MetroDigger.Manager;
 using MetroDigger.Screens.MenuObjects;
-using XNA_GSM.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
 {
+    /// <summary>
+    /// Menu wyboru poziomu. Powala na wybór poziomu spośród tych, które gracz zdążył odblokować.
+    /// </summary>
     class ChooseLevelScreen : MenuScreen
     {
         #region Initialization
-
+        /// <summary>
+        /// Tworzy nowe manu wyboru poziomu.
+        /// </summary>
         public ChooseLevelScreen()
             : base("Choose Level")
         {

@@ -1,13 +1,19 @@
 ﻿using System;
-using XNA_GSM.Screens.MenuObjects;
+using MetroDigger.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
 {
-    class PauseMenu2 : MenuScreen
+    /// <summary>
+    /// Menu pauzy gry. Daje takie same mozliwości jak menu startowe.
+    /// Przez naciśnięcie klawisza Esc pozwala wrócić do aktualnie rozgrywanej gry.
+    /// </summary>
+    class PauseMenu : MenuScreen
     {
         #region Initialization
-
-        public PauseMenu2()
+        /// <summary>
+        /// Tworzy menu pauzy gry
+        /// </summary>
+        public PauseMenu()
             : base("MetroDigger")
         {
             MenuEntry newGameEntry = new MenuEntry("Play Game");

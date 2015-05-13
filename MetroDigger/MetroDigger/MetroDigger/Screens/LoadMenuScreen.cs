@@ -1,17 +1,21 @@
 ﻿using System;
 using MetroDigger.Manager;
 using MetroDigger.Screens.MenuObjects;
-using XNA_GSM.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
 {
+    /// <summary>
+    /// Menu ładowania gry zapisanej w pliku. Pozwala wpisać nazwę pliku, z którego ma zostać wczytana gra.
+    /// </summary>
     class LoadMenuScreen : MenuScreen
     {
         #region Initialization
 
-        MenuTextInput _textInput = new MenuTextInput("...");
+        readonly MenuTextInput _textInput = new MenuTextInput("...");
 
-
+        /// <summary>
+        /// Tworzy noew menu ładowania gry z pliku.
+        /// </summary>
         public LoadMenuScreen()
             : base("Load Game")
         {

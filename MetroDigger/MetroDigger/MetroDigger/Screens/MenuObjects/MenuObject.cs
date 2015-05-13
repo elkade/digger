@@ -5,30 +5,27 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Screens.MenuObjects
 {
+    /// <summary>
+    /// Abstrakcyjna klasa bazowa dla kontrolek. Opisuje efekty przejścia kontrolek przy zmianie ekranu.
+    /// </summary>
     abstract class MenuObject
     {
         #region Fields
 
         /// <summary>
-        /// The _text rendered for this entry.
+        /// Tekst kontrolki
         /// </summary>
         protected string _text;
 
         /// <summary>
-        /// Tracks a fading selection effect on the entry.
+        /// Współczynnik blednięcia kontrolki przy przejściu
         /// </summary>
-        /// <remarks>
-        /// The entries transition out of the selection effect when they are deselected.
-        /// </remarks>
-        float selectionFade;
+        float _selectionFade;
 
         /// <summary>
-        /// The position at which the entry is drawn. This is set by the MenuScreen
-        /// each frame in Update.
+        /// Położenie kontrolki na ekranie.
         /// </summary>
-        Vector2 position;
-
-        private bool isSelectable;
+        Vector2 _position;
 
         #endregion
 
@@ -36,7 +33,7 @@ namespace MetroDigger.Screens.MenuObjects
 
 
         /// <summary>
-        /// Gets or sets the _text of this menu entry.
+        /// Teks kontrolki.
         /// </summary>
         public virtual string Text
         {
@@ -46,19 +43,17 @@ namespace MetroDigger.Screens.MenuObjects
 
 
         /// <summary>
-        /// Gets or sets the position at which to draw this menu entry.
+        /// Pozycja kontrolki na ekranie.
         /// </summary>
         public Vector2 Position
         {
-            get { return position; }
-            set { position = value; }
+            get { return _position; }
+            set { _position = value; }
         }
-
-        public bool IsSelectable
-        {
-            get { return isSelectable; }
-            set { isSelectable = value; }
-        }
+        /// <summary>
+        /// Określa, czy kontrolkę da sie zaznaczyć.
+        /// </summary>
+        public bool IsSelectable { get; set; }
 
         #endregion
 
@@ -66,11 +61,11 @@ namespace MetroDigger.Screens.MenuObjects
 
 
         /// <summary>
-        /// Constructs a new menu entry with the specified _text.
+        /// Tworzy nową kontrolkę.
         /// </summary>
-        public MenuObject(string text)
+        protected MenuObject(string text)
         {
-            this._text = text;
+            _text = text;
         }
 
 
@@ -79,13 +74,13 @@ namespace MetroDigger.Screens.MenuObjects
         #region Events
 
         /// <summary>
-        /// Event raised when the menu entry is selected.
+        /// Zdarzenie wywoływanie przy wyborze kontrolki.
         /// </summary>
         public event EventHandler<EventArgs> Selected;
 
 
         /// <summary>
-        /// Method for raising the Selected event.
+        /// Metoda do wywoływania zdarzenia wybrania kontrolki.
         /// </summary>
         protected internal virtual void OnSelectEntry()
         {
@@ -100,63 +95,52 @@ namespace MetroDigger.Screens.MenuObjects
 
 
         /// <summary>
-        /// Updates the menu entry.
+        /// Aktualizuje kontrolkę
         /// </summary>
-        public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
+        public virtual void Update(bool isSelected, GameTime gameTime)
         {
 
             float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
 
             if (isSelected)
-                selectionFade = Math.Min(selectionFade + fadeSpeed, 1);
+                _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1);
             else
-                selectionFade = Math.Max(selectionFade - fadeSpeed, 0);
+                _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0);
         }
 
         /// <summary>
-        /// Draws the menu entry. This can be overridden to customize the appearance.
+        /// Rysuje kontrolkę
         /// </summary>
-        public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
+        public void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
-
-            // Draw the selected entry in yellow, otherwise white.
             Color color = isSelected ? Color.LightGreen : Color.White;
 
-            // Pulsate the size of the selected menu entry.
-            //double time = gameTime.TotalGameTime.TotalSeconds;
-
-            //float pulsate = (float)Math.Sin(time * 6) + 1;
-
-            //float scale = 1 + pulsate * 0.05f * selectionFade;
-
-            // Modify the alpha to fade _text out during transitions.
             color *= screen.TransitionAlpha;
 
-            // Draw _text, centered on the middle of each line.
             ScreenManager screenManager = screen.ScreenManager;
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = MediaManager.Instance.Font;
 
-            Vector2 origin = new Vector2(0, font.LineSpacing / 2);
+            Vector2 origin = new Vector2(0, (float)font.LineSpacing / 2);
 
-            spriteBatch.DrawString(font, Text, position, color, 0,
+            spriteBatch.DrawString(font, Text, _position, color, 0,
                                    origin, 1, SpriteEffects.None, 0);
         }
 
 
         /// <summary>
-        /// Queries how much space this menu entry requires.
+        /// Pobiera ile miejsca potrzebuje kontrolka.
         /// </summary>
-        public virtual int GetHeight(MenuScreen screen)
+        public int GetHeight()
         {
             return MediaManager.Instance.Font.LineSpacing;
         }
 
 
         /// <summary>
-        /// Queries how wide the entry is, used for centering on the screen.
+        /// Pobiera szerokość kontrolki w celu wycentorwania jej
         /// </summary>
-        public virtual int GetWidth(MenuScreen screen)
+        public int GetWidth()
         {
             return (int)MediaManager.Instance.Font.MeasureString(Text).X;
         }

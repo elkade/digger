@@ -2,8 +2,11 @@
 using System.Text;
 using Microsoft.Xna.Framework.Input;
 
-namespace XNA_GSM
+namespace MetroDigger.Screens.MenuObjects
 {
+    /// <summary>
+    /// Narzędzie służące do rejestracji wpisywanego tekstu i konwersji na znaki gotowe do wyświetlenia.
+    /// </summary>
     class TextRegistrator
     {
         Keys _inputKey;
@@ -14,13 +17,20 @@ namespace XNA_GSM
         double _time;
 
         private bool _isAccelerated = false;
-
+        /// <summary>
+        /// Tworzy nowy rejestrator
+        /// </summary>
+        /// <param name="textDelay1">Opóźnienie po pierwszym wciśnięciu klawisza</param>
+        /// <param name="textDelay2">Opóźnienie po wciśnięciu klawisza pomiędzy zapisem kolejnych liter</param>
         public TextRegistrator(double textDelay1, double textDelay2)
         {
             _textDelay1 = textDelay1;
             _textDelay2 = textDelay2;
         }
-
+        /// <summary>
+        /// Podaje zestaw klawiszy klawiatury do rejestratora w celu konwersji i zapisu.
+        /// </summary>
+        /// <param name="keys">Tablica klawiszy</param>
         public void Input(Keys[] keys)
         {
             if (keys.Length > 0)
@@ -36,12 +46,18 @@ namespace XNA_GSM
             else
                 _inputKey = 0;
         }
-
+        /// <summary>
+        /// Zwraca zapisany tekst
+        /// </summary>
+        /// <returns>zapisany tekst.</returns>
         public string Output()
         {
             return _text;
         }
-
+        /// <summary>
+        /// Aktualizuje wpisany tekst.
+        /// </summary>
+        /// <param name="newTime">Aktualny czas gry.</param>
         internal void Update(double newTime)
         {
             if (_inputKey != Keys.None)

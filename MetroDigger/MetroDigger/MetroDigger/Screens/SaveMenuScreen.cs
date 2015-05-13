@@ -1,17 +1,21 @@
 ﻿using System;
 using MetroDigger.Manager;
 using MetroDigger.Screens.MenuObjects;
-using XNA_GSM.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
 {
+    /// <summary>
+    /// Menu zapisywania gry. Pozwala na wpisanie nazwy pliku, do którego nastąpi zapis gry.
+    /// </summary>
     class SaveMenuScreen : MenuScreen
     {
         #region Initialization
 
-        MenuTextInput _textInput = new MenuTextInput("...");
+        readonly MenuTextInput _textInput = new MenuTextInput("...");
 
-
+        /// <summary>
+        /// Tworzy menu zapisywania gry
+        /// </summary>
         public SaveMenuScreen()
             : base("Save Game")
         {

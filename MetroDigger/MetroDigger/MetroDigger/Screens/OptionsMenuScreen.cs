@@ -1,32 +1,25 @@
 using MetroDigger.Manager;
 using MetroDigger.Manager.Settings;
-using XNA_GSM.Screens.MenuObjects;
+using MetroDigger.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
 {
     /// <summary>
-    ///     The options screen is brought up over the top of the main menu
-    ///     screen, and gives the user a chance to configure the game
-    ///     in various hopefully useful ways.
+    ///Menu opcji gry. Pozwala na w³¹czenie/wy³¹czenie dŸwiêków i muzyki oraz zmiane sterowania na strza³ki/wsad.
     /// </summary>
     internal class OptionsMenuScreen : MenuScreen
     {
-        private MenuCheckField controlsCheckField;
-        private MenuCheckField musicMenuCheckField;
-        private MenuLabel shootLabel;
-        private MenuCheckField soundEffectsMenuCheckField;
-
         public OptionsMenuScreen()
             : base("GameOptions")
         {
-            controlsCheckField = new MenuCheckField("Control:", new[] {"Arrow", "Wsad"},
+            MenuCheckField controlsCheckField = new MenuCheckField("Control:", new[] {"Arrow", "Wsad"},
                 GameOptions.Instance.Controls == Controls.Arrows ? 0 : 1);
-            musicMenuCheckField = new MenuCheckField("Music:", new[] {"On", "Off"},
+            MenuCheckField musicMenuCheckField = new MenuCheckField("Music:", new[] {"On", "Off"},
                 GameOptions.Instance.IsMusicEnabled ? 0 : 1);
-            soundEffectsMenuCheckField = new MenuCheckField("Sound effects:", new[] {"On", "Off"},
+            MenuCheckField soundEffectsMenuCheckField = new MenuCheckField("Sound effects:", new[] {"On", "Off"},
                 GameOptions.Instance.IsSoundEnabled ? 0 : 1);
 
-            shootLabel = new MenuLabel("Space - shoot");
+            MenuLabel shootLabel = new MenuLabel("Space - shoot");
 
             var back = new MenuEntry("Back");
 

@@ -1,27 +1,12 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// MenuScreen.cs
-//
-// XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
 using System;
 using System.Collections.Generic;
 using MetroDigger.Logging;
 using MetroDigger.Manager;
-using MetroDigger.Manager.Settings;
-using MetroDigger.Screens;
 using MetroDigger.Screens.MenuObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using XNA_GSM.Screens.MenuObjects;
 
-#endregion
-
-namespace MetroDigger
+namespace MetroDigger.Screens
 {
     /// <summary>
     /// Base class for screens that contain a menu of options. The user can
@@ -171,7 +156,7 @@ namespace MetroDigger
                 MenuObject menuObject = _menuObjects[i];
                 
                 // each entry is to be centered horizontally
-                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuObject.GetWidth(this) / 2;
+                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuObject.GetWidth() / 2;
 
                 if (ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
@@ -182,7 +167,7 @@ namespace MetroDigger
                 menuObject.Position = position;
 
                 // move down for the next entry the size of this entry
-                position.Y += menuObject.GetHeight(this);
+                position.Y += menuObject.GetHeight();
             }
         }
 
@@ -207,7 +192,7 @@ namespace MetroDigger
             {
                 bool isSelected = IsActive && (i == _selectedObjectIndex);
 
-                _menuObjects[i].Update(this, isSelected, gameTime);
+                _menuObjects[i].Update(isSelected, gameTime);
             }
             // make sure our entries are in the right place before we draw them
             UpdateMenuEntryLocations();

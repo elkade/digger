@@ -1,12 +1,18 @@
 using System;
-using XNA_GSM.Screens.MenuObjects;
+using MetroDigger.Screens.MenuObjects;
 
 namespace MetroDigger.Screens
 {
+    /// <summary>
+    /// G³ówne menu gry. Posiada pola przekierowuj¹ce do zapisu gry, za³adowania gry z pliku, rozpoczêcia nowej gry,
+    /// menu opcji, rankingu i wyjœcia z gry
+    /// </summary>
     class StartScreen : MenuScreen
     {
         #region Initialization
-
+        /// <summary>
+        /// Tworzy g³ówne menu gry
+        /// </summary>
         public StartScreen()
             : base("MetroDigger")
         {

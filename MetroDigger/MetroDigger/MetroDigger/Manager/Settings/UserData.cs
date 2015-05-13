@@ -8,6 +8,13 @@ namespace MetroDigger.Manager.Settings
     public class UserData
     {
         /// <summary>
+        /// Domyślny konstruktor bezparametrowy potrzebny w celu serializacji
+        /// </summary>
+        public UserData()
+        {
+            
+        }
+        /// <summary>
         /// Tworzy nowy okbiekt UserData
         /// </summary>
         /// <param name="name">Nazwa użytkownika</param>
@@ -21,7 +28,7 @@ namespace MetroDigger.Manager.Settings
         /// <summary>
         /// Lista poziomów, które ukończył użytkownik wraz ze stanem ukończenia.
         /// </summary>
-        public List<UserLevel> Levels { get; private set; }
+        public List<UserLevel> Levels { get; set; }
 
         private string Name { get; set; }
     }

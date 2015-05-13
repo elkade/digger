@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MetroDigger.Screens.MenuObjects;
+﻿namespace MetroDigger.Screens.MenuObjects
 
-namespace XNA_GSM.Screens.MenuObjects
 {
+    /// <summary>
+    /// Kontrolka - etykieta. Nie można jej zaznaczyć - służy jedynie za wyświetlany tekst.
+    /// </summary>
     class MenuLabel : MenuObject
     {
+        /// <summary>
+        /// Tworzy nową etykietę.
+        /// </summary>
+        /// <param name="text">Tekst etykiety</param>
         public MenuLabel(string text)
             : base(text)
         {

@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Screens
 {
+    /// <summary>
+    /// Ekran rozgrywki. Wyœwietla poziom z ca³¹ zawartoœci¹
+    /// </summary>
     internal class GameplayScreen : GameScreen
     {
         private readonly Level _level;
@@ -21,8 +24,12 @@ namespace MetroDigger.Screens
         }
 
         #region Initialization
-
-        public GameplayScreen(Level level, bool isStarted=true) //do wczytania levelu z save'a lub kontynuacji
+        /// <summary>
+        /// Tworzy nowy ekran rozgrywki
+        /// </summary>
+        /// <param name="level">Poziom do wczytania</param>
+        /// <param name="isStarted">Czy gra rozpoczyna sie natychmiast</param>
+        public GameplayScreen(Level level, bool isStarted = true)
         {
             if (level == null)
                 throw new NullReferenceException();
@@ -32,30 +39,12 @@ namespace MetroDigger.Screens
             _level.IsStarted = isStarted;
             MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
         }
-
-        //public GameplayScreen() //do t³a
-        //{
-        //    SetTransition();
-        //    int lvlNo = (new Random()).Next(GameManager.Instance.GetMaxLevel());
-        //    if (!GameManager.Instance.GetLevel(lvlNo, out _level))
-        //        _level.LevelAccomplished += OnLevelAccomplished;
-        //    MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
-        //}
-
-        //public GameplayScreen(int lvlNo)
-        //    //do wczytania levelu o konkretnym numerze
-        //{
-        //    SetTransition();
-        //    if (!GameManager.Instance.GetLevel(lvlNo, out _level, true))
-        //    {
-        //        _level.IsStarted = true;
-        //        _level.LevelAccomplished += OnLevelAccomplished;
-        //    }
-        //    else ; //osi¹gniêto max level
-        //    MediaManager.Instance.SetDimensions(_level.Width, _level.Height);
-        //}
-
-        private void OnLevelAccomplished(Level level, bool isWon) //isWon-pora¿ka
+        /// <summary>
+        /// Metoda wywo³ywana przez zdarzenie zakoñczenia gry
+        /// </summary>
+        /// <param name="level">ukoñczony poziom</param>
+        /// <param name="isWon">czy gra zakoñczy³a siê sukcesem</param>
+        private void OnLevelAccomplished(Level level, bool isWon)
         {
             try
             {
@@ -91,20 +80,9 @@ namespace MetroDigger.Screens
             }
         }
 
-        /// <summary>
-        ///     Load graphics content for the game.
-        /// </summary>
         public override void LoadContent()
         {
             ScreenManager.Game.ResetElapsedTime();
-        }
-
-
-        /// <summary>
-        ///     Unload graphics content used by the game.
-        /// </summary>
-        public override void UnloadContent()
-        {
         }
 
         #endregion
@@ -112,27 +90,29 @@ namespace MetroDigger.Screens
         #region Update and Draw
 
         /// <summary>
-        ///     Updates the state of the game. This method checks the GameScreen.IsActive
-        ///     property, so the game will stop updating when the pause menu is active,
-        ///     or if you tab away to a different application.
+        /// Aktualizuje stan poziomu
         /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
             if (coveredByOtherScreen)
-                _pauseAlpha = Math.Min(_pauseAlpha + 1f/32, 1);
+                _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
             else
-                _pauseAlpha = Math.Max(_pauseAlpha - 1f/32, 0);
+                _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
 
             if (IsActive)
-            {if(_level==null)
-                ScreenManager.AddScreen(new MessageBoxScreen("Unable to load level."));
+            {
+                if (_level == null)
+                    ScreenManager.AddScreen(new MessageBoxScreen("Unable to load level."));
 
-                _level.Update();
+                if (_level != null) _level.Update();
             }
         }
-
+        /// <summary>
+        /// Obs³uguje wciœniête klawisze niedotycz¹ce logiki gry
+        /// </summary>
+        /// <param name="input"></param>
         public override void HandleInput(InputHandler input)
         {
             if (input == null)
@@ -141,10 +121,13 @@ namespace MetroDigger.Screens
             if (input.IsPauseGame())
             {
                 GameManager.Instance.SaveToMemory(_level);
-                ScreenManager.AddScreen(new PauseMenu2());
+                ScreenManager.AddScreen(new PauseMenu());
             }
         }
-
+        /// <summary>
+        /// Rysuje poziom i efekty przejœcia ekranów na ekranie
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
@@ -158,7 +141,7 @@ namespace MetroDigger.Screens
 
             if (TransitionPosition > 0 || _pauseAlpha > 0)
             {
-                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, _pauseAlpha/2);
+                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, _pauseAlpha / 2);
 
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }

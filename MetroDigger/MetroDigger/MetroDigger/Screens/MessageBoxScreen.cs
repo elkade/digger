@@ -6,13 +6,15 @@ using Microsoft.Xna.Framework.Graphics;
 namespace MetroDigger.Screens
 {
     /// <summary>
-    ///     A popup message box screen, used to display "are you sure?"
-    ///     confirmation messages.
+    /// MessageBox u¿ywany do wyœwietlania krótkich informacji
     /// </summary>
     
  
     internal class MessageBoxScreen : GameScreen
     {
+        /// <summary>
+        /// Tworzy message box
+        /// </summary>
         public event Action Accept;
 
         #region Fields
