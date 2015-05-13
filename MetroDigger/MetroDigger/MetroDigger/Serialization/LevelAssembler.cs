@@ -14,7 +14,7 @@ namespace MetroDigger.Serialization
     /// Implementuje wzorzec projektowy Assembler. 
     /// Służy do konwersji poziomu gry na obiekt łatwo serializowalny i z powrotem.
     /// </summary>
-    internal class LevelAssembler : IAssembler<Level, LevelDto>
+    public class LevelAssembler : IAssembler<Level, LevelDto>
     {
         /// <summary>
         /// Konwertuje poziom gry do obiektu serializowalnego

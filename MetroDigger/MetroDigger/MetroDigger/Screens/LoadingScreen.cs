@@ -16,28 +16,25 @@ namespace MetroDigger.Screens
         readonly GameScreen[] _screensToLoad;
 
         /// <summary>
-        /// The constructor is private: loading screens should
-        /// be activated via the static Load method instead.
+        /// Tworzy nowy ekran ³adowania. Konstruktor wywo³ywany ze statycznej metody Load
         /// </summary>
         private LoadingScreen(bool loadingIsSlow, GameScreen[] screensToLoad)
         {
-            this._loadingIsSlow = loadingIsSlow;
-            this._screensToLoad = screensToLoad;
+            _loadingIsSlow = loadingIsSlow;
+            _screensToLoad = screensToLoad;
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
         }
 
 
         /// <summary>
-        /// Activates the loading screen.
+        /// Aktywuje ekran ³adowania.
         /// </summary>
         public static void Load(ScreenManager screenManager, bool loadingIsSlow, params GameScreen[] screensToLoad)
         {
-            // Tell all the current screens to transition off.
             foreach (GameScreen screen in screenManager.GetScreens())
                 screen.ExitScreen();
 
-            // Create and activate the loading screen.
             LoadingScreen loadingScreen = new LoadingScreen(loadingIsSlow,
                                                             screensToLoad);
 
@@ -48,57 +45,36 @@ namespace MetroDigger.Screens
 
 
         /// <summary>
-        /// Updates the loading screen.
+        /// Aktualizuje ekran ³adowania
         /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            // If all the previous screens have finished transitioning
-            // off, it is time to actually perform the load.
             if (_otherScreensAreGone)
             {
                 ScreenManager.RemoveScreen(this);
 
                 foreach (GameScreen screen in _screensToLoad)
-                {
                     if (screen != null)
-                    {
                         ScreenManager.AddScreen(screen);
-                    }
-                }
-
-                // Once the load has finished, we use ResetElapsedTime to tell
-                // the  game timing mechanism that we have just finished a very
-                // long frame, and that it should not try to catch up.
                 ScreenManager.Game.ResetElapsedTime();
             }
         }
 
 
         /// <summary>
-        /// Draws the loading screen.
+        /// Odrysowuje ekran ³adowania
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            // If we are the only active screen, that means all the previous screens
-            // must have finished transitioning off. We check for this in the Draw
-            // method, rather than in Update, because it isn't enough just for the
-            // screens to be gone: in order for the transition to look good we must
-            // have actually drawn a frame without them before we perform the load.
             if ((ScreenState == ScreenState.Active) &&
                 (ScreenManager.GetScreens().Length == 1))
             {
                 _otherScreensAreGone = true;
             }
 
-            // The gameplay screen takes a while to load, so we display a loading
-            // message while that is going on, but the menus load very quickly, and
-            // it would look silly if we flashed this up for just a fraction of a
-            // second while returning from the game to the menus. This parameter
-            // tells us how long the loading is going to take, so we know whether
-            // to bother drawing the message.
             if (_loadingIsSlow)
             {
                 SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
@@ -106,7 +82,6 @@ namespace MetroDigger.Screens
 
                 const string message = "Loading...";
 
-                // Position the _text in the viewport.
                 Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
                 Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
                 Vector2 textSize = font.MeasureString(message);
@@ -114,7 +89,6 @@ namespace MetroDigger.Screens
 
                 Color color = Color.White * TransitionAlpha;
 
-                // Draw the _text.
                 spriteBatch.Begin();
                 spriteBatch.DrawString(font, message, textPosition, color);
                 spriteBatch.End();

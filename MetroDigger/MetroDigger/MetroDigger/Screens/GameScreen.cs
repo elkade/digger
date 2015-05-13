@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace MetroDigger.Screens
 {
     /// <summary>
-    /// Enum describes the screen transition state.
+    /// Opisuje stan przejœcia miêdzy kolejnymi menu.
     /// </summary>
     public enum ScreenState
     {
@@ -17,77 +17,54 @@ namespace MetroDigger.Screens
 
 
     /// <summary>
-    /// A screen is a single layer that has update and draw logic, and which
-    /// can be combined with other layers to build up a complex menu system.
-    /// For instance the main menu, the options menu, the "are you sure you
-    /// want to quit" message box, and the main game itself are all implemented
-    /// as screens.
+    /// Klasa bazowa dla ekranów. Ekran to pojedyncza warstwa,
+    /// która ma logikê aktualizacji i rysowania oraz mo¿e byæ ³¹czona z innyni
+    /// warstwami menu w celu stworzenia z³o¿onego systemu.
+    /// Klasa ta definiuje wszelkie animacje towarzysz¹ce przejœciom miêdzy ekranami.
     /// </summary>
     public abstract class GameScreen
     {
         #region Properties
 
+        /// <summary>
+        /// Wskazuje na to, czy ekran jest popupem - czyli wyœwietla siê jako okienko przed
+        /// ekranem macierzystym.
+        /// </summary>
+        public bool IsPopup { get; protected set; }
+
 
         /// <summary>
-        /// Normally when one screen is brought up over the top of another,
-        /// the first screen will transition off to make room for the new
-        /// one. This property indicates whether the screen is only a small
-        /// popup, in which case screens underneath it do not need to bother
-        /// transitioning off.
+        /// Ustawia jak d³ugo zajmuje ekranowi przejœcie z innego ekranu.
         /// </summary>
-        public bool IsPopup
+        protected TimeSpan TransitionOnTime
         {
-            get { return isPopup; }
-            protected set { isPopup = value; }
+            set { _transitionOnTime = value; }
         }
 
-        bool isPopup = false;
+        TimeSpan _transitionOnTime = TimeSpan.Zero;
 
 
         /// <summary>
-        /// Indicates how long the screen takes to
-        /// transition on when it is activated.
+        /// Ustawia jak d³ugo zajmuje ekranowi przejœciew inny ekran.
         /// </summary>
-        public TimeSpan TransitionOnTime
+        protected TimeSpan TransitionOffTime
         {
-            get { return transitionOnTime; }
-            protected set { transitionOnTime = value; }
+            private get { return _transitionOffTime; }
+            set { _transitionOffTime = value; }
         }
 
-        TimeSpan transitionOnTime = TimeSpan.Zero;
+        TimeSpan _transitionOffTime = TimeSpan.Zero;
 
-
-        /// <summary>
-        /// Indicates how long the screen takes to
-        /// transition off when it is deactivated.
-        /// </summary>
-        public TimeSpan TransitionOffTime
+        protected float TransitionPosition
         {
-            get { return transitionOffTime; }
-            protected set { transitionOffTime = value; }
+            get { return _transitionPosition; }
         }
 
-        TimeSpan transitionOffTime = TimeSpan.Zero;
+        float _transitionPosition = 1;
 
 
         /// <summary>
-        /// Gets the current position of the screen transition, ranging
-        /// from zero (fully active, no transition) to one (transitioned
-        /// fully off to nothing).
-        /// </summary>
-        public float TransitionPosition
-        {
-            get { return transitionPosition; }
-            protected set { transitionPosition = value; }
-        }
-
-        float transitionPosition = 1;
-
-
-        /// <summary>
-        /// Gets the current alpha of the screen transition, ranging
-        /// from 1 (fully active, no transition) to 0 (transitioned
-        /// fully off to nothing).
+        /// Pobiera parametr zaciemnienia ekranu przy przejœciu.
         /// </summary>
         public float TransitionAlpha
         {
@@ -96,141 +73,92 @@ namespace MetroDigger.Screens
 
 
         /// <summary>
-        /// Gets the current screen transition state.
+        /// Zwraca obecny stan przejœcia.
         /// </summary>
         public ScreenState ScreenState
         {
-            get { return screenState; }
-            protected set { screenState = value; }
+            get { return _screenState; }
         }
 
-        ScreenState screenState = ScreenState.TransitionOn;
+        ScreenState _screenState = ScreenState.TransitionOn;
 
 
         /// <summary>
-        /// There are two possible reasons why a screen might be transitioning
-        /// off. It could be temporarily going away to make room for another
-        /// screen that is on top of it, or it could be going away for good.
-        /// This property indicates whether the screen is exiting for real:
-        /// if set, the screen will automatically remove itself as soon as the
-        /// transition finishes.
+        /// Zwraca, czy ekran jest w trakcie zamykania siê.
         /// </summary>
         public bool IsExiting
         {
-            get { return isExiting; }
-            protected internal set { isExiting = value; }
+            set { _isExiting = value; }
         }
 
-        bool isExiting = false;
+        bool _isExiting;
 
 
         /// <summary>
-        /// Checks whether this screen is active and can respond to user input.
+        /// Sprawdza, czy menu jest aktywne i powinno reagowaæ na input u¿ytkownika.
         /// </summary>
-        public bool IsActive
+        protected bool IsActive
         {
             get
             {
-                return !otherScreenHasFocus &&
-                       (screenState == ScreenState.TransitionOn ||
-                        screenState == ScreenState.Active);
+                return !_otherScreenHasFocus &&
+                       (_screenState == ScreenState.TransitionOn ||
+                        _screenState == ScreenState.Active);
             }
         }
 
-        bool otherScreenHasFocus;
+        bool _otherScreenHasFocus;
 
 
         /// <summary>
-        /// Gets the manager that this screen belongs to.
+        /// Zwraca ScreenManager, który zarz¹dza tym ekranem.
         /// </summary>
-        public ScreenManager ScreenManager
+        public ScreenManager ScreenManager { get; set; }
+
+        /// <summary>
+        /// Tworzy now¹ instancjê klasy <see cref="GameScreen"/>.
+        /// </summary>
+        protected GameScreen()
         {
-            get { return screenManager; }
-            internal set { screenManager = value; }
+            IsPopup = false;
         }
 
-        ScreenManager screenManager;
-
-        #endregion
-
-        #region Initialization
 
 
         /// <summary>
-        /// Load graphics content for the screen.
-        /// </summary>
-        public virtual void LoadContent() { }
-
-
-        /// <summary>
-        /// Unload content for the screen.
-        /// </summary>
-        public virtual void UnloadContent() { }
-
-
-        #endregion
-
-        #region Update and Draw
-
-
-        /// <summary>
-        /// Allows the screen to run logic, such as updating the transition position.
-        /// Unlike HandleInput, this method is called regardless of whether the screen
-        /// is active, hidden, or in the middle of a transition.
+        /// Aktualizuje przejœcie i stan ekranu.
         /// </summary>
         public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                       bool coveredByOtherScreen)
         {
-            this.otherScreenHasFocus = otherScreenHasFocus;
+            _otherScreenHasFocus = otherScreenHasFocus;
 
-            if (isExiting)
+            if (_isExiting)
             {
-                // If the screen is going away to die, it should transition off.
-                screenState = ScreenState.TransitionOff;
+                _screenState = ScreenState.TransitionOff;
 
-                if (!UpdateTransition(gameTime, transitionOffTime, 1))
-                {
-                    // When the transition finishes, remove the screen.
+                if (!UpdateTransition(gameTime, _transitionOffTime, 1))
                     ScreenManager.RemoveScreen(this);
-                }
             }
             else if (coveredByOtherScreen)
             {
-                // If the screen is covered by another, it should transition off.
-                if (UpdateTransition(gameTime, transitionOffTime, 1))
-                {
-                    // Still busy transitioning.
-                    screenState = ScreenState.TransitionOff;
-                }
+                if (UpdateTransition(gameTime, _transitionOffTime, 1))
+                    _screenState = ScreenState.TransitionOff;
                 else
-                {
-                    // Transition finished!
-                    screenState = ScreenState.Hidden;
-                }
+                    _screenState = ScreenState.Hidden;
             }
             else
             {
-                // Otherwise the screen should transition on and become active.
-                if (UpdateTransition(gameTime, transitionOnTime, -1))
-                {
-                    // Still busy transitioning.
-                    screenState = ScreenState.TransitionOn;
-                }
+                if (UpdateTransition(gameTime, _transitionOnTime, -1))
+                    _screenState = ScreenState.TransitionOn;
                 else
-                {
-                    // Transition finished!
-                    screenState = ScreenState.Active;
-                }
+                    _screenState = ScreenState.Active;
             }
         }
 
 
-        /// <summary>
-        /// Helper for updating the screen transition position.
-        /// </summary>
         bool UpdateTransition(GameTime gameTime, TimeSpan time, int direction)
         {
-            // How much should we move by?
             float transitionDelta;
 
             if (time == TimeSpan.Zero)
@@ -239,32 +167,26 @@ namespace MetroDigger.Screens
                 transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
                                           time.TotalMilliseconds);
 
-            // Update the transition position.
-            transitionPosition += transitionDelta * direction;
+            _transitionPosition += transitionDelta * direction;
 
-            // Did we reach the end of the transition?
-            if (((direction < 0) && (transitionPosition <= 0)) ||
-                ((direction > 0) && (transitionPosition >= 1)))
+            if (((direction < 0) && (_transitionPosition <= 0)) ||
+                ((direction > 0) && (_transitionPosition >= 1)))
             {
-                transitionPosition = MathHelper.Clamp(transitionPosition, 0, 1);
+                _transitionPosition = MathHelper.Clamp(_transitionPosition, 0, 1);
                 return false;
             }
-
-            // Otherwise we are still busy transitioning.
             return true;
         }
 
 
         /// <summary>
-        /// Allows the screen to handle user input. Unlike Update, this method
-        /// is only called when the screen is active, and not when some other
-        /// screen has taken the focus.
+        /// Metoda wirtualna wywo³ywana, gdy nale¿y sprawdziæ stan klawiatury.
         /// </summary>
         public virtual void HandleInput(InputHandler input) { }
 
 
         /// <summary>
-        /// This is called when the screen should draw itself.
+        /// Metoda wirtualna wywo³ywana, gdy ekran powinien siê odrysowaæ
         /// </summary>
         public virtual void Draw(GameTime gameTime) { }
 
@@ -275,22 +197,14 @@ namespace MetroDigger.Screens
 
 
         /// <summary>
-        /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which
-        /// instantly kills the screen, this method respects the transition timings
-        /// and will give the screen a chance to gradually transition off.
+        /// Powoduje rozpoczêcie przejœcia zamykaj¹cego ekran.
         /// </summary>
         public void ExitScreen()
         {
             if (TransitionOffTime == TimeSpan.Zero)
-            {
-                // If the screen has a zero transition time, remove it immediately.
                 ScreenManager.RemoveScreen(this);
-            }
             else
-            {
-                // Otherwise flag that it should transition off and then exit.
-                isExiting = true;
-            }
+                _isExiting = true;
         }
 
 

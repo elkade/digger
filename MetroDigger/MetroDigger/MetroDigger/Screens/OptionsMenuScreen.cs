@@ -7,7 +7,7 @@ namespace MetroDigger.Screens
     /// <summary>
     ///Menu opcji gry. Pozwala na w³¹czenie/wy³¹czenie dŸwiêków i muzyki oraz zmiane sterowania na strza³ki/wsad.
     /// </summary>
-    internal class OptionsMenuScreen : MenuScreen
+    public class OptionsMenuScreen : MenuScreen
     {
         public OptionsMenuScreen()
             : base("GameOptions")

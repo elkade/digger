@@ -5,7 +5,7 @@ namespace MetroDigger.Gameplay.Entities.Others
     /// <summary>
     /// Reprezentuje znacznik stacji metra
     /// </summary>
-    internal class Station : Metro
+    public class Station : Metro
     {
         /// <summary>
         /// Tworzy nowy znacznik stacji metra

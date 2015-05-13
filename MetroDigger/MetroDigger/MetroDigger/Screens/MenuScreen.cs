@@ -9,15 +9,14 @@ using Microsoft.Xna.Framework.Graphics;
 namespace MetroDigger.Screens
 {
     /// <summary>
-    /// Base class for screens that contain a menu of options. The user can
-    /// move up and down to select an entry, or cancel to back out of the screen.
+    /// Bazowa klasa dla ekranów menu. U¿ytkownik mo¿e przesuwaæ wskaŸnik w górê/dó³, wybieraæ enterem i wychodziæ Esc.
     /// </summary>
-    abstract class MenuScreen : GameScreen
+    public abstract class MenuScreen : GameScreen
     {
         #region Fields
 
         readonly List<MenuObject> _menuObjects = new List<MenuObject>();
-        int _selectedObjectIndex = 0;
+        int _selectedObjectIndex;
         readonly string _menuTitle;
         #endregion
 
@@ -25,8 +24,7 @@ namespace MetroDigger.Screens
 
 
         /// <summary>
-        /// Gets the list of menu entries, so derived classes can add
-        /// or change the menu contents.
+        /// Pobiera listê kontrolek, aby klasa pochodna mog³a j¹ edytowaæ.
         /// </summary>
         protected IList<MenuObject> MenuObjects
         {
@@ -40,12 +38,12 @@ namespace MetroDigger.Screens
 
 
         /// <summary>
-        /// Constructor.
+        /// Tworzy now¹ instancjê Ekranu menu.
         /// </summary>
-        public MenuScreen(string menuTitle)
+        protected MenuScreen(string menuTitle)
         {
             Logger.Log(menuTitle +" loaded");
-            this._menuTitle = menuTitle;
+            _menuTitle = menuTitle;
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
@@ -57,15 +55,14 @@ namespace MetroDigger.Screens
 
 
         /// <summary>
-        /// Responds to user input, changing the selected entry and accepting
-        /// or cancelling the menu.
+        /// Odpowiada na ¿¹dania p³yn¹ce z klawiatury; zaznacza b¹dŸ odznacza kontrolkê
         /// </summary>
         public override void HandleInput(InputHandler input)
         {
             // Move to the previous menu entry?
             if (input.IsUp())
             {
-                do//todo: mo¿e siê zapêtliæ w nieskoñczonoœæ je¿eli ¿aden nie jest selectable
+                do
                 {
                     _selectedObjectIndex--;
                     if (_selectedObjectIndex < 0)
@@ -73,7 +70,6 @@ namespace MetroDigger.Screens
                 } while (!MenuObjects[_selectedObjectIndex].IsSelectable);
             }
 
-            // Move to the next menu entry?
             if (input.IsDown())
             {
                 do
@@ -86,13 +82,6 @@ namespace MetroDigger.Screens
 
             MenuObjects[_selectedObjectIndex].HandleInput(input);
 
-            // Accept or cancel the menu? We pass in our ControllingPlayer, which may
-            // either be null (to accept input from any player) or a specific index.
-            // If we pass a null controlling player, the InputHandler helper returns to
-            // us which player actually provided the input. We pass that through to
-            // OnSelectEntry and OnCancel, so they can tell which player triggered them.
-            PlayerIndex playerIndex;
-
             if (input.IsMenuSelect())
             {
                 OnSelectEntry(_selectedObjectIndex);
@@ -104,17 +93,14 @@ namespace MetroDigger.Screens
         }
 
 
-        /// <summary>
-        /// Handler for when the user has chosen a menu entry.
-        /// </summary>
-        protected virtual void OnSelectEntry(int entryIndex)
+        private void OnSelectEntry(int entryIndex)
         {
             _menuObjects[entryIndex].OnSelectEntry();
         }
 
 
         /// <summary>
-        /// Handler for when the user has cancelled the menu.
+        /// Handler dla zdarzenia wyjœcia z menu
         /// </summary>
         protected virtual void OnCancel()
         {
@@ -123,7 +109,7 @@ namespace MetroDigger.Screens
 
 
         /// <summary>
-        /// Helper overload makes it easy to use OnCancel as a MenuEntry event handler.
+        /// Prze³adowanie handlera wyjœcia z menu wzbogacone o argumenty.
         /// </summary>
         protected void OnCancel(object sender, EventArgs e)
         {
@@ -136,26 +122,14 @@ namespace MetroDigger.Screens
         #region UpdateMovement and Draw
 
 
-        /// <summary>
-        /// Allows the screen the chance to position the menu entries. By default
-        /// all menu entries are lined up in a vertical list, centered on the screen.
-        /// </summary>
-        protected virtual void UpdateMenuEntryLocations()
+        private void UpdateMenuEntryLocations()
         {
-            // Make the menu slide into place during transitions, using a
-            // power curve to make things look more interesting (this makes
-            // the movement slow down as it nears the end).
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
-            // start at Y = 175; each X value is generated per entry
             Vector2 position = new Vector2(0f, 175f);
 
-            // update each menu entry's location in turn
-            for (int i = 0; i < _menuObjects.Count; i++)
+            foreach (MenuObject menuObject in _menuObjects)
             {
-                MenuObject menuObject = _menuObjects[i];
-                
-                // each entry is to be centered horizontally
                 position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuObject.GetWidth() / 2;
 
                 if (ScreenState == ScreenState.TransitionOn)
@@ -163,17 +137,15 @@ namespace MetroDigger.Screens
                 else
                     position.X += transitionOffset * 512;
 
-                // set the entry's position
                 menuObject.Position = position;
 
-                // move down for the next entry the size of this entry
                 position.Y += menuObject.GetHeight();
             }
         }
 
 
         /// <summary>
-        /// Updates the menu.
+        /// Aktualizuje menu.
         /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
@@ -187,21 +159,19 @@ namespace MetroDigger.Screens
                     _selectedObjectIndex = 0;
             }
 
-            // UpdateMovement each nested MenuEntry object.
             for (int i = 0; i < _menuObjects.Count; i++)
             {
                 bool isSelected = IsActive && (i == _selectedObjectIndex);
 
                 _menuObjects[i].Update(isSelected, gameTime);
             }
-            // make sure our entries are in the right place before we draw them
             UpdateMenuEntryLocations();
 
         }
 
 
         /// <summary>
-        /// Draws the menu.
+        /// Rysuje menu
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
@@ -212,7 +182,6 @@ namespace MetroDigger.Screens
 
             spriteBatch.Begin();
 
-            // Draw each menu entry in turn.
             for (int i = 0; i < _menuObjects.Count; i++)
             {
                 MenuObject menuObject = _menuObjects[i];
@@ -222,16 +191,12 @@ namespace MetroDigger.Screens
                 menuObject.Draw(this, isSelected, gameTime);
             }
 
-            // Make the menu slide into place during transitions, using a
-            // power curve to make things look more interesting (this makes
-            // the movement slow down as it nears the end).
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
-            // Draw the menu title centered on the screen
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
+            Vector2 titlePosition = new Vector2((float)graphics.Viewport.Width / 2, 80);
             Vector2 titleOrigin = font.MeasureString(_menuTitle) / 2;
             Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
-            float titleScale = 1.25f;
+            const float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;
 

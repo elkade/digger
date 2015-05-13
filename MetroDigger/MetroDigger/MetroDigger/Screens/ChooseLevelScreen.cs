@@ -39,7 +39,7 @@ namespace MetroDigger.Screens
                     levelsList[i].Selected += (sender, args) => LoadingScreen.Load(ScreenManager, true, new GameplayScreen(lvl));
                 }
                 else
-                    levelsList[i] = new MenuLabel(i.ToString());
+                    levelsList[i] = new MenuLabel((i+1).ToString());
                 MenuObjects.Add(levelsList[i]);
             }
             exitMenuEntry.Selected += OnCancel;

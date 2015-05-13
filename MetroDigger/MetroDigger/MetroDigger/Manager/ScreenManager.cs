@@ -48,14 +48,10 @@ namespace MetroDigger.Manager
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             _blankTexture = content.Load<Texture2D>("blank");
-            foreach (GameScreen screen in _screens)
-                screen.LoadContent();
         }
 
         protected override void UnloadContent()
         {
-            foreach (GameScreen screen in _screens)
-                screen.UnloadContent();
         }
 
         public override void Update(GameTime gameTime)
@@ -118,10 +114,6 @@ namespace MetroDigger.Manager
             screen.ScreenManager = this;
             screen.IsExiting = false;
 
-            if (_isInitialized)
-            {
-                screen.LoadContent();
-            }
 
             _screens.Add(screen);
             Logger.Log("Screen loaded");
@@ -133,10 +125,6 @@ namespace MetroDigger.Manager
         /// <param name="screen"></param>
         public void RemoveScreen(GameScreen screen)
         {
-            if (_isInitialized)
-            {
-                screen.UnloadContent();
-            }
 
             _screens.Remove(screen);
             _screensToUpdate.Remove(screen);
@@ -174,11 +162,6 @@ namespace MetroDigger.Manager
         {
             screen.ScreenManager = this;
             screen.IsExiting = false;
-
-            if (_isInitialized)
-            {
-                screen.LoadContent();
-            }
             (_screens[_screens.Count - 1]).ExitScreen();
             _screens.Add(screen);
         }

@@ -58,7 +58,7 @@ namespace MetroDigger.Screens.MenuObjects
         /// Aktualizuje wpisany tekst.
         /// </summary>
         /// <param name="newTime">Aktualny czas gry.</param>
-        internal void Update(double newTime)
+        public void Update(double newTime)
         {
             if (_inputKey != Keys.None)
             {

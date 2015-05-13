@@ -10,7 +10,7 @@ namespace MetroDigger.Screens
     /// <summary>
     /// Ekran rozgrywki. Wyœwietla poziom z ca³¹ zawartoœci¹
     /// </summary>
-    internal class GameplayScreen : GameScreen
+    public class GameplayScreen : GameScreen
     {
         private readonly Level _level;
 
@@ -78,11 +78,6 @@ namespace MetroDigger.Screens
                 msg.Accept += () => ScreenManager.Start(new StartScreen());
                 ScreenManager.AddScreen(msg);
             }
-        }
-
-        public override void LoadContent()
-        {
-            ScreenManager.Game.ResetElapsedTime();
         }
 
         #endregion

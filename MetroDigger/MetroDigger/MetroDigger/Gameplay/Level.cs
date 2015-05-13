@@ -18,7 +18,7 @@ namespace MetroDigger.Gameplay
     /// <summary>
     /// Reprezentuje poziom gry wraz z aktualnym stanem bohatera, obiektów i mapy.
     /// </summary>
-    internal class Level
+    public class Level
     {
         /// <summary>
         /// Wektor grawitacji działającej na poziomie

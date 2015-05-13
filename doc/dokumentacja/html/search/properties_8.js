@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['initlives',['InitLives',['../class_metro_digger_1_1_gameplay_1_1_level.html#ac33ca88f5b8b7b34a379739d7ef9d80a',1,'MetroDigger::Gameplay::Level']]],
+  ['initscore',['InitScore',['../class_metro_digger_1_1_gameplay_1_1_level.html#a0bc70029e534fe376f92411639015bf3',1,'MetroDigger::Gameplay::Level']]],
+  ['instance',['Instance',['../class_metro_digger_1_1_manager_1_1_game_manager.html#a9f23dd0238b5905495751ea427c08a01',1,'MetroDigger.Manager.GameManager.Instance()'],['../class_metro_digger_1_1_manager_1_1_input_handler.html#a27e0a5d5ea450d5a671569b9cee76bb8',1,'MetroDigger.Manager.InputHandler.Instance()'],['../class_metro_digger_1_1_manager_1_1_media_manager.html#a9c45bcf3566813e4ed08afc30c9aea66',1,'MetroDigger.Manager.MediaManager.Instance()']]],
+  ['isactive',['IsActive',['../class_metro_digger_1_1_screens_1_1_game_screen.html#a470f742dff7a7d7d04571a1f2983a0d0',1,'MetroDigger::Screens::GameScreen']]],
+  ['iscleared',['IsCleared',['../class_metro_digger_1_1_gameplay_1_1_entities_1_1_others_1_1_metro.html#a9e25c83bc1940c4ad5ee035e164f1ae7',1,'MetroDigger::Gameplay::Entities::Others::Metro']]],
+  ['isexiting',['IsExiting',['../class_metro_digger_1_1_screens_1_1_game_screen.html#abbcf105f75448318889023bfd366284f',1,'MetroDigger::Screens::GameScreen']]],
+  ['isfull',['IsFull',['../class_metro_digger_1_1_gameplay_1_1_entities_1_1_terrains_1_1_water.html#ace8646cd9c5efd4fcbdb4475e01d6a93',1,'MetroDigger::Gameplay::Entities::Terrains::Water']]],
+  ['islooping',['IsLooping',['../class_metro_digger_1_1_effects_1_1_animation.html#a95485b1ccd7b93b0859b8dbad007428c',1,'MetroDigger::Effects::Animation']]],
+  ['ismoving',['IsMoving',['../interface_metro_digger_1_1_gameplay_1_1_i_mover.html#a70600d2bb4a9b11354c4b7e623013850',1,'MetroDigger::Gameplay::IMover']]],
+  ['ismusicenabled',['IsMusicEnabled',['../class_metro_digger_1_1_manager_1_1_settings_1_1_game_options.html#ab84f98fe4466576623d604009c90d22b',1,'MetroDigger::Manager::Settings::GameOptions']]],
+  ['ispopup',['IsPopup',['../class_metro_digger_1_1_screens_1_1_game_screen.html#a4f15588c9028034a8c7906b806ff7769',1,'MetroDigger::Screens::GameScreen']]],
+  ['isselectable',['IsSelectable',['../class_metro_digger_1_1_screens_1_1_menu_objects_1_1_menu_object.html#a48dee21b3b1e6e4fdaa29001570be601',1,'MetroDigger::Screens::MenuObjects::MenuObject']]],
+  ['issoundenabled',['IsSoundEnabled',['../class_metro_digger_1_1_manager_1_1_settings_1_1_game_options.html#a347425c5f79be936563a434425ddae91',1,'MetroDigger::Manager::Settings::GameOptions']]],
+  ['isstarted',['IsStarted',['../class_metro_digger_1_1_gameplay_1_1_level.html#a49b09f7cfb8a839129104ba81f46063e',1,'MetroDigger::Gameplay::Level']]],
+  ['istoremove',['IsToRemove',['../interface_metro_digger_1_1_gameplay_1_1_abstract_1_1_i_updateable.html#a50d3e9267cfa2244710214caef2f1c20',1,'MetroDigger.Gameplay.Abstract.IUpdateable.IsToRemove()'],['../class_metro_digger_1_1_gameplay_1_1_entities_1_1_dynamic_entity.html#ad0511bee49feb365385d2b5318075133',1,'MetroDigger.Gameplay.Entities.DynamicEntity.IsToRemove()']]],
+  ['isunlocked',['IsUnlocked',['../class_metro_digger_1_1_manager_1_1_settings_1_1_user_level.html#a07d37fd9d4df819ee2b36e9fda1f810d',1,'MetroDigger::Manager::Settings::UserLevel']]],
+  ['iswaterproof',['IsWaterProof',['../interface_metro_digger_1_1_gameplay_1_1_abstract_1_1_i_collideable.html#ad5525faff37972d973fd2f757945ce00',1,'MetroDigger.Gameplay.Abstract.ICollideable.IsWaterProof()'],['../class_metro_digger_1_1_gameplay_1_1_entities_1_1_dynamic_entity.html#a9d7e75056481d4431f095d5b5b8923ab',1,'MetroDigger.Gameplay.Entities.DynamicEntity.IsWaterProof()']]]
+];

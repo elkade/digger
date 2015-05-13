@@ -13,7 +13,7 @@ namespace MetroDigger.Gameplay.Drivers
     /// <summary>
     /// Odpowiada za sterowanie ruchem  obiektu zgodnie z algorytmem A*
     /// </summary>
-    internal class AStarDriver : Driver
+    public class AStarDriver : Driver
     {
         private readonly IDynamicEntity _chasedEntity;
         private readonly bool _isDriller;

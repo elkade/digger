@@ -11,7 +11,7 @@ namespace MetroDigger.Gameplay.Drivers
     /// <summary>
     /// Sterownik wyznaczający ścieżkę poruszania się obiektu zgodnie z rozkazami płynącymi z InputManagera
     /// </summary>
-    internal class KeyboardDriver : Driver
+    public class KeyboardDriver : Driver
     {
         private readonly InputHandler _im;
         public KeyboardDriver(Vector2 unit, Board board)

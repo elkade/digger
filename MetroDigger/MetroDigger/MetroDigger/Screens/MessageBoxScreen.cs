@@ -8,9 +8,9 @@ namespace MetroDigger.Screens
     /// <summary>
     /// MessageBox u¿ywany do wyœwietlania krótkich informacji
     /// </summary>
-    
- 
-    internal class MessageBoxScreen : GameScreen
+
+
+    public class MessageBoxScreen : GameScreen
     {
         /// <summary>
         /// Tworzy message box

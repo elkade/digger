@@ -7,7 +7,7 @@ namespace MetroDigger.Gameplay.Entities.Terrains
     /// </summary>
     class Water : Terrain
     {
-        internal enum WaterLevel
+        public enum WaterLevel
         {
             FullClosed=3,
             FullOpen=2,

@@ -8,7 +8,7 @@ namespace MetroDigger.Screens.MenuObjects
     /// <summary>
     /// Abstrakcyjna klasa bazowa dla kontrolek. Opisuje efekty przejścia kontrolek przy zmianie ekranu.
     /// </summary>
-    abstract class MenuObject
+    public abstract class MenuObject
     {
         #region Fields
 
@@ -82,7 +82,7 @@ namespace MetroDigger.Screens.MenuObjects
         /// <summary>
         /// Metoda do wywoływania zdarzenia wybrania kontrolki.
         /// </summary>
-        protected internal virtual void OnSelectEntry()
+        public virtual void OnSelectEntry()
         {
             if (Selected != null)
                 Selected(this, new EventArgs());
