@@ -104,7 +104,6 @@
     <Compile Include="Gameplay\Abstract\IShooter.cs" />
     <Compile Include="Gameplay\MovementHandler.cs" />
     <Compile Include="Gameplay\WaterSpiller.cs" />
-    <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Manager\GameManager.cs" />
     <Compile Include="Properties\Annotations.cs" />

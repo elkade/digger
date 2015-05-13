@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using MetroDigger.Gameplay;
 using MetroDigger.Logging;
 using MetroDigger.Screens;
@@ -10,6 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Manager
 {
+    /// <summary>
+    /// Odpowiada za obs³ugê ekranów gry i przejœcia pomiêdzy nimi.
+    /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
         readonly List<GameScreen> _screens = new List<GameScreen>();
@@ -18,14 +20,21 @@ namespace MetroDigger.Manager
         Texture2D _blankTexture;
 
         bool _isInitialized;
-
+        /// <summary>
+        /// Obiekt XNA s³u¿¹cy do rysowania
+        /// </summary>
         public SpriteBatch SpriteBatch { get; private set; }
-
+        /// <summary>
+        /// Tworzy now¹ instancjê managera przypisan¹ do bie¿¹cego obiektu gry
+        /// </summary>
+        /// <param name="game">Bie¿¹cy boiekt gry</param>
         public ScreenManager(Game game)
             : base(game)
         {
         }
-
+        /// <summary>
+        /// Inicjalizuje obiekt
+        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
@@ -40,17 +49,13 @@ namespace MetroDigger.Manager
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             _blankTexture = content.Load<Texture2D>("blank");
             foreach (GameScreen screen in _screens)
-            {
                 screen.LoadContent();
-            }
         }
 
         protected override void UnloadContent()
         {
             foreach (GameScreen screen in _screens)
-            {
                 screen.UnloadContent();
-            }
         }
 
         public override void Update(GameTime gameTime)
@@ -88,7 +93,10 @@ namespace MetroDigger.Manager
             }
 
         }
-
+        /// <summary>
+        /// Rysuje aktualnie wyœwietlane ekrany
+        /// </summary>
+        /// <param name="gameTime">Aktualny czas gry</param>
         public override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
@@ -101,7 +109,10 @@ namespace MetroDigger.Manager
                 screen.Draw(gameTime);
             }
         }
-
+        /// <summary>
+        /// Dodaje nowy ekran na pocz¹tek listy wyœwietlanych ekranów
+        /// </summary>
+        /// <param name="screen"></param>
         public void AddScreen(GameScreen screen)
         {
             screen.ScreenManager = this;
@@ -116,7 +127,10 @@ namespace MetroDigger.Manager
             Logger.Log("Screen loaded");
 
         }
-
+        /// <summary>
+        /// Usuwa konkretny ekran z listy wyœwietlanych ekranów
+        /// </summary>
+        /// <param name="screen"></param>
         public void RemoveScreen(GameScreen screen)
         {
             if (_isInitialized)
@@ -127,12 +141,18 @@ namespace MetroDigger.Manager
             _screens.Remove(screen);
             _screensToUpdate.Remove(screen);
         }
-
+        /// <summary>
+        /// Pobiera tablicê aktualnie wyœwietlanych ekranów
+        /// </summary>
+        /// <returns>Tablica aktualnie wyœwietlanych ekranów</returns>
         public GameScreen[] GetScreens()
         {
             return _screens.ToArray();
         }
-
+        /// <summary>
+        /// Powoduje zaciemnienie ekranu
+        /// </summary>
+        /// <param name="alpha">Wspó³czynnik zaciemnienia</param>
         public void FadeBackBufferToBlack(float alpha)
         {
             Viewport viewport = GraphicsDevice.Viewport;
@@ -146,7 +166,10 @@ namespace MetroDigger.Manager
             SpriteBatch.End();
         }
 
-
+        /// <summary>
+        /// Usuwa ekran z pocz¹tku listy i zamienia go na podany.
+        /// </summary>
+        /// <param name="screen">Ekran, który ma byæ pierwszy na liœcie</param>
         public void SwitchScreen(GameScreen screen)
         {
             screen.ScreenManager = this;
@@ -159,7 +182,10 @@ namespace MetroDigger.Manager
             (_screens[_screens.Count - 1]).ExitScreen();
             _screens.Add(screen);
         }
-
+        /// <summary>
+        /// Dodaje do listy startowy zestaw ekranów i inicjalizuje je.
+        /// </summary>
+        /// <param name="screens"></param>
         public void Start(params GameScreen[] screens)
         {
             foreach (GameScreen loadedScreen in GetScreens())
@@ -170,8 +196,7 @@ namespace MetroDigger.Manager
                 int lvlNo = (new Random()).Next(GameManager.Instance.GetMaxLevel());
                 GameManager.Instance.GetLevel(lvlNo, out lvl);
                 AddScreen(new GameplayScreen(lvl));
-            }catch
-            {}
+            }catch{}
             foreach(var screen in screens)
                 AddScreen(screen);
         }

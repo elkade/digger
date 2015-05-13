@@ -2,6 +2,9 @@
 
 namespace MetroDigger.Serialization
 {
+    /// <summary>
+    /// Reprezentuje obiekt poziomu gotoy do serializacji
+    /// </summary>
     public class LevelDto
     {
         public int Width { get; set; }
@@ -21,10 +24,6 @@ namespace MetroDigger.Serialization
         public int InitLives { get; set; }
 
         public Position StartPosition { get; set; }
-        //stone
-        //bullet
-        //miner
-        //ranger
     }
 
     public class StoneDto : EntityDto

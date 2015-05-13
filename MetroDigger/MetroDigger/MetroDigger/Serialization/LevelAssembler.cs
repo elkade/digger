@@ -1,18 +1,26 @@
 ﻿using System.Collections.Generic;
 using MetroDigger.Gameplay;
+using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.Drivers;
-using MetroDigger.Gameplay.Entities;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
 using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Logging;
-using MetroDigger.Utils;
 
 namespace MetroDigger.Serialization
 {
+    /// <summary>
+    /// Implementuje wzorzec projektowy Assembler. 
+    /// Służy do konwersji poziomu gry na obiekt łatwo serializowalny i z powrotem.
+    /// </summary>
     internal class LevelAssembler : IAssembler<Level, LevelDto>
     {
+        /// <summary>
+        /// Konwertuje poziom gry do obiektu serializowalnego
+        /// </summary>
+        /// <param name="plain">poziom</param>
+        /// <returns>obiekt do serializacji</returns>
         public LevelDto GetDto(Level plain)
         {
             var dto = new LevelDto
@@ -128,7 +136,11 @@ namespace MetroDigger.Serialization
 
             return dto;
         }
-
+        /// <summary>
+        /// Konwertuje zdeselializowany poziom do poziomu gry
+        /// </summary>
+        /// <param name="dto">poziom zdeserializowany</param>
+        /// <returns>poziom gry</returns>
         public Level GetPlain(LevelDto dto)
         {
             var plain = new Level(dto.Width, dto.Height)
@@ -171,17 +183,10 @@ namespace MetroDigger.Serialization
                 {
                     plain.Board[item.Position.X, item.Position.Y].Metro = new Station();
                     plain.StationTiles.Add(plain.Board[item.Position.X, item.Position.Y]);
-                    //if (plain.Board[item.Position.X, item.Position.Y].Terrain.Accessibility != Accessibility.Free)
-                    //    plain.StationsCount++;
-                    //else
-                    //    plain.Board[item.Position.X, item.Position.Y].Metro.IsCleared = true;
                 }
-                foreach (EntityDto item in dto.MetroTunnels)
-                {
-                    plain.Board[item.Position.X, item.Position.Y].Metro = new Tunnel();
-                    plain.TunnelTiles.Add(plain.Board[item.Position.X, item.Position.Y]);
-                }
-                foreach (EntityDto item in dto.PowerCells)
+            foreach (EntityDto item in dto.MetroTunnels)
+                plain.Board[item.Position.X, item.Position.Y].Metro = new Tunnel();
+            foreach (EntityDto item in dto.PowerCells)
                     plain.Board[item.Position.X, item.Position.Y].Item = new PowerCell();
                 foreach (EntityDto item in dto.Drills)
                     plain.Board[item.Position.X, item.Position.Y].Item = new Drill();
@@ -206,20 +211,22 @@ namespace MetroDigger.Serialization
 
                 #region Enemy
 
+                var enemies = new List<IDynamicEntity>();
+
                 foreach (MinerDto item in dto.Miners)
-                    plain.Enemies.Add(new Miner(new AStarDriver(Tile.Size, plain.Board, plain.Player),
+                    enemies.Add(new Miner(new AStarDriver(Tile.Size, plain.Board, plain.Player),
                         plain.Board[item.Position.X, item.Position.Y]));
 
                 foreach (RangerDto item in dto.Rangers)
-                    plain.Enemies.Add(new Ranger(new AStarDriver(Tile.Size, plain.Board, plain.Player,false),
+                    enemies.Add(new Ranger(new AStarDriver(Tile.Size, plain.Board, plain.Player,false),
                         plain.Board[item.Position.X, item.Position.Y], item.HasDrill, item.PowerCells));
 
                 foreach (StoneDto item in dto.Stones)
-                    plain.Enemies.Add(new Stone(new GravityDriver(Tile.Size, plain.Board, Level.GravityVector),
+                    enemies.Add(new Stone(new GravityDriver(Tile.Size, plain.Board, Level.GravityVector),
                         plain.Board[item.Position.X, item.Position.Y]));
 
 
-                plain.RegisterEnemies();
+                plain.RegisterEnemies(enemies);
 
                 #endregion
                 Logger.Log("Plain Level Created");

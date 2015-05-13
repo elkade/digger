@@ -5,28 +5,64 @@ using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay
 {
+    /// <summary>
+    /// Narzędzie zmieniające położenie obiektu zgodnie z określonymi parametrami.
+    /// </summary>
     public interface IMover
     {
+        /// <summary>
+        /// Kafelek startowy ruchu
+        /// </summary>
         Tile StartTile { get; }
-
+        /// <summary>
+        /// Kafelek końcowy ruchu
+        /// </summary>
         Tile EndTile { get; }
-
+        /// <summary>
+        /// Aktualna rzeczywista pozycja obiektu poruszającego się
+        /// </summary>
         Vector2 Position { get; }
-
+        /// <summary>
+        /// Kierunek obiektu poruszającego się
+        /// </summary>
         Vector2 Direction { get; set; }
-
+        /// <summary>
+        /// Określa, czy obiekt obecnie się porusza
+        /// </summary>
         bool IsMoving { get; }
-        
+        /// <summary>
+        /// Resetue parametry ruchu do stanu pocatkowego
+        /// </summary>
+        /// <param name="firstTile">Początkowy kafelek obiektu</param>
+        /// <param name="firstDirection">Początkowy kierunek obiektu</param>
         void Reset(Tile firstTile, Vector2 firstDirection);
-
+        /// <summary>
+        /// Rozpoczyna ruch obiektu
+        /// </summary>
+        /// <param name="startTile">Kafelek startowy ruchu</param>
+        /// <param name="endTile">Kafelek końcowy ruchu</param>
+        /// <param name="speed">Prędkość ruchu</param>
         void MakeMove(Tile startTile, Tile endTile, float speed);
-
+        /// <summary>
+        /// Aktualizuje rozpoczęty ruch
+        /// </summary>
         void Update();
-
+        /// <summary>
+        /// Zdarzenie wywoływane w momencie rozpoczęcia ruchu
+        /// </summary>
         event Action<IMover,Tile,Tile> Started;
+        /// <summary>
+        /// Zdarzenie wywoływane w momencie przekroczenia połowy trasy biezącego ruchu
+        /// </summary>
         event Action<IMover, Tile, Tile> Halved;
+        /// <summary>
+        /// Zdarzenie wywoływane po zakończeniu bieżącego ruchu
+        /// </summary>
         event Action<IMover, Tile, Tile> Finished;
     }
+    /// <summary>
+    /// Narzędzie służące do zmiany położenia obiektu w linni prostej pomiędzy kafelkami
+    /// </summary>
     public class MovementHandler : IMover
     {
         private int _distance;
@@ -72,7 +108,11 @@ namespace MetroDigger.Gameplay
         {
             get { return _isMoving; }
         }
-
+        /// <summary>
+        /// Tworzy nowy MovementHandler
+        /// </summary>
+        /// <param name="firstTile">Początkowe położenie obiektu</param>
+        /// <param name="firstDirection">Początkowy kierunek obiektu</param>
         public MovementHandler(Tile firstTile, Vector2 firstDirection)
         {
             Reset(firstTile, firstDirection);

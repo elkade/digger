@@ -4,11 +4,9 @@ using System.Linq;
 using MetroDigger.Gameplay.Abstract;
 using MetroDigger.Gameplay.CollisionDetection;
 using MetroDigger.Gameplay.Drivers;
-using MetroDigger.Gameplay.Entities;
 using MetroDigger.Gameplay.Entities.Characters;
 using MetroDigger.Gameplay.Entities.Others;
 using MetroDigger.Gameplay.Entities.Terrains;
-using MetroDigger.Gameplay.GameObjects;
 using MetroDigger.Gameplay.Tiles;
 using MetroDigger.Logging;
 using MetroDigger.Manager;
@@ -17,27 +15,42 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MetroDigger.Gameplay
 {
+    /// <summary>
+    /// Reprezentuje poziom gry wraz z aktualnym stanem bohatera, obiektów i mapy.
+    /// </summary>
     internal class Level
     {
+        /// <summary>
+        /// Wektor grawitacji działającej na poziomie
+        /// </summary>
         public static Vector2 GravityVector = new Vector2(0, 1);
         private readonly ICollisionDetector _collisionDetector;
         private readonly int _height;
         private readonly TopBar _topBar;
         private readonly int _width;
+        /// <summary>
+        /// Plansza gry
+        /// </summary>
         public readonly Board Board;
-
+        /// <summary>
+        /// Lista Dynamicznych obiektów gry
+        /// </summary>
         public readonly List<IDynamicEntity> DynamicEntities = new List<IDynamicEntity>();
-        public readonly List<IDynamicEntity> Enemies = new List<IDynamicEntity>();
         private readonly List<IDynamicEntity> _newlyAddedDynamicEntities = new List<IDynamicEntity>();
         private int _stationsCount;
         private bool _isStarted;
         private Player _player;
         private readonly ISpiller _ws;
-
+        /// <summary>
+        /// Lista kafelków, na których znajduje się znacznik stacji metra
+        /// </summary>
         public readonly List<Tile> StationTiles = new List<Tile>();
-        public readonly List<Tile> TunnelTiles = new List<Tile>(); 
         #region LoadFromSave
-
+        /// <summary>
+        /// Tworzy nową instancję poziomu z planszą o padanej wielkości
+        /// </summary>
+        /// <param name="width">szerokość planszy</param>
+        /// <param name="height">wysokośc planszy</param>
         public Level(int width, int height)
         {
             _stationsCount = 0;
@@ -53,7 +66,10 @@ namespace MetroDigger.Gameplay
             Logger.Log("New level created");
 
         }
-
+        /// <summary>
+        /// Rejestruje gracza w poziomie
+        /// </summary>
+        /// <param name="p">Gracz</param>
         public void RegisterPlayer(Player p)
         {
             _player = p;
@@ -91,10 +107,12 @@ namespace MetroDigger.Gameplay
                 Player.Score += _ws.Spill(tile2.X, tile2.Y);
             };
         }
-
-        public void RegisterEnemies()
+        /// <summary>
+        /// Rejestruje wrogów w poziomie
+        /// </summary>
+        public void RegisterEnemies(List<IDynamicEntity> enemies)
         {
-            var drillers = Enemies.OfType<IDriller>();
+            var drillers = enemies.OfType<IDriller>();
             foreach (var enemy in drillers)
             {
                 enemy.Drilled += (character, tile1, tile2) =>
@@ -103,7 +121,7 @@ namespace MetroDigger.Gameplay
                     Player.Score+=_ws.Spill(tile2.X, tile2.Y);
                 };
             }
-            var collectors = Enemies.OfType<ICollector>();
+            var collectors = enemies.OfType<ICollector>();
             foreach (var enemy in collectors)
             {
                 enemy.Visited += (collector, tile1, tile2) =>
@@ -113,7 +131,7 @@ namespace MetroDigger.Gameplay
                     tile2.Clear(ref _stationsCount);
                 };
             }
-            var shooters = Enemies.OfType<IShooter>();
+            var shooters = enemies.OfType<IShooter>();
             foreach (var enemy in shooters)
             {
                 enemy.Shoot += sender =>
@@ -130,54 +148,75 @@ namespace MetroDigger.Gameplay
             };
 
             }
-            DynamicEntities.AddRange(Enemies);
+            DynamicEntities.AddRange(enemies);
             DynamicEntities.Add(_player);
         }
 
         #endregion
-
+        /// <summary>
+        /// Szerokość planszy poziomu
+        /// </summary>
         public int Width
         {
             get { return _width; }
         }
-
+        /// <summary>
+        /// Wysokośc planszy poziomu
+        /// </summary>
         public int Height
         {
             get { return _height; }
         }
-
+        /// <summary>
+        /// Obiekt gracza
+        /// </summary>
         public Player Player
         {
             get { return _player; }
         }
-
-
+        /// <summary>
+        /// Określa, czy poziom został rozpoczęty i odbywa się aktualizacja stanu gry
+        /// </summary>
         public bool IsStarted
         {
-            get { return _isStarted; }
             set { _isStarted = value; }
         }
-
+        /// <summary>
+        /// Określa numer porządkowy poziomu
+        /// </summary>
         public int Number { get; set; }
-
+        /// <summary>
+        /// Określa uzyskany podczas poziomu wynik punktowy
+        /// </summary>
         public int GainedScore
         {
             get { return Player.Score; }
         }
-
+        /// <summary>
+        /// Określa cały wynik punktowy uzyskany do tej pory w rozgrywce
+        /// </summary>
         public int TotalScore
         {
             get { return InitScore + Player.Score; }
         }
-
+        /// <summary>
+        /// Określa liczbę żyć głównrgo gracza w momencie rozpoczęcia poziomu
+        /// </summary>
         public int InitLives { get; set; }
+        /// <summary>
+        /// Określa wynik punktowy w momencie rozpoczęcia poziomu
+        /// </summary>
         public int InitScore { get; set; }
-
+        /// <summary>
+        /// Określa całkowitą liczbę żyć gracza
+        /// </summary>
         public int TotalLives
         {
             get { return Player.LivesCount + InitLives; }
         }
-
+        /// <summary>
+        /// Aktualizuje stan poziomy, mapy i obiektów dynamicznych
+        /// </summary>
         public void Update()
         {
             if (!_isStarted)
@@ -231,7 +270,11 @@ namespace MetroDigger.Gameplay
             if (TotalLives == 0)
                 RaiseLevelAccomplished(false);
         }
-
+        /// <summary>
+        /// Rysuje elementy mapty, górny pasek i obiekty dynamiczne
+        /// </summary>
+        /// <param name="gameTime">Aktualny czas gry</param>
+        /// <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             foreach (var tile in Board)
@@ -247,7 +290,9 @@ namespace MetroDigger.Gameplay
                 LevelAccomplished(this, b);
             Logger.Log(b ? "level won" : "level lost");
         }
-
+        /// <summary>
+        /// Zdarzenie wywoływane w momencie ukończenia poziomu
+        /// </summary>
         public event Action<Level, bool> LevelAccomplished;
     }
 

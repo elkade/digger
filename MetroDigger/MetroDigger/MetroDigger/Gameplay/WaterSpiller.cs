@@ -5,14 +5,31 @@ using Microsoft.Xna.Framework;
 
 namespace MetroDigger.Gameplay
 {
+    /// <summary>
+    /// Narzędzie służące do rozlania wody.
+    /// </summary>
     interface ISpiller
     {
+        /// <summary>
+        /// Rozlewa wodę począwszy od kafelka X Y
+        /// </summary>
+        /// <param name="x">Indeks X kafelka startowego</param>
+        /// <param name="y">Indeks Y kafelka startowego</param>
+        /// <returns>Liczba punktów uzyskanych poprzez roznalie wody i oczyszczenie kafelków</returns>
         int Spill(int x, int y);
     }
+    /// <summary>
+    /// Narzędzie służące do rozlania wody.
+    /// </summary>
     class WaterSpiller : ISpiller
     {
         private readonly Board _board;
         private Vector2 _gravityVector;
+        /// <summary>
+        /// Tworzy nowy rozlewacz wody
+        /// </summary>
+        /// <param name="board">plansza gry</param>
+        /// <param name="gravityVector">wektor zgodnie z który rozlea się woda</param>
         public WaterSpiller(Board board, Vector2 gravityVector)
         {
             _board = board;
@@ -21,8 +38,9 @@ namespace MetroDigger.Gameplay
         /// <summary>
         /// rozlewa wodę zgodnie z prawem grawitacji
         /// </summary>
-        /// <param name="x">x pola z wodą garniczącego z polem pustym</param>
-        /// <param name="y">y pola z wodą garniczącego z polem pustym</param>
+        /// <param name="x">Indeks X kafelka startowego</param>
+        /// <param name="y">Indeks Y kafelka startowego</param>
+        /// <returns>Liczba punktów uzyskanych poprzez roznalie wody i oczyszczenie kafelków</returns>
         public int Spill(int x, int y)
         {
             bool[,] visited = new bool[_board.Width,_board.Height];

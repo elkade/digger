@@ -10,18 +10,17 @@ using Microsoft.Xna.Framework.Graphics;
 namespace MetroDigger
 {
     /// <summary>
-    /// Sample showing how to manage different game states, with transitions
-    /// between menu screens, a loading screen, the game itself, and a pause
-    /// menu. This main game class is extremely simple: all the interesting
-    /// stuff happens in the ScreenManager component.
+    /// Główna klasa gry łącząca środowisko XNA z grą Metro Digger
     /// </summary>
     public class MetroDiggerGame : Game
     {
         private readonly GraphicsDeviceManager _graphics;
-        private readonly ScreenManager screenManager;
+        private readonly ScreenManager _screenManager;
         private readonly GameOptions _gameOptions;
         private readonly MediaManager _mediaManager;
-
+        /// <summary>
+        /// Tworzy nową instancję gry
+        /// </summary>
         public MetroDiggerGame()
         {
             Logger.Config("log");
@@ -37,8 +36,8 @@ namespace MetroDigger
                 PreferredBackBufferHeight = MediaManager.Instance.Height
             };
 
-            screenManager = new ScreenManager(this);
-            Components.Add(screenManager);
+            _screenManager = new ScreenManager(this);
+            Components.Add(_screenManager);
 
             _gameOptions = GameOptions.Instance;
             //_gameOptions.IsMusicEnabled = true;
@@ -52,11 +51,13 @@ namespace MetroDigger
         {
             base.Initialize();
             Logger.Log("initializing screens");
-            screenManager.Start(new StartScreen());
-            screenManager.AddScreen(new LogScreen());
+            _screenManager.Start(new StartScreen());
+            _screenManager.AddScreen(new LogScreen());
 
         }
-
+        /// <summary>
+        /// Ładuje jedorazowo wszelkie media użyte w grze
+        /// </summary>
         protected override void LoadContent()
         {
             base.LoadContent();

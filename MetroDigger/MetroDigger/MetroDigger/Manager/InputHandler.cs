@@ -2,10 +2,16 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MetroDigger.Manager
 {
-
+    /// <summary>
+    /// Odpowiada za interpretacjê informacji pochodz¹cych z klawiatury.
+    /// Realizuje wzorzec projektowy Singleton.
+    /// </summary>
     public class InputHandler
     {
         #region Singleton
+        /// <summary>
+        /// Zwraca instancjê klasy.
+        /// </summary>
         public static InputHandler Instance { get { return _instance; } }
 
         private static readonly InputHandler _instance = new InputHandler();
@@ -15,38 +21,27 @@ namespace MetroDigger.Manager
         {
             CurrentKeyboardState = new KeyboardState();
 
-            LastKeyboardState = new KeyboardState();
+            _lastKeyboardState = new KeyboardState();
         }
 
 
 
-        #region Fields
-
+        /// <summary>
+        /// Obecny stan klawiatury
+        /// </summary>
         public KeyboardState CurrentKeyboardState;
 
-        public KeyboardState LastKeyboardState;
+        private KeyboardState _lastKeyboardState;
 
-        #endregion
 
-        #region Initialization
 
 
         /// <summary>
-        /// Constructs a new input state.
-        /// </summary>
-
-
-        #endregion
-
-        #region Public Methods
-
-
-        /// <summary>
-        /// Reads the latest state of the keyboard and gamepad.
+        /// Odczytuje ostatni stan klawiatury.
         /// </summary>
         public void Update()
         {
-            LastKeyboardState = CurrentKeyboardState;
+            _lastKeyboardState = CurrentKeyboardState;
 
             CurrentKeyboardState = Keyboard.GetState(0);
 
@@ -54,26 +49,20 @@ namespace MetroDigger.Manager
 
 
         /// <summary>
-        /// Helper for checking if a key was newly pressed during this update. The
-        /// controllingPlayer parameter specifies which player to read input for.
-        /// If this is null, it will accept input from any player. When a keypress
-        /// is detected, the output playerIndex reports which player pressed it.
+        /// Sprawdza, czy zosta³ wciœniêty nowy klawisz.
         /// </summary>
         public bool IsNewKeyPress(Keys key)
         {
-                return (CurrentKeyboardState.IsKeyDown(key) && LastKeyboardState.IsKeyUp(key));
+            return (CurrentKeyboardState.IsKeyDown(key) && _lastKeyboardState.IsKeyUp(key));
         }
 
-        public bool IsKeyPress(Keys key)
+        private bool IsKeyPress(Keys key)
         {
             return CurrentKeyboardState.IsKeyDown(key);
         }
 
         /// <summary>
-        /// Checks for a "menu select" input action.
-        /// The controllingPlayer parameter specifies which player to read input for.
-        /// If this is null, it will accept input from any player. When the action
-        /// is detected, the output playerIndex reports which player pressed it.
+        /// Sprawdza, czy zosta³ wciœniêty klawisz odpowiedzialny za zaznaczenie opcji w menu.
         /// </summary>
         public bool IsMenuSelect()
         {
@@ -82,10 +71,7 @@ namespace MetroDigger.Manager
 
 
         /// <summary>
-        /// Checks for a "menu cancel" input action.
-        /// The controllingPlayer parameter specifies which player to read input for.
-        /// If this is null, it will accept input from any player. When the action
-        /// is detected, the output playerIndex reports which player pressed it.
+        /// Sprawdza, czy zosta³ wciœniêty klawisz odpowiedzialny za anulowanie menu.
         /// </summary>
         public bool IsMenuCancel()
         {
@@ -94,49 +80,49 @@ namespace MetroDigger.Manager
 
 
         /// <summary>
-        /// Checks for a "menu up" input action.
-        /// The controllingPlayer parameter specifies which player to read
-        /// input for. If this is null, it will accept input from any player.
+        /// Sprawdza, czy zosta³ wciœniêty klawisz odpowiedzialny za przejœcie do góry w menu lub grze.
         /// </summary>
         public bool IsUp(bool wsadEnabled = false)
         {
             return wsadEnabled ? IsNewKeyPress(Keys.W) : IsNewKeyPress(Keys.Up);
         }
 
-
         /// <summary>
-        /// Checks for a "menu down" input action.
-        /// The controllingPlayer parameter specifies which player to read
-        /// input for. If this is null, it will accept input from any player.
+        /// Sprawdza, czy zosta³ wciœniêty klawisz odpowiedzialny za przejœcie w dó³ w menu lub grze.
         /// </summary>
         public bool IsDown(bool wsadEnabled = false)
         {
             return wsadEnabled ? IsNewKeyPress(Keys.S) : IsNewKeyPress(Keys.Down);
         }
 
+        /// <summary>
+        /// Sprawdza, czy zosta³ wciœniêty klawisz odpowiedzialny za przejœcie w prawo w menu lub grze.
+        /// </summary>
         public bool IsRight(bool wsadEnabled = false)
         {
             return wsadEnabled ? IsNewKeyPress(Keys.D) : IsNewKeyPress(Keys.Right);
         }
 
+        /// <summary>
+        /// Sprawdza, czy zosta³ wciœniêty klawisz odpowiedzialny za przejœcie w lewo w menu lub grze.
+        /// </summary>
         public bool IsLeft(bool wsadEnabled = false)
         {
             return wsadEnabled ? IsNewKeyPress(Keys.A) : IsNewKeyPress(Keys.Left);
         }
 
         /// <summary>
-        /// Checks for a "pause the game" input action.
-        /// The controllingPlayer parameter specifies which player to read
-        /// input for. If this is null, it will accept input from any player.
+        /// Sprawdza, czy zosta³ wciœniêty klawisz odpowiedzialny za zapauzowanie gry.
         /// </summary>
         public bool IsPauseGame()
         {
             return IsNewKeyPress(Keys.Escape);
         }
-
-
-        #endregion
-
+        /// <summary>
+        /// Zwraca kierunek poruszania siê gracza zgodnie z wciœniêtym klawiszem góra/dó³
+        /// </summary>
+        /// <param name="wsad">Okreœla czy u¿ywane s¹ strza³ki czy klawisze WSAD</param>
+        /// <returns>Kierunek poruszania siê gracza</returns>
         public int Vertical(bool wsad = false)
         {
             int dir = 0;
@@ -146,6 +132,12 @@ namespace MetroDigger.Manager
                 dir--;
             return dir;
         }
+        /// <summary>
+        /// Zwraca kierunek poruszania siê gracza zgodnie z wciœniêtym klawiszem prawo/lewo
+        /// </summary>
+        /// <param name="wsad">Okreœla czy u¿ywane s¹ strza³ki czy klawisze WSAD</param>
+        /// <returns>Kierunek poruszania siê gracza</returns>
+
         public int Horizontal(bool wsad = false)
         {
             int dir = 0;

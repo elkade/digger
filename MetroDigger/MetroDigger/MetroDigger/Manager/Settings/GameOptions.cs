@@ -1,5 +1,8 @@
 ﻿namespace MetroDigger.Manager.Settings
 {
+    /// <summary>
+    /// Reprezentuje zestaw opcji gry
+    /// </summary>
     public class GameOptions
     {
         #region Singleton
@@ -12,11 +15,22 @@
         {
             
         }
+        /// <summary>
+        /// Typ kontroli klawiatury
+        /// </summary>
         public Controls Controls { get; set; }
+        /// <summary>
+        /// Określa, czy muzyka jest włączona
+        /// </summary>
         public bool IsMusicEnabled { get; set; }
+        /// <summary>
+        /// Określa, czy efekty dźwiąkowe są włączone
+        /// </summary>
         public bool IsSoundEnabled { get; set; }
     }
-
+    /// <summary>
+    /// Typy kontroli klawiatury
+    /// </summary>
     public enum Controls
     {
         Arrows = 0,

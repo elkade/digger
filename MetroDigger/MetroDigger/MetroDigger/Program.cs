@@ -1,12 +1,10 @@
-using System;
-
 namespace MetroDigger
 {
 #if WINDOWS || XBOX
     static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        /// G³ówny punk wejœcia aplikacji.
         /// </summary>
         static void Main(string[] args)
         {
