@@ -1,0 +1,2619 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MetroDigger</name>
+    </assembly>
+    <members>
+        <member name="T:MetroDigger.Effects.Particle">
+            <summary>
+            Cząstka będąca częścią animacji rozpraszających się cząstek.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Effects.Particle.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,Microsoft.Xna.Framework.Color,System.Single,System.Int32)">
+            <summary>
+            Tworzy nową czastkę.
+            </summary>
+            <param name="texture">Tekstura zawierająca cząstkę.</param>
+            <param name="position">Miejsce wyświetlenia cząstki na ekranie.</param>
+            <param name="velocity">Prędkośc, z jaką ma się przesuwać cząstka.</param>
+            <param name="angle">kierunek ruchu cząstki.</param>
+            <param name="angularVelocity">prędkość kątowa</param>
+            <param name="color">kolor cząstki</param>
+            <param name="size">rozmiar cząstki</param>
+            <param name="ttl">czas zycia cząstki</param>
+        </member>
+        <member name="M:MetroDigger.Effects.Particle.Update">
+            <summary>
+            Aktualizuje kąt, położenie i czas życia cząstki
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Effects.Particle.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje cząstkę na ekranie
+            </summary>
+            <param name="spriteBatch">obiekt XNA służący do ryzowania.</param>
+        </member>
+        <member name="P:MetroDigger.Effects.Particle.Ttl">
+            <summary>
+            Time to live - liczba updatów, jaka pozostała cząstce do momentu, aż przestanie być wyświetlana
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Effects.ParticleEngine">
+            <summary>
+            Silnik odpowiedzialny za tworzenie nowych cząstek.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Effects.ParticleEngine.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Tworzy nowy silnik cząstek.
+            </summary>
+            <param name="textures">Lista grafik, które mają przybierać cząstki</param>
+            <param name="location">początkowe położenie źródła cząstek</param>
+        </member>
+        <member name="M:MetroDigger.Effects.ParticleEngine.Update">
+            <summary>
+            Aktualizuje cząstki - tworzy nowe i usuwa te, których czas życia się skończył.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Effects.ParticleEngine.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje cząstki na ekranie.
+            </summary>
+            <param name="spriteBatch">Obiekt XNA służący do rysowania.</param>
+        </member>
+        <member name="P:MetroDigger.Effects.ParticleEngine.EmitterLocation">
+            <summary>
+            Określa położenie źródła cząstek.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Board">
+            <summary>
+            Plansza gry składająca się z siatki dostępnych kafelków i otoczki buforowej.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Board.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Tworzy nową planszę
+            </summary>
+            <param name="width">Szerokość dostępnego obszaru planszy</param>
+            <param name="height">Wysokość dostępnego obszaru planszy</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Board.GetEnumerator">
+            <summary>
+            Implementacja IEnumerable
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Board.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Implementacja IEnumerable
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Board.GetLength(System.Int32)">
+            <summary>
+            Liczba kafelków w danym wymiarze
+            </summary>
+            <param name="p0">Wymiar</param>
+            <returns>Wielkość wymiaru</returns>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Board.Item(System.Int32,System.Int32)">
+            <summary>
+            Indeksator kafelków na planszy
+            </summary>
+            <param name="x">Indeks X od 0 do Width - 1</param>
+            <param name="y">Index Y od 0 do Heigth -1</param>
+            <returns>Kafelek o podanych współrzędnych</returns>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Board.StartTile">
+            <summary>
+            Kafelek startowy dla gracza
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Board.Width">
+            <summary>
+            Szerokość planszy
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Board.Height">
+            <summary>
+            Wysokość planszy
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.CollisionDetection.CircleDetector">
+            <summary>
+            Detektor kolizji, który sprawdza przecięcia koła otaczającego obiekt
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.CollisionDetection.CollisionDetector">
+            <summary>
+            Abstrakcyjny detektor kolizji
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.CollisionDetection.ICollisionDetector">
+            <summary>
+            Wykrywa kolizję pomiędzy obiektami
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.CollisionDetection.ICollisionDetector.CheckCollision(MetroDigger.Gameplay.Abstract.ICollideable,MetroDigger.Gameplay.Abstract.ICollideable)">
+            <summary>
+            Sprawdza, czy zachodzi kolizja pomiędzy dwoma obiektami
+            </summary>
+            <param name="entity1">Obiekt, którego kolizja ma zostać sprawdzona</param>
+            <param name="entity2">Obiekt, którego kolizja ma zostać sprawdzona</param>
+            <returns></returns>
+        </member>
+        <member name="M:MetroDigger.Gameplay.CollisionDetection.CollisionDetector.CheckCollision(MetroDigger.Gameplay.Abstract.ICollideable,MetroDigger.Gameplay.Abstract.ICollideable)">
+            <summary>
+            Sprawdza, czy zachodzi kolizja pomiędzy dwoma obiektami
+            </summary>
+            <param name="entity1">Obiekt, którego kolizja ma zostać sprawdzona</param>
+            <param name="entity2">Obiekt, którego kolizja ma zostać sprawdzona</param>
+            <returns></returns>
+        </member>
+        <member name="M:MetroDigger.Gameplay.CollisionDetection.CircleDetector.CheckCollision(MetroDigger.Gameplay.Abstract.ICollideable,MetroDigger.Gameplay.Abstract.ICollideable)">
+            <summary>
+            Sprawdza, czy zachodzi kolizja pomiędzy dwoma obiektami
+            </summary>
+            <param name="entity1">Obiekt, którego kolizja ma zostać sprawdzona</param>
+            <param name="entity2">Obiekt, którego kolizja ma zostać sprawdzona</param>
+            <returns></returns>
+        </member>
+        <member name="T:MetroDigger.Gameplay.CollisionDetection.RectangleDetector">
+            <summary>
+            Detektor kolizji, który sprawdza przecięcia prostokątu otaczającego obiekt
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.CollisionDetection.RectangleDetector.CheckCollision(MetroDigger.Gameplay.Abstract.ICollideable,MetroDigger.Gameplay.Abstract.ICollideable)">
+            <summary>
+            Sprawdza, czy zachodzi kolizja pomiędzy dwoma obiektami
+            </summary>
+            <param name="entity1">Obiekt, którego kolizja ma zostać sprawdzona</param>
+            <param name="entity2">Obiekt, którego kolizja ma zostać sprawdzona</param>
+            <returns></returns>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Drivers.AStarDriver">
+            <summary>
+            Odpowiada za sterowanie ruchem  obiektu zgodnie z algorytmem A*
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Drivers.Driver">
+            <summary>
+            Abstrakcyjna klasa bazowa dla sterowników
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Drivers.IDriver">
+            <summary>
+            Odpowiada za sterowanie ruchem  obiektu za pomosą wywoływania odpowiednich zdarzeń.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Drivers.IDriver.UpdateMovement(MetroDigger.Gameplay.IMover,MetroDigger.Gameplay.Entities.EntityState)">
+            <summary>
+            Aktualizuje ścieżkę, po której ma poruszać się sterowany obiekt
+            </summary>
+            <param name="mover">narzędzie dokonujące zmiany położenia obiektu</param>
+            <param name="state">okraśla stan, w jakim znajduje się obiekt</param>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Drivers.IDriver.Shoot">
+            <summary>
+            Zdarzenie wywoływane gdy sterowany obiekt ma wykonać strzał
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Drivers.IDriver.Drill">
+            <summary>
+            Zdarzenie wywoływane gdy sterowany obiekt ma zacząć wiercić
+            </summary>
+            <remarks>Tile to kafelek, który ma zaostć wiercony</remarks>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Drivers.IDriver.Move">
+            <summary>
+            Zdarzenie wywoływane gdy sterowany obiekt ma zacząć się poruszać
+            </summary>
+            <remarks>Tile to kafelek, w kierunku którego ma odbyć się ruch</remarks>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Drivers.IDriver.Turn">
+            <summary>
+            Zdarzenie wywoływane gdy sterowany obiekt ma zacząć się obracać.
+            </summary>
+            <remarks>Vector2 - kierunek docelowy obrotu</remarks>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Drivers.Driver.Shoot">
+            <summary>
+            Zdarzenie wywoływane gdy sterowany obiekt ma wykonać strzał
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Drivers.Driver.Drill">
+            <summary>
+            Zdarzenie wywoływane gdy sterowany obiekt ma zacząć wiercić
+            </summary>
+            <remarks>Tile to kafelek, który ma zaostć wiercony</remarks>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Drivers.Driver.Move">
+            <summary>
+            Zdarzenie wywoływane gdy sterowany obiekt ma zacząć się poruszać
+            </summary>
+            <remarks>Tile to kafelek, w kierunku którego ma odbyć się ruch</remarks>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Drivers.Driver.Turn">
+            <summary>
+            Zdarzenie wywoływane gdy sterowany obiekt ma zacząć się obracać.
+            </summary>
+            <remarks>Vector2 - kierunek docelowy obrotu</remarks>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Drivers.AStarDriver.#ctor(Microsoft.Xna.Framework.Vector2,MetroDigger.Gameplay.Board,MetroDigger.Gameplay.Abstract.IDynamicEntity,System.Boolean)">
+            <summary>
+            Tworzy nowy sterownik A*
+            </summary>
+            <param name="unit">Rozmiar kafelków na planszy</param>
+            <param name="board">Plansza, po której porusza się obiekt</param>
+            <param name="chasedEntity">Obiekt, za którym ma podążać obiekt sterowany</param>
+            <param name="isDriller">określa, czy obiekt potrafi wiercić</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Drivers.AStarDriver.UpdateMovement(MetroDigger.Gameplay.IMover,MetroDigger.Gameplay.Entities.EntityState)">
+            <summary>
+            Aktualizuje ścieżkę, po której ma poruszać się sterowany obiekt
+            </summary>
+            <param name="mover">narzędzie dokonujące zmiany położenia obiektu</param>
+            <param name="state">okraśla stan, w jakim znajduje się obiekt</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Drivers.GravityDriver">
+            <summary>
+            Sterownik, który wyznacza ścieżkę zgodną ze swobodnym spadkiem w kierunku działania siły grawitacji.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Drivers.GravityDriver.#ctor(Microsoft.Xna.Framework.Vector2,MetroDigger.Gameplay.Board,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Tworzy nowy sterownik grawitacyjny
+            </summary>
+            <param name="unit">Rozmiar kafelków na planszy</param>
+            <param name="board">Plansza, po której porusza się obiekt</param>
+            <param name="gravityDirection">Keirunek, w którym działa siła grawitacji</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Drivers.GravityDriver.UpdateMovement(MetroDigger.Gameplay.IMover,MetroDigger.Gameplay.Entities.EntityState)">
+            <summary>
+            Aktualizuje ścieżkę, po której ma poruszać się sterowany obiekt
+            </summary>
+            <param name="mover">narzędzie dokonujące zmiany położenia obiektu</param>
+            <param name="state">okraśla stan, w jakim znajduje się obiekt</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Drivers.KeyboardDriver">
+            <summary>
+            Sterownik wyznaczający ścieżkę poruszania się obiektu zgodnie z rozkazami płynącymi z InputManagera
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Drivers.KeyboardDriver.UpdateMovement(MetroDigger.Gameplay.IMover,MetroDigger.Gameplay.Entities.EntityState)">
+            <summary>
+            Aktualizuje ścieżkę, po której ma poruszać się sterowany obiekt
+            </summary>
+            <param name="mover">narzędzie dokonujące zmiany położenia obiektu</param>
+            <param name="state">okraśla stan, w jakim znajduje się obiekt</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Drivers.StraightDriver">
+            <summary>
+            Sterownik, który wyznacza ścieżkę - linię prostą.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Drivers.StraightDriver.#ctor(Microsoft.Xna.Framework.Vector2,MetroDigger.Gameplay.Board)">
+            <summary>
+            Tworzy nowy prostoliniowy sterownik
+            </summary>
+            <param name="unit">Rozmiar kafelków na planszy</param>
+            <param name="board">Plansza, po której porusza się obiekt</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Drivers.StraightDriver.UpdateMovement(MetroDigger.Gameplay.IMover,MetroDigger.Gameplay.Entities.EntityState)">
+            <summary>
+            Aktualizuje ścieżkę, po której ma poruszać się sterowany obiekt
+            </summary>
+            <param name="mover">narzędzie dokonujące zmiany położenia obiektu</param>
+            <param name="state">okraśla stan, w jakim znajduje się obiekt</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.DynamicEntity">
+            <summary>
+            Abstrakcyjna klasa bazowa dla dynamicznych obiektów gry
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Entity">
+            <summary>
+            Abstrakcyjna klasa bazowa dla obiektów, które mogą zostać narysowane na planszy
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Abstract.IDrawable">
+            <summary>
+            Obiekt, który może zostać narysowany na mapie.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Abstract.IDrawable.Draw(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje obiekt na mapie
+            </summary>
+            <param name="gameTime">Aktualny czas gry</param>
+            <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.IDrawable.Position">
+            <summary>
+            Miejsce na ekranie, w którym ma zostać narysowany obiekt.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.IDrawable.ZIndex">
+            <summary>
+            ZIndex obiektu
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Entity.Draw(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje obiekt na planszy
+            </summary>
+            <param name="gameTime">Czas gry</param>
+            <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Entity.Direction">
+            <summary>
+            Określa kierunek, w którym jest zwrócony obiekt
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Entity.Position">
+            <summary>
+            Położenie boiektu na ekranie
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Entity.ZIndex">
+            <summary>
+            ZIndex obiektu
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Abstract.IDynamicEntity">
+            <summary>
+            Obiekt, który jest pełnoprwanym elementem gry.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Abstract.ICollideable">
+            <summary>
+            Obiekt, który może doznać kolizji z innym obiektem tego typu.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Abstract.IBoardObject">
+            <summary>
+            Obiekt, który może zostać umieszczony na planszy gry.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Abstract.IMoveable">
+            <summary>
+            Obiekt, który może się poruszać.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Abstract.IUpdateable">
+            <summary>
+            Obiekt zdolny do aktualizacji swojego stanu.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Abstract.IUpdateable.Update">
+            <summary>
+            Aktualizuje stan obiektu.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.IUpdateable.IsToRemove">
+            <summary>
+            Określa, czy obiekt ma być nadal aktualizowany, czy usunięty.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.IMoveable.MovementSpeed">
+            <summary>
+            Prędkość poruszania obiektu.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.IBoardObject.Direction">
+            <summary>
+            Kierunek, w którym ustawiony jest obiekt.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.IBoardObject.OccupiedTile">
+            <summary>
+            Kafelek zajmowany przez obiekt.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.IBoardObject.Width">
+            <summary>
+            Szerokość obiektu.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.IBoardObject.Height">
+            <summary>
+            Wysokość obiektu.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Abstract.ICollideable.CollideWith(MetroDigger.Gameplay.Abstract.ICollideable)">
+            <summary>
+            Wywołuje zachowanie obiektu w momencie kolizji
+            </summary>
+            <param name="collideable">Obiekt, z którym zaszła kolizja.</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Abstract.ICollideable.Harm">
+            <summary>
+            Metoda wywoływana w momencie, gdy obiekt zostaje raniony.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.ICollideable.Aggressiveness">
+            <summary>
+            Określa to, jak obiekt reaguje na kolizję.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.ICollideable.IsWaterProof">
+            <summary>
+            Określa, czy obiekt może zostać raniony w kontakcie z wodą.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.IDynamicEntity.Value">
+            <summary>
+            Wartość obiektu - liczba punktów zdobywanych przy jego zniszczeniu.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.DynamicEntity.Draw(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje obiekt na planszy
+            </summary>
+            <param name="gameTime">Czas gry</param>
+            <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.DynamicEntity.Update">
+            <summary>
+            Aktualizuje stan obiektu
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.DynamicEntity.CollideWith(MetroDigger.Gameplay.Abstract.ICollideable)">
+            <summary>
+            Wywołuje zachowanie obiektu w momencie kolizji
+            </summary>
+            <param name="collideable">Obiekt, z którym zaszła kolizja.</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.DynamicEntity.Harm">
+            <summary>
+            Metoda wywoływana w momencie, gdy obiekt zostaje raniony.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.DynamicEntity.StartDrilling(MetroDigger.Gameplay.Tiles.Tile)">
+            <summary>
+            Rozpoczyna wiercenie
+            </summary>
+            <param name="destination">Docelowy kafelek wiercenia.</param>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.HasDrill">
+            <summary>
+            Określa, czy obiekt posiada wiertło
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.PowerCellsCount">
+            <summary>
+            Określa liczbę baterii posiadanych przez obiekt
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.Width">
+            <summary>
+            Określa szerokość obiektu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.Height">
+            <summary>
+            Określa wysokość obiektu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.MovementSpeed">
+            <summary>
+            Określa prędkość obiektu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.IsToRemove">
+            <summary>
+            Określa, czy obiekt ma być aktualizowany, czy usunięty
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.OccupiedTile">
+            <summary>
+            Zwraca Kafelek aktualnie zajmowany przez obiekt
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.Aggressiveness">
+            <summary>
+            Określa to, jak obiekt reaguje na kolizję.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.IsWaterProof">
+            <summary>
+            Określa, czy obiekt może zostać raniony w kontakcie z wodą.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.DynamicEntity.Value">
+            <summary>
+            Wartość obiektu - liczba punktów zdobywanych przy jego zniszczeniu.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.EntityState">
+            <summary>
+            Stan, w którym znajduje się obiekt
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Aggressiveness">
+            <summary>
+            Zachowanie obiektu przy kolizji
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Others.Drill">
+            <summary>
+            Wiertło
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Others.Item">
+            <summary>
+            Abstrakcyjna klasa bazowa dla przedmiotów, które mogą zostać podniesione przez ICollectora
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.StaticEntity">
+            <summary>
+            Abstrakcyjna klasa bazowa dla obiektów, które nie mogą się poruszać.
+            Nie mają one określonej pozycji na mapie, a  należą do kafelków.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.StaticEntity.Draw(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje obiekt na planszy
+            </summary>
+            <param name="gameTime">Czas gry</param>
+            <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.Item.GetCollected(MetroDigger.Gameplay.Abstract.ICollector)">
+            <summary>
+            Metoda wywoływana, gdy obiekt zostaje podniesiony
+            </summary>
+            <param name="collector">ICollectory podnoszący obiekt</param>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Entities.Others.Item.Collected">
+            <summary>
+            Zdarzenie wywoływane w momencie, gdy obiekt zostaje zebrany
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.Drill.#ctor">
+            <summary>
+            Tworzy nowe wiertło
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.Drill.GetCollected(MetroDigger.Gameplay.Abstract.ICollector)">
+            <summary>
+            Metoda wywoływana, gdy wierto zostaje podniesione
+            </summary>
+            <param name="collector">Obiekt podnoszący wirtło</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Others.Metro">
+            <summary>
+            Abstrakcyjna klasa bazowa dla znaczników metra
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.Metro.Clear(System.Int32@)">
+            <summary>
+            Czyści znacznik
+            </summary>
+            <param name="stationsCount">reprezentuje liczbę stacji, które pozostały do oczyszczenia.</param>
+            <returns></returns>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Others.Metro.IsCleared">
+            <summary>
+            Określa, czy znacznik został już oczyszczony
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Others.PowerCell">
+            <summary>
+            Bateria
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.PowerCell.#ctor">
+            <summary>
+            Tworzy nową baterię
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.PowerCell.GetCollected(MetroDigger.Gameplay.Abstract.ICollector)">
+            <summary>
+            Metoda wywoływana, gdy bateria zostaje podniesiona
+            </summary>
+            <param name="collector">Obiekt podnoszący baterię</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Abstract.ICollector">
+            <summary>
+            Obiekt, który potrafi zbierać inne obiekty z planszy.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.ICollector.HasDrill">
+            <summary>
+            Określa, czy obiekt ma wiertło
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Abstract.ICollector.PowerCellsCount">
+            <summary>
+            Określa liczbę baterii posiadanych przez obiekt
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Abstract.ICollector.Visited">
+            <summary>
+            Zdarzenie wywoływane w momencie odwiedzenia nowego kafelka.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Others.Station">
+            <summary>
+            Reprezentuje znacznik stacji metra
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.Station.#ctor">
+            <summary>
+            Tworzy nowy znacznik stacji metra
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.Station.Clear(System.Int32@)">
+            <summary>
+            Czyści znacznik
+            </summary>
+            <param name="stationsCount">reprezentuje liczbę stacji, które pozostały do oczyszczenia.
+            Odejmuje 1 od tej liczby</param>
+            <returns></returns>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Others.Tunnel">
+            <summary>
+            Reprezentuje znacznik tunelu matra
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.Tunnel.#ctor">
+            <summary>
+            Tworzy nowy znacznik tunelu metra
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Others.Tunnel.Clear(System.Int32@)">
+            <summary>
+            Czyści znacznik
+            </summary>
+            <param name="stationsCount">reprezentuje liczbę stacji, które pozostały do oczyszczenia.</param>
+            <returns></returns>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Terrains.Buffer">
+            <summary>
+            Teren buforowy, na który nikt nie ma wstępu. Okala planszę.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Terrains.Terrain">
+            <summary>
+            Abstrakcyjna klasa bazowa dla szczegółowych typów terenu
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Terrains.ITerrain">
+            <summary>
+            Teren kafelka. Przechowuje informację, czy kafelek jest dostępny dla obiektu.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Terrains.ITerrain.Accessibility">
+            <summary>
+            Dostępność terenu dla obiektów.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Terrains.Terrain.Accessibility">
+            <summary>
+            Dostępność terenu dla obiektów.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Terrains.Buffer.#ctor">
+            <summary>
+            Tworzy nowy teren buforowy.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Terrains.Accessibility">
+            <summary>
+            Typy dostępności terenu dla obiektów.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Abstract.IDriller">
+            <summary>
+            Obiekt zdolny do wiercenia
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Abstract.IDriller.StartDrilling(MetroDigger.Gameplay.Tiles.Tile)">
+            <summary>
+            Rozpoczyna wiercenie
+            </summary>
+            <param name="destination">Docelowy kafelek wiercenia.</param>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Abstract.IDriller.Drilled">
+            <summary>
+            Zdarzenie wywoływane, gdy obiekt zakończy wiercenie.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Abstract.IShooter">
+            <summary>
+            Obiekt zdolny do strzelania.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Abstract.IShooter.StartShooting">
+            <summary>
+            Rozpoczyna strzał
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Abstract.IShooter.Shoot">
+            <summary>
+            Zdarzenie wywoływane w momencie wykonania strzału
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.IMover">
+            <summary>
+            Narzędzie zmieniające położenie obiektu zgodnie z określonymi parametrami.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.IMover.Reset(MetroDigger.Gameplay.Tiles.Tile,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Resetue parametry ruchu do stanu pocatkowego
+            </summary>
+            <param name="firstTile">Początkowy kafelek obiektu</param>
+            <param name="firstDirection">Początkowy kierunek obiektu</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.IMover.MakeMove(MetroDigger.Gameplay.Tiles.Tile,MetroDigger.Gameplay.Tiles.Tile,System.Single)">
+            <summary>
+            Rozpoczyna ruch obiektu
+            </summary>
+            <param name="startTile">Kafelek startowy ruchu</param>
+            <param name="endTile">Kafelek końcowy ruchu</param>
+            <param name="speed">Prędkość ruchu</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.IMover.Update">
+            <summary>
+            Aktualizuje rozpoczęty ruch
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.IMover.StartTile">
+            <summary>
+            Kafelek startowy ruchu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.IMover.EndTile">
+            <summary>
+            Kafelek końcowy ruchu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.IMover.Position">
+            <summary>
+            Aktualna rzeczywista pozycja obiektu poruszającego się
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.IMover.Direction">
+            <summary>
+            Kierunek obiektu poruszającego się
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.IMover.IsMoving">
+            <summary>
+            Określa, czy obiekt obecnie się porusza
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Gameplay.IMover.Started">
+            <summary>
+            Zdarzenie wywoływane w momencie rozpoczęcia ruchu
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Gameplay.IMover.Halved">
+            <summary>
+            Zdarzenie wywoływane w momencie przekroczenia połowy trasy biezącego ruchu
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Gameplay.IMover.Finished">
+            <summary>
+            Zdarzenie wywoływane po zakończeniu bieżącego ruchu
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.MovementHandler">
+            <summary>
+            Narzędzie służące do zmiany położenia obiektu w linni prostej pomiędzy kafelkami
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.MovementHandler.#ctor(MetroDigger.Gameplay.Tiles.Tile,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Tworzy nowy MovementHandler
+            </summary>
+            <param name="firstTile">Początkowe położenie obiektu</param>
+            <param name="firstDirection">Początkowy kierunek obiektu</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.ISpiller">
+            <summary>
+            Narzędzie służące do rozlania wody.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.ISpiller.Spill(System.Int32,System.Int32)">
+            <summary>
+            Rozlewa wodę począwszy od kafelka X Y
+            </summary>
+            <param name="x">Indeks X kafelka startowego</param>
+            <param name="y">Indeks Y kafelka startowego</param>
+            <returns>Liczba punktów uzyskanych poprzez roznalie wody i oczyszczenie kafelków</returns>
+        </member>
+        <member name="T:MetroDigger.Gameplay.WaterSpiller">
+            <summary>
+            Narzędzie służące do rozlania wody.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.WaterSpiller.#ctor(MetroDigger.Gameplay.Board,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Tworzy nowy rozlewacz wody
+            </summary>
+            <param name="board">plansza gry</param>
+            <param name="gravityVector">wektor zgodnie z który rozlea się woda</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.WaterSpiller.Spill(System.Int32,System.Int32)">
+            <summary>
+            rozlewa wodę zgodnie z prawem grawitacji
+            </summary>
+            <param name="x">Indeks X kafelka startowego</param>
+            <param name="y">Indeks Y kafelka startowego</param>
+            <returns>Liczba punktów uzyskanych poprzez roznalie wody i oczyszczenie kafelków</returns>
+        </member>
+        <member name="T:MetroDigger.Logging.Logger">
+            <summary>
+            Narzędzie pomocnicze służące do zapisywania logów z gry do pliku. Działa jedynie w trybie DEBUG
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Logging.Logger.Config(System.String)">
+            <summary>
+            Konfiguruje ustawienia loggera
+            </summary>
+            <param name="fileName">nazwa pliku, do którego zapisywane są logi z gry</param>
+        </member>
+        <member name="M:MetroDigger.Logging.Logger.Log(System.String)">
+            <summary>
+            Loguje podaną wiadomość wraz z bieżacą datą i czasem
+            </summary>
+            <param name="message">Wiadomość do zalogowania.</param>
+        </member>
+        <member name="T:MetroDigger.Manager.GameManager">
+            <summary>
+            Odpowiada za przekazywanie, zapisywanie i odczytywanie informacji związanych z grą i użytkownikiem.
+            Realizuje wzorzec projektowy singleton.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.GetMaxLevel">
+            <summary>
+            Zwraca numer poziomu o najwyższym numerze
+            </summary>
+            <returns>Numer poziomu</returns>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.SignIn(System.String)">
+            <summary>
+            Loguje gracza do gry
+            </summary>
+            <param name="name">Nazwa gracza</param>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.SaveGameToFile(System.String)">
+            <summary>
+            Zapisuje poziom wraz z aktualnym stanem do pliku
+            </summary>
+            <param name="text">nazwa pliku</param>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.LoadLevelFromFile(System.String,System.Boolean)">
+            <summary>
+            Pobiera zapisany poziom z pliku
+            </summary>
+            <param name="filename">nazwa pliku</param>
+            <param name="isFromSave">określa gdzie szukać pliku:
+            czy w folderze z zapisanymi grami, czy w folderze z poziomami</param>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.SaveToMemory(MetroDigger.Gameplay.Level)">
+            <summary>
+            Konwertuje bieżący poziom  i zapisuje w pamięci do momentu zapisania do pliku
+            </summary>
+            <param name="level"></param>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.LoadSavedLevelFromMemory">
+            <summary>
+            Pobiera Poziom zapisany w pamięci
+            </summary>
+            <returns>Poziom w stanie gotowym do rozgrywki</returns>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.GetLevel(System.Int32,MetroDigger.Gameplay.Level@,System.Boolean)">
+            <summary>
+            Ładuje poziom o konkretnym numerze z uwzględnieniem dotychczasowych wyników.
+            </summary>
+            <param name="lvlNo">Numer poziomu</param>
+            <param name="level">Poziom do zwrócenia</param>
+            <param name="isNew">czy bieżące wyniki mają być dla żądanego poziomu uwzględniane</param>
+            <returns>czy żądany numer poziomu nie przekracza najwyższego możliwego</returns>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.LoadBestScores(System.Nullable{System.Int32})">
+            <summary>
+            Pobiera z pliku najlepsze wyniki poziomu lub całej gry
+            </summary>
+            <param name="lvlNo">numer poziomu. null = cała gra</param>
+            <returns>lista 10 najlepszych wyników</returns>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.AddToBestScores(System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            Dodaje wynik do listy najlepszych wyników
+            </summary>
+            <param name="scoreValue">wynik</param>
+            <param name="lvlNo">poziom, na którym zdobyto wynik</param>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.UnlockedLevels">
+            <summary>
+            Zwraca listę odblokowanych przez gracza poziomów wraz z najlepszym wynikiem
+            </summary>
+            <returns>lista informacji o poziomach</returns>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.SaveAccomplishedLevel(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Zapisuje do pliku informację, że dany poziom został ukończony oraz wynik i liczbę żyć.
+            </summary>
+            <param name="lvlNo">numer poziomu</param>
+            <param name="score">Wynik uzyskany na poziomie</param>
+            <param name="lives">pozostała liczba żyć.</param>
+        </member>
+        <member name="M:MetroDigger.Manager.GameManager.ClearRanking(System.Nullable{System.Int32})">
+            <summary>
+            Czyści ranking najlepszych wyników.
+            </summary>
+            <param name="lvlNo">numer poziomu null=ranking dla wszystkich</param>
+        </member>
+        <member name="P:MetroDigger.Manager.GameManager.Instance">
+            <summary>
+            Zwraca instancję klasy.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.GameManager.UserName">
+            <summary>
+            Nazwa aktualnie zalogowanego gracza
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.CanBeNullAttribute">
+            <summary>
+            Indicates that the value of the marked element could be <c>null</c> sometimes,
+            so the check for <c>null</c> is necessary before its usage
+            </summary>
+            <example><code>
+            [CanBeNull] public object Test() { return null; }
+            public void UseTest() {
+              var p = Test();
+              var s = p.ToString(); // Warning: Possible 'System.NullReferenceException'
+            }
+            </code></example>
+        </member>
+        <member name="T:MetroDigger.Annotations.NotNullAttribute">
+            <summary>
+            Indicates that the value of the marked element could never be <c>null</c>
+            </summary>
+            <example><code>
+            [NotNull] public object Foo() {
+              return null; // Warning: Possible 'null' assignment
+            }
+            </code></example>
+        </member>
+        <member name="T:MetroDigger.Annotations.StringFormatMethodAttribute">
+            <summary>
+            Indicates that the marked method builds string by format pattern and (optional) arguments.
+            Parameter, which contains format string, should be given in constructor. The format string
+            should be in <see cref="M:System.String.Format(System.IFormatProvider,System.String,System.Object[])"/>-like form
+            </summary>
+            <example><code>
+            [StringFormatMethod("message")]
+            public void ShowError(string message, params object[] args) { /* do something */ }
+            public void Foo() {
+              ShowError("Failed: {0}"); // Warning: Non-existing argument in format string
+            }
+            </code></example>
+        </member>
+        <member name="M:MetroDigger.Annotations.StringFormatMethodAttribute.#ctor(System.String)">
+            <param name="formatParameterName">
+            Specifies which parameter of an annotated method should be treated as format-string
+            </param>
+        </member>
+        <member name="T:MetroDigger.Annotations.InvokerParameterNameAttribute">
+            <summary>
+            Indicates that the function argument should be string literal and match one
+            of the parameters of the caller function. For example, ReSharper annotates
+            the parameter of <see cref="T:System.ArgumentNullException"/>
+            </summary>
+            <example><code>
+            public void Foo(string param) {
+              if (param == null)
+                throw new ArgumentNullException("par"); // Warning: Cannot resolve symbol
+            }
+            </code></example>
+        </member>
+        <member name="T:MetroDigger.Annotations.NotifyPropertyChangedInvocatorAttribute">
+             <summary>
+             Indicates that the method is contained in a type that implements
+             <see cref="T:System.ComponentModel.INotifyPropertyChanged"/> interface
+             and this method is used to notify that some property value changed
+             </summary>
+             <remarks>
+             The method should be non-static and conform to one of the supported signatures:
+             <list>
+             <item><c>NotifyChanged(string)</c></item>
+             <item><c>NotifyChanged(params string[])</c></item>
+             <item><c>NotifyChanged{T}(Expression{Func{T}})</c></item>
+             <item><c>NotifyChanged{T,U}(Expression{Func{T,U}})</c></item>
+             <item><c>SetProperty{T}(ref T, T, string)</c></item>
+             </list>
+             </remarks>
+             <example><code>
+             public class Foo : INotifyPropertyChanged {
+               public event PropertyChangedEventHandler PropertyChanged;
+               [NotifyPropertyChangedInvocator]
+               protected virtual void NotifyChanged(string propertyName) { ... }
+            
+               private string _name;
+               public string Name {
+                 get { return _name; }
+                 set { _name = value; NotifyChanged("LastName"); /* Warning */ }
+               }
+             }
+             </code>
+             Examples of generated notifications:
+             <list>
+             <item><c>NotifyChanged("Property")</c></item>
+             <item><c>NotifyChanged(() =&gt; Property)</c></item>
+             <item><c>NotifyChanged((VM x) =&gt; x.Property)</c></item>
+             <item><c>SetProperty(ref myField, value, "Property")</c></item>
+             </list>
+             </example>
+        </member>
+        <member name="T:MetroDigger.Annotations.ContractAnnotationAttribute">
+            <summary>
+            Describes dependency between method input and output
+            </summary>
+            <syntax>
+            <p>Function Definition Table syntax:</p>
+            <list>
+            <item>FDT      ::= FDTRow [;FDTRow]*</item>
+            <item>FDTRow   ::= Input =&gt; Output | Output &lt;= Input</item>
+            <item>Input    ::= ParameterName: Value [, Input]*</item>
+            <item>Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}</item>
+            <item>Value    ::= true | false | null | notnull | canbenull</item>
+            </list>
+            If method has single input parameter, it's name could be omitted.<br/>
+            Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same)
+            for method output means that the methos doesn't return normally.<br/>
+            <c>canbenull</c> annotation is only applicable for output parameters.<br/>
+            You can use multiple <c>[ContractAnnotation]</c> for each FDT row,
+            or use single attribute with rows separated by semicolon.<br/>
+            </syntax>
+            <examples><list>
+            <item><code>
+            [ContractAnnotation("=> halt")]
+            public void TerminationMethod()
+            </code></item>
+            <item><code>
+            [ContractAnnotation("halt &lt;= condition: false")]
+            public void Assert(bool condition, string text) // regular assertion method
+            </code></item>
+            <item><code>
+            [ContractAnnotation("s:null => true")]
+            public bool IsNullOrEmpty(string s) // string.IsNullOrEmpty()
+            </code></item>
+            <item><code>
+            // A method that returns null if the parameter is null, and not null if the parameter is not null
+            [ContractAnnotation("null => null; notnull => notnull")]
+            public object Transform(object data) 
+            </code></item>
+            <item><code>
+            [ContractAnnotation("s:null=>false; =>true,result:notnull; =>false, result:null")]
+            public bool TryParse(string s, out Person result)
+            </code></item>
+            </list></examples>
+        </member>
+        <member name="T:MetroDigger.Annotations.LocalizationRequiredAttribute">
+            <summary>
+            Indicates that marked element should be localized or not
+            </summary>
+            <example><code>
+            [LocalizationRequiredAttribute(true)]
+            public class Foo {
+              private string str = "my string"; // Warning: Localizable string
+            }
+            </code></example>
+        </member>
+        <member name="T:MetroDigger.Annotations.CannotApplyEqualityOperatorAttribute">
+            <summary>
+            Indicates that the value of the marked type (or its derivatives)
+            cannot be compared using '==' or '!=' operators and <c>Equals()</c>
+            should be used instead. However, using '==' or '!=' for comparison
+            with <c>null</c> is always permitted.
+            </summary>
+            <example><code>
+            [CannotApplyEqualityOperator]
+            class NoEquality { }
+            class UsesNoEquality {
+              public void Test() {
+                var ca1 = new NoEquality();
+                var ca2 = new NoEquality();
+                if (ca1 != null) { // OK
+                  bool condition = ca1 == ca2; // Warning
+                }
+              }
+            }
+            </code></example>
+        </member>
+        <member name="T:MetroDigger.Annotations.BaseTypeRequiredAttribute">
+            <summary>
+            When applied to a target attribute, specifies a requirement for any type marked
+            with the target attribute to implement or inherit specific type or types.
+            </summary>
+            <example><code>
+            [BaseTypeRequired(typeof(IComponent)] // Specify requirement
+            public class ComponentAttribute : Attribute { }
+            [Component] // ComponentAttribute requires implementing IComponent interface
+            public class MyComponent : IComponent { }
+            </code></example>
+        </member>
+        <member name="T:MetroDigger.Annotations.UsedImplicitlyAttribute">
+            <summary>
+            Indicates that the marked symbol is used implicitly
+            (e.g. via reflection, in external library), so this symbol
+            will not be marked as unused (as well as by other usage inspections)
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.MeansImplicitUseAttribute">
+            <summary>
+            Should be used on attributes and causes ReSharper
+            to not mark symbols marked with such attributes as unused
+            (as well as by other usage inspections)
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Annotations.ImplicitUseKindFlags.Access">
+            <summary>Only entity marked with attribute considered used</summary>
+        </member>
+        <member name="F:MetroDigger.Annotations.ImplicitUseKindFlags.Assign">
+            <summary>Indicates implicit assignment to a member</summary>
+        </member>
+        <member name="F:MetroDigger.Annotations.ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature">
+            <summary>
+            Indicates implicit instantiation of a type with fixed constructor signature.
+            That means any unused constructor parameters won't be reported as such.
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Annotations.ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature">
+            <summary>Indicates implicit instantiation of a type</summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.ImplicitUseTargetFlags">
+            <summary>
+            Specify what is considered used implicitly
+            when marked with <see cref="T:MetroDigger.Annotations.MeansImplicitUseAttribute"/>
+            or <see cref="T:MetroDigger.Annotations.UsedImplicitlyAttribute"/>
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Annotations.ImplicitUseTargetFlags.Members">
+            <summary>Members of entity marked with attribute are considered used</summary>
+        </member>
+        <member name="F:MetroDigger.Annotations.ImplicitUseTargetFlags.WithMembers">
+            <summary>Entity marked with attribute and all its members considered used</summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.PublicAPIAttribute">
+            <summary>
+            This attribute is intended to mark publicly available API
+            which should not be removed and so is treated as used
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.InstantHandleAttribute">
+            <summary>
+            Tells code analysis engine if the parameter is completely handled
+            when the invoked method is on stack. If the parameter is a delegate,
+            indicates that delegate is executed while the method is executed.
+            If the parameter is an enumerable, indicates that it is enumerated
+            while the method is executed
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.PureAttribute">
+            <summary>
+            Indicates that a method does not make any observable state changes.
+            The same as <c>System.Diagnostics.Contracts.PureAttribute</c>
+            </summary>
+            <example><code>
+            [Pure] private int Multiply(int x, int y) { return x * y; }
+            public void Foo() {
+              const int a = 2, b = 2;
+              Multiply(a, b); // Waring: Return value of pure method is not used
+            }
+            </code></example>
+        </member>
+        <member name="T:MetroDigger.Annotations.PathReferenceAttribute">
+            <summary>
+            Indicates that a parameter is a path to a file or a folder
+            within a web project. Path can be relative or absolute,
+            starting from web root (~)
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcActionAttribute">
+            <summary>
+            ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
+            is an MVC action. If applied to a method, the MVC action name is calculated
+            implicitly from the context. Use this attribute for custom wrappers similar to
+            <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcAreaAttribute">
+            <summary>
+            ASP.NET MVC attribute. Indicates that a parameter is an MVC area.
+            Use this attribute for custom wrappers similar to
+            <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcControllerAttribute">
+            <summary>
+            ASP.NET MVC attribute. If applied to a parameter, indicates that
+            the parameter is an MVC controller. If applied to a method,
+            the MVC controller name is calculated implicitly from the context.
+            Use this attribute for custom wrappers similar to 
+            <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String, String)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcMasterAttribute">
+            <summary>
+            ASP.NET MVC attribute. Indicates that a parameter is an MVC Master.
+            Use this attribute for custom wrappers similar to
+            <c>System.Web.Mvc.Controller.View(String, String)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcModelTypeAttribute">
+            <summary>
+            ASP.NET MVC attribute. Indicates that a parameter is an MVC model type.
+            Use this attribute for custom wrappers similar to
+            <c>System.Web.Mvc.Controller.View(String, Object)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcPartialViewAttribute">
+            <summary>
+            ASP.NET MVC attribute. If applied to a parameter, indicates that
+            the parameter is an MVC partial view. If applied to a method,
+            the MVC partial view name is calculated implicitly from the context.
+            Use this attribute for custom wrappers similar to
+            <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcSupressViewErrorAttribute">
+            <summary>
+            ASP.NET MVC attribute. Allows disabling all inspections
+            for MVC views within a class or a method.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcDisplayTemplateAttribute">
+            <summary>
+            ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.
+            Use this attribute for custom wrappers similar to 
+            <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcEditorTemplateAttribute">
+            <summary>
+            ASP.NET MVC attribute. Indicates that a parameter is an MVC editor template.
+            Use this attribute for custom wrappers similar to
+            <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcTemplateAttribute">
+            <summary>
+            ASP.NET MVC attribute. Indicates that a parameter is an MVC template.
+            Use this attribute for custom wrappers similar to
+            <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcViewAttribute">
+            <summary>
+            ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
+            is an MVC view. If applied to a method, the MVC view name is calculated implicitly
+            from the context. Use this attribute for custom wrappers similar to
+            <c>System.Web.Mvc.Controller.View(Object)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Annotations.AspMvcActionSelectorAttribute">
+            <summary>
+            ASP.NET MVC attribute. When applied to a parameter of an attribute,
+            indicates that this parameter is an MVC action name
+            </summary>
+            <example><code>
+            [ActionName("Foo")]
+            public ActionResult Login(string returnUrl) {
+              ViewBag.ReturnUrl = Url.Action("Foo"); // OK
+              return RedirectToAction("Bar"); // Error: Cannot resolve action
+            }
+            </code></example>
+        </member>
+        <member name="T:MetroDigger.Annotations.RazorSectionAttribute">
+            <summary>
+            Razor attribute. Indicates that a parameter or a method is a Razor section.
+            Use this attribute for custom wrappers similar to 
+            <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c>
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.LevelAccomplishedScreen">
+            <summary>
+            Menu ukończonego poziomu.
+            Pozwala wybrać opcję powtórzenia poziomu lub przejścia do następnego poziomu w przypadku wygranej.
+            Pozwala na powtórzenie poziomu lub wyjście do menu głównego w przypadku porażki.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.MenuScreen">
+            <summary>
+            Bazowa klasa dla ekranów menu. Użytkownik może przesuwać wskaźnik w górę/dół, wybierać enterem i wychodzić Esc.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.GameScreen">
+            <summary>
+            Klasa bazowa dla ekranów. Ekran to pojedyncza warstwa,
+            która ma logikę aktualizacji i rysowania oraz może być łączona z innyni
+            warstwami menu w celu stworzenia złożonego systemu.
+            Klasa ta definiuje wszelkie animacje towarzyszące przejściom między ekranami.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.GameScreen.#ctor">
+            <summary>
+            Tworzy nową instancję klasy <see cref="T:MetroDigger.Screens.GameScreen"/>.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.GameScreen.Update(Microsoft.Xna.Framework.GameTime,System.Boolean,System.Boolean)">
+            <summary>
+            Aktualizuje przejście i stan ekranu.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.GameScreen.HandleInput(MetroDigger.Manager.InputHandler)">
+            <summary>
+            Metoda wirtualna wywoływana, gdy należy sprawdzić stan klawiatury.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.GameScreen.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Metoda wirtualna wywoływana, gdy ekran powinien się odrysować
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.GameScreen.ExitScreen">
+            <summary>
+            Powoduje rozpoczęcie przejścia zamykającego ekran.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.GameScreen.IsPopup">
+            <summary>
+            Wskazuje na to, czy ekran jest popupem - czyli wyświetla się jako okienko przed
+            ekranem macierzystym.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.GameScreen.TransitionOnTime">
+            <summary>
+            Ustawia jak długo zajmuje ekranowi przejście z innego ekranu.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.GameScreen.TransitionOffTime">
+            <summary>
+            Ustawia jak długo zajmuje ekranowi przejściew inny ekran.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.GameScreen.TransitionAlpha">
+            <summary>
+            Pobiera parametr zaciemnienia ekranu przy przejściu.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.GameScreen.ScreenState">
+            <summary>
+            Zwraca obecny stan przejścia.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.GameScreen.IsExiting">
+            <summary>
+            Zwraca, czy ekran jest w trakcie zamykania się.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.GameScreen.IsActive">
+            <summary>
+            Sprawdza, czy menu jest aktywne i powinno reagować na input użytkownika.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.GameScreen.ScreenManager">
+            <summary>
+            Zwraca ScreenManager, który zarządza tym ekranem.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuScreen.#ctor(System.String)">
+            <summary>
+            Tworzy nową instancję Ekranu menu.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuScreen.HandleInput(MetroDigger.Manager.InputHandler)">
+            <summary>
+            Odpowiada na żądania płynące z klawiatury; zaznacza bądź odznacza kontrolkę
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuScreen.OnCancel">
+            <summary>
+            Handler dla zdarzenia wyjścia z menu
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuScreen.OnCancel(System.Object,System.EventArgs)">
+            <summary>
+            Przeładowanie handlera wyjścia z menu wzbogacone o argumenty.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuScreen.Update(Microsoft.Xna.Framework.GameTime,System.Boolean,System.Boolean)">
+            <summary>
+            Aktualizuje menu.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuScreen.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Rysuje menu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.MenuScreen.MenuObjects">
+            <summary>
+            Pobiera listę kontrolek, aby klasa pochodna mogła ją edytować.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.LevelAccomplishedScreen.#ctor(System.Boolean,MetroDigger.Gameplay.Level,MetroDigger.Gameplay.Level,System.Int32)">
+            <summary>
+            Tworzy nowe menu ukończonego poziomu
+            </summary>
+            <param name="isWon">czy poziom zakończył się sukcesem</param>
+            <param name="levelToRetry">poziom, który ma zostać wczytany w przypadku ponowienia gry</param>
+            <param name="levelToContinue">poziom, który ma zostać wczytany w przypadku kontynuacji</param>
+            <param name="gainedScore">liczba ponktów zdobyta w ukończonym poziomie</param>
+        </member>
+        <member name="T:MetroDigger.Screens.ChooseLevelScreen">
+            <summary>
+            Menu wyboru poziomu. Powala na wybór poziomu spośród tych, które gracz zdążył odblokować.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.ChooseLevelScreen.#ctor">
+            <summary>
+            Tworzy nowe manu wyboru poziomu.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.LoadMenuScreen">
+            <summary>
+            Menu ładowania gry zapisanej w pliku. Pozwala wpisać nazwę pliku, z którego ma zostać wczytana gra.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.LoadMenuScreen.#ctor">
+            <summary>
+            Tworzy noew menu ładowania gry z pliku.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.LogScreen">
+            <summary>
+            Menu logowania. Pierwsze menu gry. Pozwala na wpisanie nazwy użytkownika.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.LogScreen.#ctor">
+            <summary>
+            Tworzy menu logowania.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.PauseMenu">
+            <summary>
+            Menu pauzy gry. Daje takie same mozliwości jak menu startowe.
+            Przez naciśnięcie klawisza Esc pozwala wrócić do aktualnie rozgrywanej gry.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.PauseMenu.#ctor">
+            <summary>
+            Tworzy menu pauzy gry
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.RankingScreen">
+            <summary>
+            Menu renkingu. Pozwala na wybór numeru poziomu,
+            którego ranking najlepszych wyników ma zostać pokazany oraz na wyczysczenie konkretnej listy.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.RankingScreen.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Tworzy menu rankingu
+            </summary>
+            <param name="score">nowozdobyty wynik</param>
+            <param name="lvl">jakiego poziomu ranking ma dotyczyć. null=całej gry</param>
+        </member>
+        <member name="T:MetroDigger.Serialization.LevelDto">
+            <summary>
+            Reprezentuje obiekt poziomu gotoy do serializacji
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Effects.Animation">
+            <summary>
+            Reprezentuje animowaną teksturę.
+            </summary>
+            <remarks>
+            Dzieli obraz na klatki, które mogą być wyświetlane w kolejności.
+            </remarks>
+        </member>
+        <member name="M:MetroDigger.Effects.Animation.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,System.Single,System.Boolean,System.Int32,Microsoft.Xna.Framework.Vector2,System.Int32)">
+            <summary>
+            Tworzy nową animację
+            </summary>
+            <param name="texture">wyświetlane obrazy</param>
+            <param name="frameTime">czas wyświetlania pojedynczej klatki</param>
+            <param name="isLooping">czy animacja ma byś zapętlona</param>
+            <param name="frameWidth">szerokość klatki</param>
+            <param name="scale">skala w stosunku do wielkości pierwotnej obrazu</param>
+            <param name="frameHeight">wysokość klatki</param>
+        </member>
+        <member name="P:MetroDigger.Effects.Animation.Texture">
+            <summary>
+            Wyświetlana tekstura; klatki są ustawione horyzontalnie. 
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Effects.Animation.FrameTime">
+            <summary>
+            Czas trwania pokazu każdej klatki
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Effects.Animation.IsLooping">
+            <summary>
+            Określa, czy po zakończeniu animacji powinna się ona odtworzyć ponownie
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Effects.Animation.FrameCount">
+            <summary>
+            Pobiera liczbę klatek animacji
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Effects.Animation.FrameWidth">
+            <summary>
+            Pobiera szerokość klatki animacji
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Effects.Animation.FrameHeight">
+            <summary>
+            Pobiera wysokość klatki animacji.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Effects.Animation.Scale">
+            <summary>
+            Określa w jakiej skali do wielkości pierwotnej ma byś wyświeetlany obraz
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Effects.AnimationPlayer">
+            <summary>
+            Kontroluje odtwarzanie animacji z klasy Animation
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Effects.AnimationPlayer.PlayAnimation(MetroDigger.Effects.Animation,System.Boolean)">
+            <summary>
+            Rozpoczyna lub kontynuuje animację.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Effects.AnimationPlayer.ResetAnimation(MetroDigger.Effects.Animation)">
+            <summary>
+            Resetuje animację
+            </summary>
+            <param name="animation">Animacja, która ma byś zresetowana</param>
+        </member>
+        <member name="M:MetroDigger.Effects.AnimationPlayer.Draw(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.SpriteEffects,Microsoft.Xna.Framework.Color,System.Single)">
+            <summary>
+            Rysuje aktualnie odtwarzaną klatkę animacji
+            </summary>
+            <param name="gameTime">aktualny czas gry</param>
+            <param name="spriteBatch">obiekt XNA służący do rysowania</param>
+            <param name="position">położenie animacji na ekranie</param>
+            <param name="spriteEffects">efekty sprita XNA</param>
+            <param name="color">kolor animacji XNA</param>
+            <param name="angle">kąt, pod jakim do osi pionowej wyświetlana jest animacja</param>
+        </member>
+        <member name="P:MetroDigger.Effects.AnimationPlayer.Animation">
+            <summary>
+            Pobiera aktualnie odtwarzaną animację
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Effects.AnimationPlayer.CustomIndex">
+            <summary>
+            Pozwala ręcznie ustawić numer aktualnie wyświetlanej klatki
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Terrains.Free">
+            <summary>
+            Wolny teren, na który dostęp mają wszystkie obiekty
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Terrains.Free.#ctor">
+            <summary>
+            Tworzy nowy wolny teren
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Terrains.Rock">
+            <summary>
+            Teren ze skałą, na który nie mają dostępu inne obiekty
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Terrains.Rock.#ctor">
+            <summary>
+            Tworzy nowy teren ze skałą.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Terrains.Soil">
+            <summary>
+            Teren z ziemią, na który obiekty mogą się dostać przy użyciu wiertła.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Terrains.Soil.#ctor">
+            <summary>
+            Tworzy nowy teren ze skałą.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Terrains.Water">
+            <summary>
+            Teren z wodą.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Terrains.Water.#ctor(MetroDigger.Gameplay.Entities.Terrains.Water.WaterLevel,System.Boolean,System.Boolean)">
+            <summary>
+            Tworzy nowy tern z wodą
+            </summary>
+            <param name="lvl">Określa poziom wody w terenie</param>
+            <param name="isFull">Określa, czy teren przechowuje informacjęo tym, że przechowuje wodę.
+            Jest źródłem wody.</param>
+            <param name="isClosed">Określa, czy teren graniczy ze stropem</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Terrains.Water.#ctor(System.Double,System.Boolean,System.Boolean)">
+            <summary>
+            Tworzy nowy teren z wodą
+            </summary>
+            <param name="lvl">Określa poziom wody w terenie</param>
+            <param name="isFull">Określa, czy teren przechowuje informacjęo tym, że przechowuje wodę.
+            Jest źródłem wody.</param>
+            <param name="isClosed">Określa, czy teren graniczy ze stropem</param>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Terrains.Water.Level">
+            <summary>
+            Określa poziom wody w terenie
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Terrains.Water.IsFull">
+            <summary>
+            Określa, czy teren jest źródłem wody
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Characters.Bullet">
+            <summary>
+            Pocisk, który może zostać wytrzelony przez IShootable.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Characters.Bullet.#ctor(MetroDigger.Gameplay.Drivers.IDriver,MetroDigger.Gameplay.Abstract.IShooter)">
+            <summary>
+            Tworzy nowy pocisk
+            </summary>
+            <param name="driver">sterownik, zgodnie z którym porusza się pocisk</param>
+            <param name="shooter">Obiekt, który wystrzelił pocisk</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Characters.Bullet.Draw(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje obiekt na planszy
+            </summary>
+            <param name="gameTime">Czas gry</param>
+            <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Characters.Bullet.CollideWith(MetroDigger.Gameplay.Abstract.ICollideable)">
+            <summary>
+            Wywołuje zachowanie obiektu w momencie kolizji
+            </summary>
+            <param name="collideable">Obiekt, z którym zaszła kolizja.</param>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Entities.Characters.Bullet.Hit">
+            <summary>
+            Zdarzenie wywoływane w momencie zderzenia z obiektem lub przejściem pomiędzy kafelkami
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Characters.Miner">
+            <summary>
+            Robot górniczy
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Characters.Miner.#ctor(MetroDigger.Gameplay.Drivers.IDriver,MetroDigger.Gameplay.Tiles.Tile)">
+            <summary>
+            Tworzy nowego robota górniczego
+            </summary>
+            <param name="driver">sterownik, zgodnie z którym porusza się robot</param>
+            <param name="occupiedTile">kafelek, w którym poczatkowo przebywa obiekt</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Characters.Ranger">
+            <summary>
+            Robot zwiadowczy
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Characters.Ranger.#ctor(MetroDigger.Gameplay.Drivers.IDriver,MetroDigger.Gameplay.Tiles.Tile,System.Boolean,System.Int32)">
+            <summary>
+            Tworzy nowego robota górniczego
+            </summary>
+            <param name="driver">sterownik, zgodnie z którym porusza się robot</param>
+            <param name="occupiedTile">kafelek, w którym poczatkowo przebywa obiekt</param>
+            <param name="hasDrill">określa czy robot ma wiertło</param>
+            <param name="energyCells">określa liczbę baterii posiadanych przez robota</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Characters.Player">
+            <summary>
+            Obiekt gracza
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Characters.Player.#ctor(MetroDigger.Gameplay.Drivers.IDriver,MetroDigger.Gameplay.Tiles.Tile,MetroDigger.Gameplay.Tiles.Tile)">
+            <summary>
+            Tworzy nowy obiekt gracza
+            </summary>
+            <param name="driver">Sterownik, zgodnie z którym porusza się obiekt gracza.</param>
+            <param name="occupiedTile">Kafelek zajmowany początkowo przez gracza.</param>
+            <param name="startTile">KAfelek, w którym odradza się gacz po byciu zranionym</param>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Characters.Player.LivesCount">
+            <summary>
+            Określa liczbę żyć gracza
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Entities.Characters.Player.Score">
+            <summary>
+            Określa wynik uzyskany przez gracza
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Entities.Characters.Stone">
+            <summary>
+            Kamień
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Entities.Characters.Stone.#ctor(MetroDigger.Gameplay.Drivers.IDriver,MetroDigger.Gameplay.Tiles.Tile)">
+            <summary>
+            Tworzy nowy kamień
+            </summary>
+            <param name="driver">sterownik, zgodnie z którym porusza się kamień</param>
+            <param name="occupiedTile">kafelek, w którym początkowo znajduje się kamień</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.TopBar">
+            <summary>
+            Reprezentuje górny pasek stanu gry zawierający liczbę żyć bohatera, liczbę baterii oraz wynik
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.TopBar.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje na ekranie elementy pasku
+            </summary>
+            <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.TopBar.Update(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Aktualizuje stan pasku
+            </summary>
+            <param name="hp">liczba żyć głównego bohatera</param>
+            <param name="score">wynik gracza</param>
+            <param name="energy">liczba baterii głównego bohatera</param>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Level">
+            <summary>
+            Reprezentuje poziom gry wraz z aktualnym stanem bohatera, obiektów i mapy.
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Gameplay.Level.GravityVector">
+            <summary>
+            Wektor grawitacji działającej na poziomie
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Gameplay.Level.Board">
+            <summary>
+            Plansza gry
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Gameplay.Level.DynamicEntities">
+            <summary>
+            Lista Dynamicznych obiektów gry
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Gameplay.Level.StationTiles">
+            <summary>
+            Lista kafelków, na których znajduje się znacznik stacji metra
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Level.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Tworzy nową instancję poziomu z planszą o padanej wielkości
+            </summary>
+            <param name="width">szerokość planszy</param>
+            <param name="height">wysokośc planszy</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Level.RegisterPlayer(MetroDigger.Gameplay.Entities.Characters.Player)">
+            <summary>
+            Rejestruje gracza w poziomie
+            </summary>
+            <param name="p">Gracz</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Level.RegisterEnemies(System.Collections.Generic.List{MetroDigger.Gameplay.Abstract.IDynamicEntity})">
+            <summary>
+            Rejestruje wrogów w poziomie
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Level.Update">
+            <summary>
+            Aktualizuje stan poziomy, mapy i obiektów dynamicznych
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Level.Draw(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje elementy mapty, górny pasek i obiekty dynamiczne
+            </summary>
+            <param name="gameTime">Aktualny czas gry</param>
+            <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.Width">
+            <summary>
+            Szerokość planszy poziomu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.Height">
+            <summary>
+            Wysokośc planszy poziomu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.Player">
+            <summary>
+            Obiekt gracza
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.IsStarted">
+            <summary>
+            Określa, czy poziom został rozpoczęty i odbywa się aktualizacja stanu gry
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.Number">
+            <summary>
+            Określa numer porządkowy poziomu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.GainedScore">
+            <summary>
+            Określa uzyskany podczas poziomu wynik punktowy
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.TotalScore">
+            <summary>
+            Określa cały wynik punktowy uzyskany do tej pory w rozgrywce
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.InitLives">
+            <summary>
+            Określa liczbę żyć głównrgo gracza w momencie rozpoczęcia poziomu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.InitScore">
+            <summary>
+            Określa wynik punktowy w momencie rozpoczęcia poziomu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Level.TotalLives">
+            <summary>
+            Określa całkowitą liczbę żyć gracza
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Gameplay.Level.LevelAccomplished">
+            <summary>
+            Zdarzenie wywoływane w momencie ukończenia poziomu
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Gameplay.Tiles.Tile">
+            <summary>
+            Reprezentuje kafelek - pojedyncze pole planszy
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Gameplay.Tiles.Tile.Item">
+            <summary>
+            Przedmiot przechowywany w kafelku
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Gameplay.Tiles.Tile.Terrain">
+            <summary>
+            Teren kafelka
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Gameplay.Tiles.Tile.Metro">
+            <summary>
+            Znacznik matra znajdujący się w kafelku
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Tiles.Tile.Clear(System.Int32@,System.Boolean@)">
+            <summary>
+            Czyści kafelek
+            </summary>
+            <param name="stationsCount">liczba stacji metra pozostała do oczyszczenia</param>
+            <param name="isCollision">określa, czy kafelek jest czyszczony przez obiekt,
+            który ma z nim fizyczny kontakt, czy na odległość - przez pocisk</param>
+            <returns>Liczba punktów uzyskana przez oczyszczenie kafelka</returns>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Tiles.Tile.Clear(System.Int32@)">
+            <summary>
+            Czyści kafelek
+            </summary>
+            <param name="stationsCount">liczba stacji metra pozostała do oczyszczenia</param>
+            <returns>Liczba punktów uzyskana przez oczyszczenie kafelka</returns>
+        </member>
+        <member name="F:MetroDigger.Gameplay.Tiles.Tile.Size">
+            <summary>
+            Rozmiar kafelków
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Tiles.Tile.#ctor(System.Int32,System.Int32,MetroDigger.Gameplay.Entities.Terrains.ITerrain,MetroDigger.Gameplay.Entities.Others.Item,MetroDigger.Gameplay.Entities.Others.Metro)">
+            <summary>
+            Tworzy nowy kafelek
+            </summary>
+            <param name="x">Indeks X na planszy</param>
+            <param name="y">Indeks Y na plaszy</param>
+            <param name="terrain">Teren kafelka</param>
+            <param name="item">Przdmiot znajdujący się w kafelku</param>
+            <param name="metro">Znacznik metra znajdujaćy się w kafelku</param>
+        </member>
+        <member name="M:MetroDigger.Gameplay.Tiles.Tile.Draw(Microsoft.Xna.Framework.GameTime,Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Rysuje na ekranie obiekty należące do kafelka: przedmiot, znacznik metra i teren
+            </summary>
+            <param name="gameTime">Aktualny czas gry</param>
+            <param name="spriteBatch">Obiekt XNA służący do rysowania</param>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Tiles.Tile.Width">
+            <summary>
+            Szerokośc kafelka
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Tiles.Tile.Height">
+            <summary>
+            Wysokość Kafelka
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Tiles.Tile.Position">
+            <summary>
+            Położenie kafelka na ekranie
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Tiles.Tile.X">
+            <summary>
+            Indeks X kafelka na planszy
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Tiles.Tile.Y">
+            <summary>
+            Indeks Y kafelka na planszy
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Gameplay.Tiles.Tile.Accessibility">
+            <summary>
+            Określa dostępność kafelka dla obiektów. Toższme z dostępnością terenu kafelka.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.MetroDiggerGame">
+            <summary>
+            Główna klasa gry łącząca środowisko XNA z grą Metro Digger
+            </summary>
+        </member>
+        <member name="M:MetroDigger.MetroDiggerGame.#ctor">
+            <summary>
+            Tworzy nową instancję gry
+            </summary>
+        </member>
+        <member name="M:MetroDigger.MetroDiggerGame.LoadContent">
+            <summary>
+            Ładuje jedorazowo wszelkie media użyte w grze
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Program.Main(System.String[])">
+            <summary>
+            Główny punk wejścia aplikacji.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.GameplayScreen">
+            <summary>
+            Ekran rozgrywki. Wyświetla poziom z całą zawartością
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.GameplayScreen.#ctor(MetroDigger.Gameplay.Level,System.Boolean)">
+            <summary>
+            Tworzy nowy ekran rozgrywki
+            </summary>
+            <param name="level">Poziom do wczytania</param>
+            <param name="isStarted">Czy gra rozpoczyna sie natychmiast</param>
+        </member>
+        <member name="M:MetroDigger.Screens.GameplayScreen.OnLevelAccomplished(MetroDigger.Gameplay.Level,System.Boolean)">
+            <summary>
+            Metoda wywoływana przez zdarzenie zakończenia gry
+            </summary>
+            <param name="level">ukończony poziom</param>
+            <param name="isWon">czy gra zakończyła się sukcesem</param>
+        </member>
+        <member name="M:MetroDigger.Screens.GameplayScreen.Update(Microsoft.Xna.Framework.GameTime,System.Boolean,System.Boolean)">
+            <summary>
+            Aktualizuje stan poziomu
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.GameplayScreen.HandleInput(MetroDigger.Manager.InputHandler)">
+            <summary>
+            Obsługuje wciśnięte klawisze niedotyczące logiki gry
+            </summary>
+            <param name="input"></param>
+        </member>
+        <member name="M:MetroDigger.Screens.GameplayScreen.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Rysuje poziom i efekty przejścia ekranów na ekranie
+            </summary>
+            <param name="gameTime"></param>
+        </member>
+        <member name="T:MetroDigger.Screens.ScreenState">
+            <summary>
+            Opisuje stan przejścia między kolejnymi menu.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Manager.InputHandler">
+            <summary>
+            Odpowiada za interpretację informacji pochodzących z klawiatury.
+            Realizuje wzorzec projektowy Singleton.
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Manager.InputHandler.CurrentKeyboardState">
+            <summary>
+            Obecny stan klawiatury
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.Update">
+            <summary>
+            Odczytuje ostatni stan klawiatury.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys)">
+            <summary>
+            Sprawdza, czy został wciśnięty nowy klawisz.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.IsMenuSelect">
+            <summary>
+            Sprawdza, czy został wciśnięty klawisz odpowiedzialny za zaznaczenie opcji w menu.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.IsMenuCancel">
+            <summary>
+            Sprawdza, czy został wciśnięty klawisz odpowiedzialny za anulowanie menu.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.IsUp(System.Boolean)">
+            <summary>
+            Sprawdza, czy został wciśnięty klawisz odpowiedzialny za przejście do góry w menu lub grze.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.IsDown(System.Boolean)">
+            <summary>
+            Sprawdza, czy został wciśnięty klawisz odpowiedzialny za przejście w dół w menu lub grze.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.IsRight(System.Boolean)">
+            <summary>
+            Sprawdza, czy został wciśnięty klawisz odpowiedzialny za przejście w prawo w menu lub grze.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.IsLeft(System.Boolean)">
+            <summary>
+            Sprawdza, czy został wciśnięty klawisz odpowiedzialny za przejście w lewo w menu lub grze.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.IsPauseGame">
+            <summary>
+            Sprawdza, czy został wciśnięty klawisz odpowiedzialny za zapauzowanie gry.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.Vertical(System.Boolean)">
+            <summary>
+            Zwraca kierunek poruszania się gracza zgodnie z wciśniętym klawiszem góra/dół
+            </summary>
+            <param name="wsad">Określa czy używane są strzałki czy klawisze WSAD</param>
+            <returns>Kierunek poruszania się gracza</returns>
+        </member>
+        <member name="M:MetroDigger.Manager.InputHandler.Horizontal(System.Boolean)">
+            <summary>
+            Zwraca kierunek poruszania się gracza zgodnie z wciśniętym klawiszem prawo/lewo
+            </summary>
+            <param name="wsad">Określa czy używane są strzałki czy klawisze WSAD</param>
+            <returns>Kierunek poruszania się gracza</returns>
+        </member>
+        <member name="P:MetroDigger.Manager.InputHandler.Instance">
+            <summary>
+            Zwraca instancję klasy.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.LoadingScreen">
+            <summary>
+            Ekran ładowania. Służy jako przerywnik w przechodzeniu pomiędzy kluczowymi ekranami w grze.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.LoadingScreen.#ctor(System.Boolean,MetroDigger.Screens.GameScreen[])">
+            <summary>
+            Tworzy nowy ekran ładowania. Konstruktor wywoływany ze statycznej metody Load
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.LoadingScreen.Load(MetroDigger.Manager.ScreenManager,System.Boolean,MetroDigger.Screens.GameScreen[])">
+            <summary>
+            Aktywuje ekran ładowania.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.LoadingScreen.Update(Microsoft.Xna.Framework.GameTime,System.Boolean,System.Boolean)">
+            <summary>
+            Aktualizuje ekran ładowania
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.LoadingScreen.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Odrysowuje ekran ładowania
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.StartScreen">
+            <summary>
+            Główne menu gry. Posiada pola przekierowujące do zapisu gry, załadowania gry z pliku, rozpoczęcia nowej gry,
+            menu opcji, rankingu i wyjścia z gry
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.StartScreen.#ctor">
+            <summary>
+            Tworzy główne menu gry
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.MenuObjects.MenuCheckField">
+            <summary>
+            Kontrolka wyboru opcji. Pozwala na wygór jednej z opcji.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.MenuObjects.MenuObject">
+            <summary>
+            Abstrakcyjna klasa bazowa dla kontrolek. Opisuje efekty przejścia kontrolek przy zmianie ekranu.
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Screens.MenuObjects.MenuObject._text">
+            <summary>
+            Tekst kontrolki
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Screens.MenuObjects.MenuObject._selectionFade">
+            <summary>
+            Współczynnik blednięcia kontrolki przy przejściu
+            </summary>
+        </member>
+        <member name="F:MetroDigger.Screens.MenuObjects.MenuObject._position">
+            <summary>
+            Położenie kontrolki na ekranie.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuObject.#ctor(System.String)">
+            <summary>
+            Tworzy nową kontrolkę.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuObject.OnSelectEntry">
+            <summary>
+            Metoda do wywoływania zdarzenia wybrania kontrolki.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuObject.Update(System.Boolean,Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Aktualizuje kontrolkę
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuObject.Draw(MetroDigger.Screens.MenuScreen,System.Boolean,Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Rysuje kontrolkę
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuObject.GetHeight">
+            <summary>
+            Pobiera ile miejsca potrzebuje kontrolka.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuObject.GetWidth">
+            <summary>
+            Pobiera szerokość kontrolki w celu wycentorwania jej
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.MenuObjects.MenuObject.Text">
+            <summary>
+            Teks kontrolki.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.MenuObjects.MenuObject.Position">
+            <summary>
+            Pozycja kontrolki na ekranie.
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.MenuObjects.MenuObject.IsSelectable">
+            <summary>
+            Określa, czy kontrolkę da sie zaznaczyć.
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Screens.MenuObjects.MenuObject.Selected">
+            <summary>
+            Zdarzenie wywoływanie przy wyborze kontrolki.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuCheckField.#ctor(System.String,System.String[],System.Int32)">
+            <summary>
+            Towrzy nową kontrolkę wyboru opcji
+            </summary>
+            <param name="text">nazwa kontrolki</param>
+            <param name="texts">lista nazw opcji</param>
+            <param name="currentNumber">startowy numer wybranej opcji</param>
+        </member>
+        <member name="P:MetroDigger.Screens.MenuObjects.MenuCheckField.Number">
+            <summary>
+            Numer aktualnie wybranej opcji
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Screens.MenuObjects.MenuCheckField.Text">
+            <summary>
+            Wyświetlany tekst związany z aktualnie wybraną opcją.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.MenuObjects.MenuEntry">
+            <summary>
+            Kontrolka przejścia do innego menu
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuEntry.#ctor(System.String)">
+            <summary>
+            Tworzy nową kontrolkę przejścia do innego menu.
+            </summary>
+            <param name="text">Tekst wyświetlany przez tę kontrolkę</param>
+        </member>
+        <member name="T:MetroDigger.Screens.MenuObjects.MenuLabel">
+            <summary>
+            Kontrolka - etykieta. Nie można jej zaznaczyć - służy jedynie za wyświetlany tekst.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuLabel.#ctor(System.String)">
+            <summary>
+            Tworzy nową etykietę.
+            </summary>
+            <param name="text">Tekst etykiety</param>
+        </member>
+        <member name="T:MetroDigger.Screens.MenuObjects.MenuTextInput">
+            <summary>
+            Kontrolka umożliwiająca wpisywanie tekstu do gry. Używa rejestratora tekstu.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuTextInput.#ctor(System.String)">
+            <summary>
+            Tworzy nową kontrolkę tekstową
+            </summary>
+            <param name="text">tekst do wyświetlenia, gdy kontrolka jest pusta</param>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuTextInput.HandleInput(MetroDigger.Manager.InputHandler)">
+            <summary>
+            Obsługuje wciśnięte klawisze
+            </summary>
+            <param name="input">InputManager dostarczający aktualnie wciśniętych klawiszy</param>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.MenuTextInput.Update(System.Boolean,Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Aktualizuje stan kontrolki i wpisanego tekstu.
+            </summary>
+            <param name="isSelected">Czy kontrolka jest zaznaczona</param>
+            <param name="gameTime">Aktualny czas gry</param>
+        </member>
+        <member name="P:MetroDigger.Screens.MenuObjects.MenuTextInput.Text">
+            <summary>
+            A=Tekst aktualnie wypisany przez kontrolkę.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.MessageBoxScreen">
+            <summary>
+            MessageBox używany do wyświetlania krótkich informacji
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MessageBoxScreen.#ctor(System.String)">
+            <summary>
+                Constructor lets the caller specify whether to include the standard
+                "A=ok, B=cancel" usage _text prompt.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MessageBoxScreen.HandleInput(MetroDigger.Manager.InputHandler)">
+            <summary>
+                Responds to user input, accepting or cancelling the message box.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MessageBoxScreen.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+                Draws the message box.
+            </summary>
+        </member>
+        <member name="E:MetroDigger.Screens.MessageBoxScreen.Accept">
+            <summary>
+            Tworzy message box
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.OptionsMenuScreen">
+             <summary>
+            Menu opcji gry. Pozwala na włączenie/wyłączenie dźwięków i muzyki oraz zmiane sterowania na strzałki/wsad.
+             </summary>
+        </member>
+        <member name="T:MetroDigger.Screens.SaveMenuScreen">
+            <summary>
+            Menu zapisywania gry. Pozwala na wpisanie nazwy pliku, do którego nastąpi zapis gry.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.SaveMenuScreen.#ctor">
+            <summary>
+            Tworzy menu zapisywania gry
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Manager.ScreenManager">
+            <summary>
+            Odpowiada za obsługę ekranów gry i przejścia pomiędzy nimi.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.ScreenManager.#ctor(Microsoft.Xna.Framework.Game)">
+            <summary>
+            Tworzy nową instancję managera przypisaną do bieżącego obiektu gry
+            </summary>
+            <param name="game">Bieżący boiekt gry</param>
+        </member>
+        <member name="M:MetroDigger.Manager.ScreenManager.Initialize">
+            <summary>
+            Inicjalizuje obiekt
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.ScreenManager.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Rysuje aktualnie wyświetlane ekrany
+            </summary>
+            <param name="gameTime">Aktualny czas gry</param>
+        </member>
+        <member name="M:MetroDigger.Manager.ScreenManager.AddScreen(MetroDigger.Screens.GameScreen)">
+            <summary>
+            Dodaje nowy ekran na początek listy wyświetlanych ekranów
+            </summary>
+            <param name="screen"></param>
+        </member>
+        <member name="M:MetroDigger.Manager.ScreenManager.RemoveScreen(MetroDigger.Screens.GameScreen)">
+            <summary>
+            Usuwa konkretny ekran z listy wyświetlanych ekranów
+            </summary>
+            <param name="screen"></param>
+        </member>
+        <member name="M:MetroDigger.Manager.ScreenManager.GetScreens">
+            <summary>
+            Pobiera tablicę aktualnie wyświetlanych ekranów
+            </summary>
+            <returns>Tablica aktualnie wyświetlanych ekranów</returns>
+        </member>
+        <member name="M:MetroDigger.Manager.ScreenManager.FadeBackBufferToBlack(System.Single)">
+            <summary>
+            Powoduje zaciemnienie ekranu
+            </summary>
+            <param name="alpha">Współczynnik zaciemnienia</param>
+        </member>
+        <member name="M:MetroDigger.Manager.ScreenManager.SwitchScreen(MetroDigger.Screens.GameScreen)">
+            <summary>
+            Usuwa ekran z początku listy i zamienia go na podany.
+            </summary>
+            <param name="screen">Ekran, który ma być pierwszy na liście</param>
+        </member>
+        <member name="M:MetroDigger.Manager.ScreenManager.Start(MetroDigger.Screens.GameScreen[])">
+            <summary>
+            Dodaje do listy startowy zestaw ekranów i inicjalizuje je.
+            </summary>
+            <param name="screens"></param>
+        </member>
+        <member name="P:MetroDigger.Manager.ScreenManager.SpriteBatch">
+            <summary>
+            Obiekt XNA służący do rysowania
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Manager.Settings.GameOptions">
+            <summary>
+            Reprezentuje zestaw opcji gry
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.Settings.GameOptions.Controls">
+            <summary>
+            Typ kontroli klawiatury
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.Settings.GameOptions.IsMusicEnabled">
+            <summary>
+            Określa, czy muzyka jest włączona
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.Settings.GameOptions.IsSoundEnabled">
+            <summary>
+            Określa, czy efekty dźwiąkowe są włączone
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Manager.Settings.Controls">
+            <summary>
+            Typy kontroli klawiatury
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Manager.Settings.UserData">
+            <summary>
+            Ieprezentuje informację o postępie użytkownia w przechodzeniu gry 
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.Settings.UserData.#ctor">
+            <summary>
+            Domyślny konstruktor bezparametrowy potrzebny w celu serializacji
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.Settings.UserData.#ctor(System.String,System.Collections.Generic.List{MetroDigger.Manager.Settings.UserLevel})">
+            <summary>
+            Tworzy nowy okbiekt UserData
+            </summary>
+            <param name="name">Nazwa użytkownika</param>
+            <param name="levels">Lista obiektów UserLevel mówiąca,
+            które poziomy i z jakim wynikiem ukończył użytkownik.</param>
+        </member>
+        <member name="P:MetroDigger.Manager.Settings.UserData.Levels">
+            <summary>
+            Lista poziomów, które ukończył użytkownik wraz ze stanem ukończenia.
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Manager.Settings.UserLevel">
+            <summary>
+            Reprezentuje opis stan ukończenia poziomu
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.Settings.UserLevel.#ctor">
+            <summary>
+            Tworzy nowy obiekt typu UserLEvel z wertościamy domyślnymi
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.Settings.UserLevel.Number">
+            <summary>
+            Numer poziomu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.Settings.UserLevel.BestScore">
+            <summary>
+            Najlepszy uzyskany wynik w tym poziomie
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.Settings.UserLevel.IsUnlocked">
+            <summary>
+            Czy poziom został już odblokowany
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.Settings.UserLevel.MaxLives">
+            <summary>
+            liczba żyć przy najlepszym wyniku
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Manager.MediaManager">
+            <summary>
+            Manager odpowiedzialny za zarządzanie grafikami, czcionkami i dźwiękami używanymi w grze.
+            Realizuje wzorzec projektowy Singleton
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Manager.MediaManager.LoadSound(System.String,Microsoft.Xna.Framework.Audio.SoundEffect,MetroDigger.Manager.SoundType)">
+            <summary>
+            Zapisuje dźwięki używane w grze w słowniku.
+            </summary>
+            <param name="name">Nazwa dźwiąku</param>
+            <param name="sound">Obiekt dźwięku</param>
+            <param name="soundType">typ dźwięku</param>
+        </member>
+        <member name="M:MetroDigger.Manager.MediaManager.PlaySound(System.String)">
+            <summary>
+            Odtwarza dźwięk zapisaany w słowniku
+            </summary>
+            <param name="name">Nazwa dźwięku do odtworzenia</param>
+        </member>
+        <member name="M:MetroDigger.Manager.MediaManager.Switch(MetroDigger.Manager.SoundType)">
+            <summary>
+            Włącza lub wyłącza dźwiąki o określonym typie
+            </summary>
+            <param name="soundType">Typ dźwięków do przełączenia</param>
+        </member>
+        <member name="M:MetroDigger.Manager.MediaManager.GetStaticAnimation(System.String,System.Single)">
+            <summary>
+            Zwraca obiekt animacji z jedną klatką
+            </summary>
+            <param name="name">nazwa animacji</param>
+            <param name="h">wysokość animacji</param>
+            <returns>obiekt animacji</returns>
+        </member>
+        <member name="M:MetroDigger.Manager.MediaManager.GetDynamicAnimation(System.String)">
+            <summary>
+            Zwraca obiekt animacji z wieloma klatkami
+            </summary>
+            <param name="name">nazwa animacji</param>
+            <returns>obiekt animacji</returns>
+        </member>
+        <member name="M:MetroDigger.Manager.MediaManager.LoadGraphics(System.String,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Zapisuje teksturę do słownika
+            </summary>
+            <param name="name">nazwa tekstury</param>
+            <param name="texture">Obiekt tekstury</param>
+        </member>
+        <member name="M:MetroDigger.Manager.MediaManager.SetDimensions(System.Int32,System.Int32)">
+            <summary>
+            Dopasowuje wymiary wyświatlanych elementów do wielkości okna
+            </summary>
+            <param name="width">szerokośc okna</param>
+            <param name="height">wysokość okna</param>
+        </member>
+        <member name="P:MetroDigger.Manager.MediaManager.Instance">
+            <summary>
+            Zwraca instancję obiektu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.MediaManager.Width">
+            <summary>
+            Szerokość ekranu
+            </summary>
+        </member>
+        <member name="P:MetroDigger.Manager.MediaManager.Height">
+            <summary>
+            Wysokość ekranu
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Manager.SoundType">
+            <summary>
+            Typ dźwięku
+            </summary>
+        </member>
+        <member name="T:MetroDigger.Serialization.IAssembler`2">
+            <summary>
+            Implementacja wzorca projektowego Assembler służącego
+            do przekształcenia obiektów gry do postaci łatwo serializowalnej.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TDto"></typeparam>
+        </member>
+        <member name="M:MetroDigger.Serialization.IAssembler`2.GetDto(`0)">
+            <summary>
+            Konwertuje obiekt gry do obiektu serializowalnego
+            </summary>
+            <param name="plain">obiekt gry</param>
+            <returns>obiekt do serializacji</returns>
+        </member>
+        <member name="M:MetroDigger.Serialization.IAssembler`2.GetPlain(`1)">
+            <summary>
+            Konwertuje zdeselializowany obiekt do obiektu gry
+            </summary>
+            <param name="dto">obiekt zdeserializowany</param>
+            <returns>obiekt gry</returns>
+        </member>
+        <member name="T:MetroDigger.Serialization.LevelAssembler">
+            <summary>
+            Implementuje wzorzec projektowy Assembler. 
+            Służy do konwersji poziomu gry na obiekt łatwo serializowalny i z powrotem.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Serialization.LevelAssembler.GetDto(MetroDigger.Gameplay.Level)">
+            <summary>
+            Konwertuje poziom gry do obiektu serializowalnego
+            </summary>
+            <param name="plain">poziom</param>
+            <returns>obiekt do serializacji</returns>
+        </member>
+        <member name="M:MetroDigger.Serialization.LevelAssembler.GetPlain(MetroDigger.Serialization.LevelDto)">
+            <summary>
+            Konwertuje zdeselializowany poziom do poziomu gry
+            </summary>
+            <param name="dto">poziom zdeserializowany</param>
+            <returns>poziom gry</returns>
+        </member>
+        <member name="T:MetroDigger.Screens.MenuObjects.TextRegistrator">
+            <summary>
+            Narzędzie służące do rejestracji wpisywanego tekstu i konwersji na znaki gotowe do wyświetlenia.
+            </summary>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.TextRegistrator.#ctor(System.Double,System.Double)">
+            <summary>
+            Tworzy nowy rejestrator
+            </summary>
+            <param name="textDelay1">Opóźnienie po pierwszym wciśnięciu klawisza</param>
+            <param name="textDelay2">Opóźnienie po wciśnięciu klawisza pomiędzy zapisem kolejnych liter</param>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.TextRegistrator.Input(Microsoft.Xna.Framework.Input.Keys[])">
+            <summary>
+            Podaje zestaw klawiszy klawiatury do rejestratora w celu konwersji i zapisu.
+            </summary>
+            <param name="keys">Tablica klawiszy</param>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.TextRegistrator.Output">
+            <summary>
+            Zwraca zapisany tekst
+            </summary>
+            <returns>zapisany tekst.</returns>
+        </member>
+        <member name="M:MetroDigger.Screens.MenuObjects.TextRegistrator.Update(System.Double)">
+            <summary>
+            Aktualizuje wpisany tekst.
+            </summary>
+            <param name="newTime">Aktualny czas gry.</param>
+        </member>
+    </members>
+</doc>
