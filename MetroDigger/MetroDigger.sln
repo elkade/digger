@@ -3,12 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetroDigger", "MetroDigger\MetroDigger\MetroDigger.csproj", "{E6DBAF5A-7B80-42EC-913D-D2A704CB9BDF}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "MetroDiggerContent", "MetroDigger\MetroDiggerContent\MetroDiggerContent.contentproj", "{0FAE512F-A160-4D8B-B5B6-EEF00FEFE9A5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{12F00898-D547-4F75-8A81-086662D13E6A}"
-	ProjectSection(SolutionItems) = preProject
-		Graph1.dgml = Graph1.dgml
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetroDiggerContent", "MetroDigger\MetroDiggerContent\MetroDiggerContent.contentproj", "{0FAE512F-A160-4D8B-B5B6-EEF00FEFE9A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -203,7 +203,8 @@ namespace MetroDigger.Serialization
                 {
                     PowerCellsCount = dto.Player.PowerCells,
                     LivesCount = dto.Player.Lives,
-                    Score = dto.Player.Score
+                    Score = dto.Player.Score,
+                    HasDrill = dto.Player.HasDrill
                 };
                 plain.RegisterPlayer(player);
 
